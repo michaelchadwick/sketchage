@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Sketchage</title>
+  <meta name="description" content="Sketchage web app" />
+  <meta name="title" content="Sketchage" />
+
+  <!-- icons -->
+  <link href="favicon.ico" rel="favicon">
+  <link href="favicon.ico" rel="icon" type="image/x-icon">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="apple-touch-startup-image" href="favicon.png">
+
+  <!-- stylesheets -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div id="wrapper">
+
+    <header>
+      <h1>Sketchage</h1>
+      <a href="#">?</a>
+      <div id="help-square">
+      <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box. Hold the <strong>Alt</strong> key to erase cells instead.</p>
+
+      <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!).</p>
+
+      <p>The "Generate Image" button will save your creation as a BMP that you can right-click to save to your computer.</p>
+      </div>
+    </header>
+
+    <nav>
+      <section id="sizeOpts">
+        <label for="text-square-count">Square Count</label>
+        <input type="number" id="text-square-count" max="100" min="3" value="30" />
+        <button id="button-square-count-recreate" class="button-img">&check;</button>
+        <button id="button-square-count-default" class="button-text">Default</button>
+
+        <label for="text-grid-size">Grid Width</label>
+        <input type="number" id="text-grid-width" value="680" />
+        <button id="button-grid-dim-resize" class="button-img">&check;</button>
+        <button id="button-grid-dim-default" class="button-text">Default</button>
+      </section>
+
+      <section id="drawOpts">
+        <label>Color:</label>
+
+        <span>FG (LMB)</span><input class="jscolor" id="color-picker-fg" value="#000000" />
+        <span>BG (RMB)</span><input class="jscolor" id="color-picker-bg" value="#FFFFFF" />
+
+        <input type="checkbox" name="colors" id="check-rainbow" />
+        <label for="check-rainbow">Rainbow</label>
+
+        <input type="checkbox" name="mouse" id="check-clicklessmode">
+        <label for="check-clicklessmode">Clickless</label>
+
+        <button id="button-clear-grid">Reset</button>
+      </section>
+
+      <section id="saveOpts">
+        <button id="button-generate-image">Generate Image</button>
+      </section>
+    </nav>
+
+    <div id="content">
+      <section id="container"></section>
+      <section id="generated-images"></section>
+    </div>
+
+    <footer>
+      <p>a <a href="http://fun.codana.me">fun.codana.me</a> web app -- by <a href="http://codana.me">codana.me</a> -- <a href="http://github.com/michaelchadwick/fun.codana.me">source</a><br />
+      based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>"</p>
+    </footer>
+
+  </div>
+
+  <!-- jQuery and custom js -->
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/bitmap.js"></script>
+  <script type="text/javascript" src="js/jscolor.min.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>

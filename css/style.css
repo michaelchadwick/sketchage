@@ -1,0 +1,168 @@
+/* base level hierarchy */
+html,
+body {
+  background: #ccc;
+  font-family: "Arial", sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#wrapper {
+  min-height: 100%;
+  position: relative;
+}
+header {
+  background-color: #155DA1;
+  margin: 0 auto;
+  padding: 7px;
+  text-align: center;
+}
+nav {
+  margin: 0 auto 5px;
+  text-align: center;
+  width: 100%;
+}
+#content {
+  overflow: auto;
+  padding: 10px;
+  padding-bottom: 65px;
+}
+footer {
+  background-color: #163B5E;
+  clear: both;
+  color: #eee;
+  font-size: 0.8em;
+  height: 65px;
+  margin-top: -40px;
+  padding: 7px;
+  text-align: center;
+}
+
+/* base level elements */
+a {
+  color: #cadeea;
+}
+h1 {
+  color: #fcfcfc;
+  font-size: 2.2em;
+  margin: 0;
+}
+button {
+  font-size: 0.75em;
+  height: 21px;
+  width: 120px;
+}
+input[type=radio] {
+  margin: 0;
+  padding: 0;
+}
+
+/* custom sections */
+header a {
+  display: block;
+  float: right;
+  font-size: 1.2em;
+  font-weight: bold;
+  height: 10px;
+  position: relative;
+  top: -30px;
+  width: 30px;
+  text-decoration: none;
+}
+header div {
+  background: #fff;
+  border: 1px solid #163B5E;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 15px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 4px 15px 0px rgba(0,0,0,0.75);
+  box-shadow: 4px 4px 15px 0px rgba(0,0,0,0.75);
+  display: none;
+  font-size: 0.9em;
+  padding: 10px;
+  position: fixed;
+  right: 5px;
+  text-align: left;
+  width: 300px;
+  z-index: 3000;
+}
+header div p {
+  margin: 2px 2px 6px;
+}
+nav section {
+  background: #eee;
+  font-family: "Consolas", sans-serif;
+  margin-bottom: 1px;
+  padding: 5px;
+}
+nav section input[type="number"] {
+  margin-right: 2px;
+  width: 50px;
+}
+nav section button {
+  position: relative;
+  left: -8px;
+  top: 1px;
+}
+nav section button.button-img {
+  width: 26px;
+}
+nav section button.button-text {
+  position: relative;
+  top: -1px;
+  width: 130px;
+}
+section#sizeOpts button.button-text {
+  position: relative;
+  left: -14px;
+  width: 55px;
+}
+section#drawOpts {
+  padding-bottom: 2px;
+}
+section#drawOpts label {
+  display: inline-block;
+  margin-left: -6px;
+  margin-right: 4px;
+  position: relative;
+  top: -0.1em;
+}
+section#drawOpts button {
+  top: -4px;
+}
+
+section#container {
+  background-color: #fff;
+  width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  height: auto;
+}
+
+section#generated-images {
+  background: #ddd;
+  display: none;
+  float: left;
+  overflow-y: scroll;
+  padding: 0 10px;
+}
+section#generated-images div {
+  padding: 3px;
+}
+section#generated-images div a {
+  color: #000;
+  text-decoration: none;
+}
+section#generated-images div img {
+  border: 1px solid #777;
+  float: left;
+  margin: 5px auto;
+}
+
+/* custom classes */
+.square {
+  cursor: default;
+  display: inline-block;
+  border: 1px solid gray;
+  float: left;
+}
