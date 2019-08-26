@@ -24,13 +24,13 @@ $(function() {
   // main input event handler
   $body.keydown(function(e) {
     var code = e.which;
-    if (code == 18) {
+    if (code === 18) {
       altIsDown = true;
     }
   });
   $body.keyup(function(e) {
     var code = e.which;
-    if (code == 18) {
+    if (code === 18) {
       altIsDown = false;
     }
   });
@@ -80,7 +80,7 @@ $(function() {
   // attach event handlers to size tools
   $("#text-square-count").keyup(function(e) {
     var code = e.which;
-    if (code == 13) {
+    if (code === 13) {
       e.preventDefault();
       $("#button-square-count-recreate").click();
     }
@@ -96,7 +96,7 @@ $(function() {
   });
   $("#text-grid-width").keyup(function(e) {
     var code = e.which;
-    if (code == 13) {
+    if (code === 13) {
       e.preventDefault();
       $("#button-grid-dim-resize").click();
     }
@@ -196,7 +196,7 @@ $(function() {
         });
       }
     });
-  };
+  }
 
   // make default grid on load
   $("#text-square-count").val(gridSize);
