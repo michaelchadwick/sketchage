@@ -1,6 +1,6 @@
 # Sketchage
 
-Building off of [mixophrygian](https://github.com/mixophrygian)'s original ["Etcha-sketch"](http://mixophrygian.github.io/) web app, I thought I'd try to make it even more awesome because *reasons*.
+Building off of [mixophrygian](https://github.com/mixophrygian)'s original ["Etcha-sketch"](https://mixophrygian.github.io/) web app, I thought I'd try to make it even more awesome because *reasons*.
 
 * Completely redesigned interface and color scheme
 * Updated to HTML5
