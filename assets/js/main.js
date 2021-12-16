@@ -76,6 +76,8 @@ $(function() {
   $("#button-clear-grid").click(function() {
     if (confirm('Are you sure you want to reset the image?')) {
       $('.square').css('background-color', colorTransparent);
+
+      clearLocalStorage();
     }
   });
 
@@ -230,6 +232,14 @@ $(function() {
     });
 
     localStorage.setItem('sketchage', serialization);
+  }
+
+  function clearLocalStorage() {
+    let settings = localStorage.getItem('sketchage');
+
+    if (settings) {
+      localStorage.removeItem('sketchage');
+    }
   }
 
   // make default grid on load
