@@ -1,7 +1,7 @@
 /* base level hierarchy */
 html,
 body {
-  background: #ccc;
+  background: #cccccc;
   font-family: "Arial", sans-serif;
   height: 100%;
   margin: 0;
@@ -30,7 +30,7 @@ nav {
 footer {
   background-color: #163B5E;
   clear: both;
-  color: #eee;
+  color: #eeeeee;
   font-size: 0.8em;
   height: 65px;
   margin-top: -40px;
@@ -56,6 +56,9 @@ input[type=radio] {
   margin: 0;
   padding: 0;
 }
+input.jscolor {
+  width: 50px;
+}
 
 /* custom sections */
 header a {
@@ -70,7 +73,7 @@ header a {
   text-decoration: none;
 }
 header div {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #163B5E;
   border-radius: 10px;
   -webkit-box-shadow: 4px 4px 15px 0px rgba(0,0,0,0.75);
@@ -89,7 +92,7 @@ header div p {
   margin: 2px 2px 6px;
 }
 nav section {
-  background: #eee;
+  background: #eeeeee;
   font-family: "Consolas", sans-serif;
   margin-bottom: 1px;
   padding: 5px;
@@ -99,9 +102,14 @@ nav section input[type="number"] {
   width: 50px;
 }
 nav section button {
+  cursor: pointer;
   position: relative;
   left: -8px;
-  top: 1px;
+  top: 0;
+}
+nav section button.danger {
+  background: #ff5555;
+  color: #ffffff;
 }
 nav section button.button-img {
   width: 26px;
@@ -121,17 +129,18 @@ section#drawOpts {
 }
 section#drawOpts label {
   display: inline-block;
-  margin-left: -6px;
-  margin-right: 4px;
+  margin-left: -4px;
+  margin-right: 6px;
   position: relative;
-  top: -0.1em;
+  top: -1px;
 }
 section#drawOpts button {
-  top: -4px;
+  left: -2px;
+  top: -2px;
 }
 
 section#container {
-  background-color: #fff;
+  background-color: #ffffffd;
   width: 680px;
   margin-left: auto;
   margin-right: auto;
@@ -140,7 +149,7 @@ section#container {
 }
 
 section#generated-images {
-  background: #ddd;
+  background: #dddddd;
   display: none;
   float: left;
   overflow-y: scroll;
@@ -154,7 +163,7 @@ section#generated-images div a {
   text-decoration: none;
 }
 section#generated-images div img {
-  border: 1px solid #777;
+  border: 1px solid #777777;
   float: left;
   margin: 5px auto;
 }
@@ -163,6 +172,6 @@ section#generated-images div img {
 .square {
   cursor: default;
   display: inline-block;
-  border: 1px solid gray;
+  border: 1px solid #777777;
   float: left;
 }
