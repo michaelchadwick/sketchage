@@ -1,43 +1,45 @@
 $(function() {
-  var gridSizeDefault = 32;
-  var gridDimDefault = 640;
+  // Sketchage object init
+  if ((typeof Sketchage) === 'undefined') var Sketchage = {}
 
-  var gridSize = gridSizeDefault;
-  var gridDim = gridDimDefault;
+  const GRID_SIZE_DEFAULT = 32;
+  const GRID_DIM_DEFAULT = 640;
+  const COLOR_FG_DEFAULT = "#000000";
+  const COLOR_BG_DEFAULT = "#FFFFFF";
+
+  Sketchage.drawingMode = "click";
+  Sketchage.mouseIsDown = false;
+  Sketchage.altIsDown = false;
+  Sketchage.useRandomColor = false;
+
+  Sketchage.gridSize = GRID_SIZE_DEFAULT;
+  Sketchage.gridDim = GRID_DIM_DEFAULT;
 
   var color = "";
-  var colorTransparent = "#FFFFFF";
-  var colorFG = "#000000";
-  var colorBG = "#FFFFFF";
-  var colorFGDefault = "#000000";
-  var colorBGDefault = "#FFFFFF";
-
-  var clickLessMode = false;
-  var mouseIsDown = false;
-  var altIsDown = false;
-  var useRandomColor = false;
+  var colorTransparent = COLOR_BG_DEFAULT;
+  var colorFG = COLOR_FG_DEFAULT;
+  var colorBG = COLOR_BG_DEFAULT;
 
   var $body = $("body");
   var $container = $("#container");
-  var $squares = $(".squares");
 
   // main input event handler
   $body.keydown(function(e) {
     var code = e.which;
     if (code === 18) {
-      altIsDown = true;
+      Sketchage.altIsDown = true;
     }
   });
   $body.keyup(function(e) {
     var code = e.which;
     if (code === 18) {
-      altIsDown = false;
+      Sketchage.altIsDown = false;
     }
   });
   $container.mousedown(function() {
-    mouseIsDown = true;
+    Sketchage.mouseIsDown = true;
   }).mouseup(function() {
-    mouseIsDown = false;
+    Sketchage.mouseIsDown = false;
   });
 
   // disallow right-clicking on canvas
@@ -61,24 +63,17 @@ $(function() {
   });
   $("#check-rainbow").click(function() {
     if ($(this).prop("checked")) {
-      useRandomColor = true;
+      Sketchage.useRandomColor = true;
     } else {
       colorFG = $("#color-picker-fg").css("background-color");
       colorBG = $("#color-picker-bg").css("background-color");
-      useRandomColor = false;
+      Sketchage.useRandomColor = false;
     }
   });
   $("#check-clicklessmode").click(function() {
     if ($(this).prop("checked")) {
-      clickLessMode = true;
-    } else clickLessMode = false;
-  });
-  $("#button-clear-grid").click(function() {
-    if (confirm('Are you sure you want to reset the image?')) {
-      $('.square').css('background-color', colorTransparent);
-
-      clearLocalStorage();
-    }
+      Sketchage.drawingMode = 'clickless';
+    } else Sketchage.drawingMode = 'click';
   });
 
   // attach event handlers to size tools
@@ -90,12 +85,12 @@ $(function() {
     }
   });
   $("#button-square-count-recreate").click(function() {
-    gridSize = $("#text-square-count").val();
+    Sketchage.gridSize = $("#text-square-count").val();
     makeGrid();
   });
   $("#button-square-count-default").click(function() {
-    gridSize = gridSizeDefault;
-    $("text-square-count").val(gridSizeDefault);
+    Sketchage.gridSize = GRID_SIZE_DEFAULT;
+    $("text-square-count").val(GRID_SIZE_DEFAULT);
     makeGrid();
   });
   $("#text-grid-width").keyup(function(e) {
@@ -111,27 +106,36 @@ $(function() {
     makeGrid();
   });
   $("#button-grid-dim-default").click(function() {
-    $container.css("width", gridDimDefault);
-    $container.css("height", gridDimDefault);
-    $("#text-grid-width").val(gridDimDefault);
+    $container.css("width", GRID_DIM_DEFAULT);
+    $container.css("height", GRID_DIM_DEFAULT);
+    $("#text-grid-width").val(GRID_DIM_DEFAULT);
     makeGrid();
   });
   $("#button-generate-image").click(function() {
     generateImage();
   });
+  $("#button-clear-grid").click(function() {
+    if (confirm('Are you sure you want to reset the image?')) {
+      $('.square').css('background-color', colorTransparent);
+
+      clearLocalStorage();
+    }
+  });
 
   function generateImage() {
     $container.css("float", "left");
+
     $("#generated-images").css({
         "display" : "block",
         "height" : $container.height()
     });
-    generateLowResBitmap(5, gridSize);
+
+    generateLowResBitmap(5, Sketchage.gridSize);
     //location.href = "#gen-img";
   }
 
   function draw(square, color) {
-    if (altIsDown) {
+    if (Sketchage.altIsDown) {
       $(square).css("background-color", colorTransparent);
     }
     else {
@@ -151,8 +155,8 @@ $(function() {
     $("#gen-img").remove();
 
     // create squares
-    for(var i = 0; i < gridSize; i++) {
-      for(var j = 0; j < gridSize-1; j++){
+    for(var i = 0; i < Sketchage.gridSize; i++) {
+      for(var j = 0; j < Sketchage.gridSize-1; j++){
         $container.append("<div class='square' id='" + j + "_" + i + "'></div>");
       }
       $container.append("<div class='square' id='" + j + "_" + i + "'></div>");
@@ -160,7 +164,7 @@ $(function() {
 
     var containerWidth = $container.width();
     var squareBorder = 1;
-    var squareWidth = containerWidth/gridSize - (2 * squareBorder);
+    var squareWidth = containerWidth/Sketchage.gridSize - (2 * squareBorder);
 
     $(".square").css({
       width: squareWidth,
@@ -170,7 +174,7 @@ $(function() {
 
     // main draw handler
     $(".square").on("mouseenter mousedown touchend touchmove", function(e) {
-      if (useRandomColor) {
+      if (Sketchage.useRandomColor) {
         colorFG = getRandomColor();
         colorBG = getRandomColor();
       }
@@ -189,10 +193,9 @@ $(function() {
           color = colorFG;
       }
 
-      if (clickLessMode) {
+      if (Sketchage.drawingMode == 'clickless') {
         draw(this, color);
-      }
-      else if (mouseIsDown) {
+      } else if (Sketchage.mouseIsDown) {
         draw(this, color);
       } else {
         $(this).mousedown(function() {
@@ -220,7 +223,6 @@ $(function() {
       }
     }
   }
-
   function saveToLocalStorage() {
     let serialization = '';
 
@@ -233,7 +235,6 @@ $(function() {
 
     localStorage.setItem('sketchage', serialization);
   }
-
   function clearLocalStorage() {
     let settings = localStorage.getItem('sketchage');
 
@@ -243,8 +244,8 @@ $(function() {
   }
 
   // make default grid on load
-  $("#text-square-count").val(gridSize);
-  $("#text-grid-width").val(gridDim);
+  $("#text-square-count").val(Sketchage.gridSize);
+  $("#text-grid-width").val(Sketchage.gridDim);
 
   makeGrid();
 
