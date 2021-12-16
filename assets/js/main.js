@@ -74,7 +74,9 @@ $(function() {
     } else clickLessMode = false;
   });
   $("#button-clear-grid").click(function() {
-    $('.square').css('background-color', colorTransparent);
+    if (confirm('Are you sure you want to reset the image?')) {
+      $('.square').css('background-color', colorTransparent);
+    }
   });
 
   // attach event handlers to size tools
@@ -132,6 +134,7 @@ $(function() {
     }
     else {
       $(square).css("background-color", color);
+      saveToLocalStorage();
     }
   }
 
@@ -184,8 +187,7 @@ $(function() {
           color = colorFG;
       }
 
-      if (clickLessMode)
-      {
+      if (clickLessMode) {
         draw(this, color);
       }
       else if (mouseIsDown) {
@@ -198,9 +200,43 @@ $(function() {
     });
   }
 
+  function loadFromLocalStorage() {
+    let settings = localStorage.getItem('sketchage');
+
+    // console.log('settings', settings);
+
+    if (settings) {
+      let load = window.confirm('Previous image data found. Load?');
+
+      if (load) {
+        let colors = settings.split(';');
+
+        colors.forEach(function(c) {
+          c = c.split(':');
+          $(`#${c[0]}`).css('background-color', c[1]);
+        });
+      }
+    }
+  }
+
+  function saveToLocalStorage() {
+    let serialization = '';
+
+    $(".square").each(function() {
+      let id = $(this).attr('id');
+      let color = $(this).css('background-color');
+
+      serialization = serialization.concat(`${id}:${color};`);
+    });
+
+    localStorage.setItem('sketchage', serialization);
+  }
+
   // make default grid on load
   $("#text-square-count").val(gridSize);
   $("#text-grid-width").val(gridDim);
 
   makeGrid();
+
+  window.onload = loadFromLocalStorage;
 });
