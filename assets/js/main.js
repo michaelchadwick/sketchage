@@ -85,13 +85,17 @@ $(function() {
     }
   });
   $("#button-square-count-recreate").click(function() {
-    Sketchage.gridSize = $("#text-square-count").val();
-    makeGrid();
+    if (confirm('Changing the square count will clear the image. Proceed?')) {
+      Sketchage.gridSize = $("#text-square-count").val();
+      makeGrid();
+    }
   });
   $("#button-square-count-default").click(function() {
-    Sketchage.gridSize = GRID_SIZE_DEFAULT;
-    $("text-square-count").val(GRID_SIZE_DEFAULT);
-    makeGrid();
+    if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
+      Sketchage.gridSize = GRID_SIZE_DEFAULT;
+      $("text-square-count").val(GRID_SIZE_DEFAULT);
+      makeGrid();
+    }
   });
   $("#text-grid-width").keyup(function(e) {
     var code = e.which;
@@ -101,15 +105,19 @@ $(function() {
     }
   });
   $("#button-grid-dim-resize").click(function() {
-    $container.css("width", $("#text-grid-width").val());
-    $container.css("height", $("#text-grid-width").val());
-    makeGrid();
+    if (confirm('Changing the grid width will clear the image. Proceed?')) {
+      $container.css("width", $("#text-grid-width").val());
+      $container.css("height", $("#text-grid-width").val());
+      makeGrid();
+    }
   });
   $("#button-grid-dim-default").click(function() {
-    $container.css("width", GRID_DIM_DEFAULT);
-    $container.css("height", GRID_DIM_DEFAULT);
-    $("#text-grid-width").val(GRID_DIM_DEFAULT);
-    makeGrid();
+    if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
+      $container.css("width", GRID_DIM_DEFAULT);
+      $container.css("height", GRID_DIM_DEFAULT);
+      $("#text-grid-width").val(GRID_DIM_DEFAULT);
+      makeGrid();
+    }
   });
   $("#button-generate-image").click(function() {
     generateImage();
