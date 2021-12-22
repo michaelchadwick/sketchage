@@ -57,6 +57,9 @@ input[type=radio] {
   padding: 0;
 }
 input.jscolor {
+  bottom: 2px;
+  margin-left: 1px;
+  position: relative;
   width: 50px;
 }
 
