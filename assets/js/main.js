@@ -22,6 +22,7 @@ $(function() {
 
   var $body = $("body");
   var $container = $("#container");
+  var $genImages = $("#generated-images");
 
   // main input event handler
   $body.keydown(function(e) {
@@ -133,13 +134,23 @@ $(function() {
   function generateImage() {
     $container.css("float", "left");
 
-    $("#generated-images").css({
-        "display" : "block",
-        "height" : $container.height()
+    $genImages.css({
+      "display" : "block",
+      "height" : $container.height()
     });
 
     generateLowResBitmap(5, Sketchage.gridSize);
-    //location.href = "#gen-img";
+
+    $genImages.find('div').find('a').click(function(event) {
+      event.preventDefault()
+
+      if ($genImages.find('div').length == 0) {
+        $container.css("float", "none");
+        $genImages.css({
+          "display" : "none"
+        });
+      }
+    });
   }
 
   function draw(square, color) {
@@ -215,8 +226,6 @@ $(function() {
 
   function loadFromLocalStorage() {
     let settings = localStorage.getItem('sketchage');
-
-    // console.log('settings', settings);
 
     if (settings) {
       let load = window.confirm('Previous image data found. Load?');
