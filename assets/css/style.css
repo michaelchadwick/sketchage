@@ -143,12 +143,12 @@ section#drawOpts button {
 }
 
 section#container {
-  background-color: #ffffffd;
-  width: 680px;
+  background-color: #ffffff;
+  height: auto;
+  margin-bottom: 20px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 20px;
-  height: auto;
+  width: 680px;
 }
 
 section#generated-images {
@@ -173,7 +173,7 @@ section#generated-images div img {
 
 /* custom classes */
 .square {
-  cursor: default;
+  cursor: pointer;
   display: inline-block;
   border: 1px solid #777777;
   float: left;
