@@ -173,7 +173,7 @@ section#generated-images div img {
 
 /* custom classes */
 .square {
-  cursor: pointer;
+  cursor: url(../img/pencil-24.png), pointer;
   display: inline-block;
   border: 1px solid #777777;
   float: left;
