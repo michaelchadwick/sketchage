@@ -2,8 +2,8 @@ $(function() {
   // Sketchage object init
   if ((typeof Sketchage) === 'undefined') var Sketchage = {}
 
-  const GRID_SIZE_DEFAULT = 32;
-  const GRID_DIM_DEFAULT = 640;
+  const SQUARE_COUNT_DEFAULT = 32;
+  const GRID_WIDTH_DEFAULT = 640;
   const COLOR_FG_DEFAULT = "#000000";
   const COLOR_BG_DEFAULT = "#FFFFFF";
 
@@ -12,8 +12,8 @@ $(function() {
   Sketchage.altIsDown = false;
   Sketchage.useRandomColor = false;
 
-  Sketchage.gridSize = GRID_SIZE_DEFAULT;
-  Sketchage.gridDim = GRID_DIM_DEFAULT;
+  Sketchage.squareCount = SQUARE_COUNT_DEFAULT;
+  Sketchage.gridWidth = GRID_WIDTH_DEFAULT;
 
   var color = "";
   var colorTransparent = COLOR_BG_DEFAULT;
@@ -87,14 +87,15 @@ $(function() {
   });
   $("#button-square-count-recreate").click(function() {
     if (confirm('Changing the square count will clear the image. Proceed?')) {
-      Sketchage.gridSize = $("#text-square-count").val();
+      Sketchage.squareCount = $("#text-square-count").val();
+      saveToLocalStorage();
       makeGrid();
     }
   });
   $("#button-square-count-default").click(function() {
     if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
-      Sketchage.gridSize = GRID_SIZE_DEFAULT;
-      $("text-square-count").val(GRID_SIZE_DEFAULT);
+      Sketchage.squareCount = SQUARE_COUNT_DEFAULT;
+      $("text-square-count").val(SQUARE_COUNT_DEFAULT);
       makeGrid();
     }
   });
@@ -102,21 +103,22 @@ $(function() {
     var code = e.which;
     if (code === 13) {
       e.preventDefault();
-      $("#button-grid-dim-resize").click();
+      $("#button-grid-width-resize").click();
     }
   });
-  $("#button-grid-dim-resize").click(function() {
+  $("#button-grid-width-resize").click(function() {
     if (confirm('Changing the grid width will clear the image. Proceed?')) {
       $container.css("width", $("#text-grid-width").val());
       $container.css("height", $("#text-grid-width").val());
+      saveToLocalStorage();
       makeGrid();
     }
   });
-  $("#button-grid-dim-default").click(function() {
+  $("#button-grid-width-default").click(function() {
     if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
-      $container.css("width", GRID_DIM_DEFAULT);
-      $container.css("height", GRID_DIM_DEFAULT);
-      $("#text-grid-width").val(GRID_DIM_DEFAULT);
+      $container.css("width", GRID_WIDTH_DEFAULT);
+      $container.css("height", GRID_WIDTH_DEFAULT);
+      $("#text-grid-width").val(GRID_WIDTH_DEFAULT);
       makeGrid();
     }
   });
@@ -139,7 +141,7 @@ $(function() {
       "height" : $container.height()
     });
 
-    generateLowResBitmap(5, Sketchage.gridSize);
+    generateLowResBitmap(5, Sketchage.squareCount);
 
     $genImages.find('div').find('a').click(function(event) {
       event.preventDefault()
@@ -174,8 +176,8 @@ $(function() {
     $("#gen-img").remove();
 
     // create squares
-    for(var i = 0; i < Sketchage.gridSize; i++) {
-      for(var j = 0; j < Sketchage.gridSize-1; j++){
+    for(var i = 0; i < Sketchage.squareCount; i++) {
+      for(var j = 0; j < Sketchage.squareCount-1; j++){
         $container.append("<div class='square' id='" + j + "_" + i + "'></div>");
       }
       $container.append("<div class='square' id='" + j + "_" + i + "'></div>");
@@ -183,7 +185,7 @@ $(function() {
 
     var containerWidth = $container.width();
     var squareBorder = 1;
-    var squareWidth = containerWidth/Sketchage.gridSize - (2 * squareBorder);
+    var squareWidth = containerWidth/Sketchage.squareCount - (2 * squareBorder);
 
     $(".square").css({
       width: squareWidth,
@@ -225,46 +227,67 @@ $(function() {
   }
 
   function loadFromLocalStorage() {
-    let settings = localStorage.getItem('sketchage');
+    let img_data = localStorage.getItem('neb.host.sketchage.image');
+    let settings = localStorage.getItem('neb.host.sketchage.settings');
 
-    if (settings) {
-      let load = window.confirm('Previous image data found. Load?');
+    if (img_data || settings) {
+      let load = window.confirm('Previous image/settings data found. Load?');
 
       if (load) {
-        let colors = settings.split(';');
+        let config = settings.split(';');
+        let square_count = config[0].split(':')[1]
+        let grid_width = config[1].split(':')[1]
+
+        Sketchage.squareCount = square_count;
+        Sketchage.gridWidth = grid_width;
+
+        // set square count and grid width
+        $("#text-square-count").val(Sketchage.squareCount);
+        $("#text-grid-width").val(Sketchage.gridWidth);
+
+        makeGrid();
+
+        let colors = img_data.split(';');
 
         colors.forEach(function(c) {
           c = c.split(':');
           $(`#${c[0]}`).css('background-color', c[1]);
         });
       }
+    } else {
+      // set square count and grid width
+      $("#text-square-count").val(Sketchage.squareCount);
+      $("#text-grid-width").val(Sketchage.gridWidth);
+
+      makeGrid();
     }
   }
   function saveToLocalStorage() {
-    let serialization = '';
+    let serial_img = '';
 
     $(".square").each(function() {
       let id = $(this).attr('id');
       let color = $(this).css('background-color');
 
-      serialization = serialization.concat(`${id}:${color};`);
+      serial_img = serial_img.concat(`${id}:${color};`);
     });
 
-    localStorage.setItem('sketchage', serialization);
+    localStorage.setItem('neb.host.sketchage.image', serial_img);
+
+    let square_count = $("#text-square-count").val();
+    let grid_width = $("#text-grid-width").val();
+
+    localStorage.setItem('neb.host.sketchage.settings', `square_count:${square_count};grid_width:${grid_width}`);
   }
   function clearLocalStorage() {
-    let settings = localStorage.getItem('sketchage');
 
-    if (settings) {
-      localStorage.removeItem('sketchage');
+    if (localStorage.getItem('neb.host.sketchage.image')) {
+      localStorage.removeItem('neb.host.sketchage.image');
+    }
+    if (localStorage.getItem('neb.host.sketchage.settings')) {
+      localStorage.removeItem('neb.host.sketchage.settings');
     }
   }
-
-  // make default grid on load
-  $("#text-square-count").val(Sketchage.gridSize);
-  $("#text-grid-width").val(Sketchage.gridDim);
-
-  makeGrid();
 
   window.onload = loadFromLocalStorage;
 });

@@ -37,14 +37,20 @@
     <nav>
       <section id="sizeOpts">
         <label for="text-square-count">Square Count</label>
-        <input type="number" id="text-square-count" max="100" min="3" value="30" />
+        <input type="number" id="text-square-count" max="128" min="4" value="32" />
         <button id="button-square-count-recreate" class="button-img">&check;</button>
         <button id="button-square-count-default" class="button-text">Default</button>
 
-        <label for="text-grid-size">Grid Width</label>
-        <input type="number" id="text-grid-width" value="680" />
-        <button id="button-grid-dim-resize" class="button-img">&check;</button>
-        <button id="button-grid-dim-default" class="button-text">Default</button>
+        <label for="text-grid-width">Grid Width</label>
+        <input type="number" id="text-grid-width" value="640" />
+        <button id="button-grid-width-resize" class="button-img">&check;</button>
+        <button id="button-grid-width-default" class="button-text">Default</button>
+
+        <label for="check-rainbow">Rainbow</label>
+        <input type="checkbox" name="colors" id="check-rainbow" />
+
+        <label for="check-clicklessmode">Clickless</label>
+        <input type="checkbox" name="mouse" id="check-clicklessmode">
       </section>
 
       <section id="drawOpts">
@@ -52,12 +58,6 @@
 
         <span>FG (LMB)</span> #<input class="jscolor" id="color-picker-fg" value="#000000" />
         <span>BG (RMB)</span> #<input class="jscolor" id="color-picker-bg" value="#FFFFFF" />
-
-        <input type="checkbox" name="colors" id="check-rainbow" />
-        <label for="check-rainbow">Rainbow</label>
-
-        <input type="checkbox" name="mouse" id="check-clicklessmode">
-        <label for="check-clicklessmode">Clickless</label>
       </section>
 
       <section id="saveOpts">
