@@ -143,14 +143,29 @@ $(function() {
 
     generateLowResBitmap(5, Sketchage.squareCount);
 
-    $genImages.find('div').find('a').click(function(event) {
+    $newest_img = $genImages.last().find('img').last();
+    $newest_img_src = $newest_img.attr('src');
+
+    $.ajax({
+      url: '../../gd_convert.php',
+      type: 'post',
+      data: { "imageConversion": $newest_img_src },
+      success: function(imgPath) {
+        // console.log('image path', imgPath);
+
+        $html = `<div class="file-links"><a class="file-link" href="${imgPath}.gif" target="_blank">GIF</a> | <a class="file-link" href="${imgPath}.jpg" target="_blank">JPG</a> | <a class="file-link" href="${imgPath}.png" target="_blank">PNG</a></div>`;
+
+        $newest_img.after($html);
+      },
+      error: function(error) { console.error('img convert failed', error); }
+    });
+
+    $genImages.find('div').find('a.gen-img-x').click(function(event) {
       event.preventDefault()
 
       if ($genImages.find('div').length == 0) {
         $container.css("float", "none");
-        $genImages.css({
-          "display" : "none"
-        });
+        $genImages.css("display", "none");
       }
     });
   }

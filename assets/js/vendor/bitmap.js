@@ -201,6 +201,16 @@
         return $bg_transform(bg);
     }
 
+    function getRandomString(length = 10) {
+        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
+
+        for ( var i = 0; i < length; i++ ) {
+            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+        }
+        return result;
+    }
+
     window.generateLowResBitmap = function(scale, pixels) {
         // pixels are x_y starting in top left, we need to iterate from bottom left
         // dimensions are a 50x50 square (0, 0, 49, 49)
@@ -216,6 +226,8 @@
             img,
             src;
 
+        var rand_name = getRandomString();
+
         for (; y>=0; y--) {
             rows.push(row = []);
             for (x=0; x<x_len; x++) {
@@ -230,20 +242,27 @@
         ];
         /* */
 
+        var gen_img_id = 'gen-img-' + rand_name;
+        var gen_img_id_x = gen_img_id + '-x';
+
         img = document.createElement('img');
         src = window.generateBitmapDataURL(rows, scale);
         img.src = src;
-        img.alt = 'generated_image';
-        img.title = 'generated_image';
+        img.alt = gen_img_id;
+        img.title = gen_img_id;
         img_parent = document.getElementById('img');
+
         if (img_parent === null) {
             img_parent = document.createElement('div');
-            img_parent.id = 'gen-img';
+            img_parent.id = gen_img_id;
+            img_parent.classList.add('gen-img');
             document.getElementById('generated-images').appendChild(img_parent);
         }
-        img_parent.innerHTML = '<div class="img-header">Generated Image &nbsp;<a title="hide image" href="#">x</a></div>';
-        img_parent.getElementsByTagName('a')[0].onclick = function() {
-            var img_parent = document.getElementById('gen-img');
+
+        img_parent.innerHTML =  '<span class="img-header">' + gen_img_id;
+        img_parent.innerHTML += ' <a title="remove ' + gen_img_id + '" href="#" id="' + gen_img_id_x + '" class="gen-img-x">[X]</a></span>';
+        document.getElementById(gen_img_id_x).onclick = function() {
+            var img_parent = document.getElementById(gen_img_id);
             img_parent.parentNode.removeChild(img_parent);
             return false;
         };

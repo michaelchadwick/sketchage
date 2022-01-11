@@ -23,6 +23,8 @@ nav {
   width: 100%;
 }
 #content {
+  margin: 0 auto;
+  max-width: 960px;
   overflow: auto;
   padding: 10px;
   padding-bottom: 65px;
@@ -156,19 +158,44 @@ section#generated-images {
   display: none;
   float: left;
   overflow-y: scroll;
-  padding: 0 10px;
+  padding-left: 10px;
 }
-section#generated-images div {
-  padding: 3px;
-}
-section#generated-images div a {
+section#generated-images a {
   color: #000;
   text-decoration: none;
 }
-section#generated-images div img {
+section#generated-images div.gen-img {
+  background-color: #eee;
+  border: 2px dashed #888;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+section#generated-images div.gen-img span.img-header {
+  border: none;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+section#generated-images div.gen-img a.gen-img-x {
+  color: #880000;
+  font-family: monospace;
+  font-size: 0.9em;
+  text-decoration: none;
+}
+section#generated-images div.gen-img a.gen-img-x:hover {
+  color: #ff0000;
+}
+section#generated-images div.gen-img img {
   border: 1px solid #777777;
-  float: left;
+  display: block;
   margin: 5px auto;
+}
+section#generated-images div.gen-img div.file-links a.file-link {
+  border-bottom: 2px dotted #444;
+  display: inline-block;
+  font-size: 0.9em;
+}
+section#generated-images div.gen-img div.file-links a.file-link:hover {
+  border-bottom: 2px dashed #222;
 }
 
 /* custom classes */
