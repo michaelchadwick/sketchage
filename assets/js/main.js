@@ -147,7 +147,7 @@ $(function() {
     $newest_img_src = $newest_img.attr('src');
 
     $.ajax({
-      url: '../../gd_convert.php',
+      url: 'gd_convert.php',
       type: 'post',
       data: { "imageConversion": $newest_img_src },
       success: function(imgPath) {
