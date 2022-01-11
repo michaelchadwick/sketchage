@@ -8,7 +8,7 @@ CONTRIBUTING.md
 LICENSE.md
 README.md
 Rakefile
-data/*
+data
 node_modules/*
 gulpfile.js
 rsync-exclude.txt
