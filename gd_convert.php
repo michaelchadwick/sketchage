@@ -14,12 +14,12 @@
     $dir = './data/' . date('y-m-j') . '_' . $file_dir;
 
     if (!is_dir($dir)) {
-      mkdir($dir);
+      mkdir($dir, 0744, true);
     }
 
     $path = $dir . '/' . $file_name;
 
-    imagebmp($img, $path . '.bmp');
+    // imagebmp($img, $path . '.bmp');
     imagegif($img, $path . '.gif');
     imagejpeg($img, $path . '.jpg');
     imagepng($img, $path . '.png');
