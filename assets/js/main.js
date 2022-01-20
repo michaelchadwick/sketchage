@@ -241,6 +241,14 @@ $(function() {
     });
   }
 
+  function makeDefaultGrid() {
+    // set square count and grid width
+    $("#text-square-count").val(Sketchage.squareCount);
+    $("#text-grid-width").val(Sketchage.gridWidth);
+
+    makeGrid();
+  }
+
   function loadFromLocalStorage() {
     let img_data = localStorage.getItem('neb.host.sketchage.image');
     let settings = localStorage.getItem('neb.host.sketchage.settings');
@@ -268,13 +276,11 @@ $(function() {
           c = c.split(':');
           $(`#${c[0]}`).css('background-color', c[1]);
         });
+      } else {
+        makeDefaultGrid();
       }
     } else {
-      // set square count and grid width
-      $("#text-square-count").val(Sketchage.squareCount);
-      $("#text-grid-width").val(Sketchage.gridWidth);
-
-      makeGrid();
+      makeDefaultGrid();
     }
   }
   function saveToLocalStorage() {
