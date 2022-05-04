@@ -200,7 +200,7 @@ section#generated-images div.gen-img div.file-links a.file-link:hover {
 
 /* custom classes */
 .square {
-  cursor: url(../img/pencil-24.png), pointer;
+  cursor: url(../images/pencil-24.png), pointer;
   display: inline-block;
   border: 1px solid #777777;
   float: left;
