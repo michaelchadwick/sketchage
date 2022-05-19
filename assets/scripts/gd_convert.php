@@ -11,7 +11,7 @@
 
     $img = imagecreatefromstring(base64_decode($data));
 
-    $dir = './data/' . date('y-m-j') . '_' . $file_dir;
+    $dir = '../../data/' . date('y-m-j_h-i-s') . '_' . $file_dir;
 
     if (!is_dir($dir)) {
       mkdir($dir, 0744, true);

@@ -31,77 +31,106 @@
   <meta name="msapplication-config" content="./browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
+  <!-- FONTAWESOME
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css">
+  <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css">
+
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- VENDOR -->
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css">
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <!-- CUSTOM -->
+  <link rel="stylesheet" href="./assets/css/modal.css" />
+  <link rel="stylesheet" href="./assets/css/app.css" />
 </head>
 <body>
 
-  <div id="wrapper">
+  <header>
+    <div class="menu-left">
 
-    <header>
-      <h1>Sketchage</h1>
-      <a href="#">?</a>
-      <div id="help-square">
-      <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box. Hold the <strong>Alt</strong> key to erase cells instead.</p>
+      <div id="nav-links">
+        <button id="button-nav" class="icon" aria-label="Click for links to more apps by neb.host" tabindex="-1">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div id="nav-overlay">
+          <div id="nav-content">
+            <div class="container">
 
-      <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!).</p>
+              <div class="nav-header">More Apps By Neb</div>
 
-      <p>The "Generate Image" button will save your creation as a BMP that you can right-click to save to your computer.</p>
+              <div class="nav-list">
+                <a href="https://ah.neb.host">Audio Hash</a>
+                <a href="https://bogdle.fun">Bogdle</a>
+                <a href="https://gw.neb.host">Gem Warrior</a>
+                <a href="https://raffler.neb.host">Raffler</a>
+              </div>
+
+              <div class="nav-footer">
+                <!-- vvv neb.host subsite footer -->
+                <footer id="footer-neb-host">site by <a href="https://neb.host">neb.host</a>
+                </footer>
+                <!-- ^^^ neb.host subsite footer -->
+              </div>
+            </div>
+
+            <div id="button-nav-close">
+              <a href="#">X</a>
+            </div>
+
+          </div>
+        </div>
       </div>
-    </header>
 
-    <nav>
-      <section id="sizeOpts">
-        <label for="text-square-count">Square Count</label>
-        <input type="number" id="text-square-count" max="128" min="4" value="32" />
-        <button id="button-square-count-recreate" class="button-img">&check;</button>
-        <button id="button-square-count-default" class="button-text">Default</button>
+      <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
+        <i class="fa-solid fa-question"></i>
+      </button>
 
-        <label for="text-grid-width">Grid Width</label>
-        <input type="number" id="text-grid-width" value="640" />
-        <button id="button-grid-width-resize" class="button-img">&check;</button>
-        <button id="button-grid-width-default" class="button-text">Default</button>
-
-        <label for="check-rainbow">Rainbow</label>
-        <input type="checkbox" name="colors" id="check-rainbow" />
-
-        <label for="check-clicklessmode">Clickless</label>
-        <input type="checkbox" name="mouse" id="check-clicklessmode">
-      </section>
-
-      <section id="drawOpts">
-        <label>Color:</label>
-
-        <span>FG (LMB)</span> #<input class="jscolor" id="color-picker-fg" value="#000000" />
-        <span>BG (RMB)</span> #<input class="jscolor" id="color-picker-bg" value="#FFFFFF" />
-      </section>
-
-      <section id="saveOpts">
-        <button id="button-generate-image">Generate Image</button>
-        <button id="button-clear-grid" class="danger">Reset Image</button>
-      </section>
-    </nav>
-
-    <div id="content">
-      <section id="container"></section>
-      <section id="generated-images"></section>
     </div>
 
+    <div class="title">
+      <h1>Sketchage</h1>
+    </div>
+
+    <div class="menu-right">
+
+      <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+
+    </div>
+  </header>
+
+  <nav>
+    <section id="drawOpts">
+      <label>Color:</label>
+
+      <span>FG (LMB)</span> #<input class="jscolor" id="color-picker-fg" value="#000000" />
+      <span>BG (RMB)</span> #<input class="jscolor" id="color-picker-bg" value="#FFFFFF" />
+    </section>
+
+    <section id="saveOpts">
+      <button id="button-generate-image">Generate Image</button>
+      <button id="button-clear-grid" class="danger">Reset Image</button>
+    </section>
+  </nav>
+
+  <div id="content">
+    <section id="container"></section>
+    <section id="generated-images"></section>
   </div>
 
-  <!-- jQuery and custom js -->
+  <!-- JAVASCRIPT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- VENDOR -->
   <script type="text/javascript" src="./assets/js/vendor/jquery.js"></script>
   <script type="text/javascript" src="./assets/js/vendor/jscolor.min.js"></script>
   <script type="text/javascript" src="./assets/js/vendor/bitmap.js"></script>
-
+  <!-- CUSTOM -->
+  <script type="text/javascript" src="./assets/js/app/init.js"></script>
+  <script type="text/javascript" src="./assets/js/app/dom.js"></script>
+  <script type="text/javascript" src="./assets/js/app/modal.js"></script>
   <script type="text/javascript" src="./assets/js/main.js"></script>
-
-  <!-- vvv neb.host subsite footer -->
-  <footer id="footer-neb-host" style="background: #484848; border-top: 2px solid #000000; bottom: 0; color: #aaaaaa; display: table; font-family: 'Consolas', sans-serif; font-size: 12px; height: 18px; letter-spacing: initial; margin-top: 20px; padding: 5px 10px; position: fixed; width: 100%; text-align: left; z-index: 2">site by <a style="color: #ffffff; font-family: 'Consolas', sans-serif; font-size: 12px;" href="https://neb.host">neb.host</a> | based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>"
-  </footer>
-  <!-- ^^^ neb.host subsite footer -->
 </body>
 </html>
