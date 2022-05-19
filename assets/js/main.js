@@ -331,7 +331,7 @@ Sketchage.generateImage = function() {
     "height" : Sketchage.dom.container.height()
   });
 
-  generateLowResBitmap(5, Sketchage.squareCount);
+  generateLowResBitmap(5, Sketchage.settings.squareCount);
 
   $newest_img = Sketchage.dom.genImages.last().find('img').last();
   $newest_img_src = $newest_img.attr('src');
