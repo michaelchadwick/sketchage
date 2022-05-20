@@ -8,7 +8,7 @@ Sketchage.dom = {
   "title": $('header'),
   "navOverlay": $('#nav-overlay'),
   "navContent": ('$nav-content'),
-  "container": $('#container'),
+  "grid": $('#grid'),
   "genImages": $("#generated-images")
 }
 

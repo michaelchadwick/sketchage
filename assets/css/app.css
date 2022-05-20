@@ -361,12 +361,13 @@ nav {
 section#content {
   display: flex;
   justify-content: center;
+  margin: 0 auto;
   max-width: 960px;
   overflow: auto;
   padding: 10px;
 }
 
-#container {
+#grid {
   background-color: transparent;
   display: grid;
   grid-column-gap: 0;
@@ -374,7 +375,7 @@ section#content {
   max-width: 960px;
   /* width: 100%; */
 }
-  #container .square {
+  #grid .square {
     border: 1px solid #777777;
     cursor: url(../images/pencil-24.png), pointer;
   }

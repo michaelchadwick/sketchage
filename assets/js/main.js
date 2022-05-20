@@ -197,8 +197,7 @@ Sketchage.changeSetting = function(setting, event = null) {
       var settingVal = document.getElementById('text-square-count').value
 
       if (settingVal != '') {
-        Sketchage.settings.squareCount = settingVal
-
+        // save to code/LS
         Sketchage.saveGlobalSetting('squareCount', settingVal)
       }
 
@@ -213,11 +212,10 @@ Sketchage.changeSetting = function(setting, event = null) {
         var settingVal = document.getElementById('text-square-count').value
 
         if (settingVal != '') {
-          Sketchage.settings.squareCount = settingVal
+          // save to code/LS
+          Sketchage.saveGlobalSetting('squareCount', settingVal);
 
-          Sketchage.saveToLocalStorage();
-          Sketchage.saveGlobalSetting('squareCount', settingVal)
-
+          // remake grid
           Sketchage.makeGrid();
         }
       }
@@ -225,9 +223,17 @@ Sketchage.changeSetting = function(setting, event = null) {
 
     case 'squareCountDefault':
       if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
+        // update container DOM
         Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+
+        // update setting DOM
         $("text-square-count").val(SQUARE_COUNT_DEFAULT);
-        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+
+        // save to code/LS
+        Sketchage.saveGlobalSetting('squareCount', settingVal);
+
+        // remake grid
         Sketchage.makeGrid();
       }
       break
@@ -236,8 +242,7 @@ Sketchage.changeSetting = function(setting, event = null) {
       var settingVal = document.getElementById('text-grid-width').value
 
       if (settingVal != '') {
-        Sketchage.settings.gridWidth = settingVal
-
+        // save to code/LS
         Sketchage.saveGlobalSetting('gridWidth', settingVal)
       }
 
@@ -252,14 +257,14 @@ Sketchage.changeSetting = function(setting, event = null) {
         var settingVal = document.getElementById('text-grid-width').value
 
         if (settingVal != '') {
-          Sketchage.settings.gridWidth = settingVal
+          // update container DOM
+          Sketchage.dom.grid.css("width", settingVal);
+          Sketchage.dom.grid.css("height", settingVal);
 
-          Sketchage.dom.container.css("width", settingVal);
-          Sketchage.dom.container.css("height", settingVal);
-
-          Sketchage.saveToLocalStorage();
+          // save to code/LS
           Sketchage.saveGlobalSetting('gridWidth', settingVal)
 
+          // remake grid
           Sketchage.makeGrid();
         }
       }
@@ -267,10 +272,17 @@ Sketchage.changeSetting = function(setting, event = null) {
 
     case 'gridWidthDefault':
       if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
-        Sketchage.dom.container.css("width", GRID_WIDTH_DEFAULT);
-        Sketchage.dom.container.css("height", GRID_WIDTH_DEFAULT);
+        // update container DOM
+        Sketchage.dom.grid.css("width", GRID_WIDTH_DEFAULT);
+        Sketchage.dom.grid.css("height", GRID_WIDTH_DEFAULT);
+
+        // update setting DOM
         $("#text-grid-width").val(GRID_WIDTH_DEFAULT);
-        Sketchage.settings.gridWidth = GRID_WIDTH_DEFAULT;
+
+        // save to code/LS
+        Sketchage.saveGlobalSetting('gridWidth', GRID_WIDTH_DEFAULT);
+
+        // remake grid
         Sketchage.makeGrid();
       }
       break
@@ -279,16 +291,16 @@ Sketchage.changeSetting = function(setting, event = null) {
       var st = document.getElementById('button-setting-clickless-mode').dataset.status
 
       if (st == '' || st == 'false') {
+        // update setting DOM
         document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
 
-        Sketchage.settings.clicklessMode = true;
-
+        // save to code/LS
         Sketchage.saveGlobalSetting('clicklessMode', true)
       } else {
+        // update setting DOM
         document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
 
-        Sketchage.settings.clicklessMode = false;
-
+        // save to code/LS
         Sketchage.saveGlobalSetting('clicklessMode', false)
       }
       break
@@ -297,18 +309,20 @@ Sketchage.changeSetting = function(setting, event = null) {
       var st = document.getElementById('button-setting-rainbow-mode').dataset.status
 
       if (st == '' || st == 'false') {
+        // update setting DOM
         document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
-        Sketchage.settings.rainbowMode = true;
+        // update color DOM
         Sketchage.colorFG = $("#color-picker-fg").css("background-color");
         Sketchage.colorBG = $("#color-picker-bg").css("background-color");
 
+        // save to code/LS
         Sketchage.saveGlobalSetting('rainbowMode', true)
       } else {
+        // update setting DOM
         document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
 
-        Sketchage.settings.rainbowMode = false;
-
+        // save to code/LS
         Sketchage.saveGlobalSetting('rainbowMode', false)
       }
       break
@@ -321,11 +335,13 @@ Sketchage.saveGlobalSetting = function(setting, value) {
   var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (settings) {
-    // set temp obj that will go to LS
-    settings[setting] = value
     // set internal code model
     Sketchage.settings[setting] = value
 
+    // set temp obj that will go to LS
+    settings[setting] = value
+
+    // save all settings to LS
     localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(settings))
   }
 
@@ -346,14 +362,14 @@ Sketchage.attachEventListeners = function() {
       Sketchage.altIsDown = false;
     }
   });
-  Sketchage.dom.container.mousedown(function() {
+  Sketchage.dom.grid.mousedown(function() {
     Sketchage.mouseIsDown = true;
   }).mouseup(function() {
     Sketchage.mouseIsDown = false;
   });
 
   // disallow right-clicking on canvas
-  Sketchage.dom.container.bind('contextmenu', function(e) {
+  Sketchage.dom.grid.bind('contextmenu', function(e) {
     e.preventDefault();
   });
 
@@ -409,11 +425,11 @@ Sketchage.attachEventListeners = function() {
 
 // drawing functions
 Sketchage.generateImage = function() {
-  Sketchage.dom.container.css("float", "left");
+  Sketchage.dom.grid.css("float", "left");
 
   Sketchage.dom.genImages.css({
     "display" : "block",
-    "height" : Sketchage.dom.container.height()
+    "height" : Sketchage.dom.grid.height()
   });
 
   generateLowResBitmap(5, Sketchage.settings.squareCount);
@@ -443,7 +459,7 @@ Sketchage.generateImage = function() {
     event.preventDefault()
 
     if (Sketchage.dom.genImages.find('div').length == 0) {
-      Sketchage.dom.container.css("float", "none");
+      Sketchage.dom.grid.css("float", "none");
       Sketchage.dom.genImages.css("display", "none");
     }
   });
@@ -468,25 +484,24 @@ Sketchage.makeGrid = function() {
   // console.log('making new grid');
 
   // remove any existing squares
-  $("#container .square").remove();
+  $("#grid .square").remove();
   // remove generated image
   $("#gen-img").remove();
 
   // create squares
   for (var i = 0; i < Sketchage.settings.squareCount; i++) {
     for (var j = 0; j < Sketchage.settings.squareCount-1; j++) {
-      Sketchage.dom.container.append("<div class='square' id='" + j + "_" + i + "'></div>");
+      Sketchage.dom.grid.append("<div class='square' id='" + j + "_" + i + "'></div>");
     }
-    Sketchage.dom.container.append("<div class='square' id='" + j + "_" + i + "'></div>");
+    Sketchage.dom.grid.append("<div class='square' id='" + j + "_" + i + "'></div>");
   }
 
-  var containerWidth = Sketchage.settings.gridWidth;
-  console.log('containerWidth', containerWidth);
   var squareBorder = 1;
-  var squareWidth = containerWidth/Sketchage.settings.squareCount - (2 * squareBorder);
-  console.log('squareWidth', squareWidth);
 
-  Sketchage.dom.container.css({
+  var gridWidth = Sketchage.settings.gridWidth;
+  var squareWidth = (gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder);
+
+  Sketchage.dom.grid.css({
     gridTemplateColumns: `repeat(${Sketchage.settings.squareCount}, 1fr)`,
     height: Sketchage.settings.gridWidth,
     width: Sketchage.settings.gridWidth,
@@ -536,6 +551,8 @@ Sketchage.loadFromLocalStorage = function() {
     Sketchage.settings.gridWidth = lsSettings.gridWidth;
     Sketchage.settings.clicklessMode = lsSettings.clicklessMode;
     Sketchage.settings.rainbowMode = lsSettings.rainbowMode;
+  } else {
+    Sketchage.saveToLocalStorage();
   }
 
   let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY);
