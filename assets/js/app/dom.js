@@ -17,7 +17,9 @@ Sketchage.dom.interactive = {
   "btnNav": $('#button-nav'),
   "btnNavClose": $('#button-nav-close'),
   "btnHelp": $('#button-help'),
-  "btnSettings": $('#button-settings')
+  "btnSettings": $('#button-settings'),
+  "btnGenImage": $('#button-generate-image'),
+  "btnClearGrid": $('#button-clear-grid')
 }
 
 // DOM > settings modal elements

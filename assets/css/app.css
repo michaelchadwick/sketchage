@@ -24,26 +24,12 @@ body {
   height: 100%;
   line-height: 1.3;
   margin: 0;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   padding: 0;
-  touch-action: manipulation;
-}
-
-nav {
-  margin: 0 auto 5px;
-  text-align: center;
-  width: 100%;
-}
-
-#content {
-  margin: 0 auto;
-  max-width: 960px;
-  overflow: auto;
-  padding: 10px;
-  padding-bottom: 65px;
 }
 
 /* base level elements */
+
 a {
   color: #cadeea;
 }
@@ -60,16 +46,16 @@ hr {
 
 button {
   align-items: center;
-  background-color: #ddd;
+  background-color: #043d72;
   border: 0;
   border-radius: 4px;
-  color: #111;
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   flex: 1;
   font-family: inherit;
   font-weight: bold;
-  height: 50px;
+  height: 30px;
   justify-content: center;
   margin: 0 6px 0 0;
   padding: 0;
@@ -77,11 +63,21 @@ button {
   user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
+  button:hover {
+    background-color: #155DA1;
+  }
   button:disabled {
     background-color: #eee;
     color: #ddd;
     cursor: not-allowed;
   }
+  button.danger {
+    background: #ff1616;
+    color: #fff;
+  }
+    button.danger:hover {
+      background: #ff5555;
+    }
 
   button.icon {
     background: none;
@@ -110,12 +106,16 @@ button {
       position: relative;
     }
 
-input.jscolor {
-  bottom: 2px;
-  margin-left: 1px;
-  position: relative;
-  width: 50px;
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
 }
+  .container.wide {
+    flex-direction: row;
+  }
 
 .radio {
   margin: 0.2rem;
@@ -144,12 +144,12 @@ input.jscolor {
       width: 1em;
     }
     .radio input[type=radio]:checked + .radio-label:before {
-      background-color: #529952;
+      background-color: #155DA1;
       box-shadow: inset 0 0 0 4px #f4f4f4;
     }
     .radio input[type=radio]:focus + .radio-label:before {
       outline: none;
-      border-color: #529952;
+      border-color: #155DA1;
     }
     .radio input[type=radio]:disabled + .radio-label:before {
       box-shadow: inset 0 0 0 4px #f4f4f4;
@@ -171,7 +171,7 @@ input.jscolor {
     width: 32px;
   }
     .switch[data-status='true'] {
-      background-color: #529952;
+      background-color: #155DA1;
     }
     .switch[data-status='true'] .knob {
       transform: translateX(calc(100% - 4px));
@@ -190,6 +190,7 @@ input.jscolor {
     }
 
 /* custom sections */
+
 header {
   align-items: center;
   background-color: #155DA1;
@@ -198,7 +199,7 @@ header {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  height: 50px;
+  height: 40px;
   padding: 0 16px;
 }
   header .menu-left {
@@ -311,7 +312,7 @@ header {
     color: #ffffff;
     font-family: 'Changa', sans-serif;
     font-weight: 700;
-    font-size: 0.75rem;
+    font-size: 0.5rem;
     line-height: 100%;
     letter-spacing: 0.1em;
     pointer-events: none;
@@ -320,123 +321,105 @@ header {
   }
   @media (min-width: 768px) {
     header .title {
-      font-size: 1rem;
+      font-size: 0.75rem;
       letter-spacing: 0.01em;
     }
   }
   header .menu-right {
     display: flex;
     width: 70px;
-    justify-content: flex-end;
   }
+    header .menu-right button#button-settings {
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 0;
+    }
 
-nav section {
-  align-items: center;
-  background: #eeeeee;
+nav {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+  nav section {
+    align-items: center;
+    background: #eeeeee;
+    display: flex;
+    font-family: "Consolas", sans-serif;
+    justify-content: center;
+    padding: 5px;
+  }
+    nav section label {
+      margin: 0 6px;
+    }
+    nav section input.jscolor {
+      border-radius: 4px;
+      margin-left: 2px;
+      padding: 3px;
+      width: 50px;
+    }
+
+section#content {
   display: flex;
-  font-family: "Consolas", sans-serif;
   justify-content: center;
-  margin-bottom: 1px;
-  padding: 5px;
-}
-  nav section input[type="number"] {
-    margin-right: 2px;
-    width: 50px;
-  }
-  nav section button {
-    cursor: pointer;
-  }
-    nav section button.danger {
-      background: #ff5555;
-      color: #ffffff;
-    }
-    nav section button.button-img {
-      width: 26px;
-    }
-    nav section button.button-text {
-      position: relative;
-      top: -1px;
-      width: 130px;
-    }
-
-section#sizeOpts button.button-text {
-  position: relative;
-  left: -14px;
-  width: 55px;
-}
-section#drawOpts {
-  padding-bottom: 2px;
-}
-  section#drawOpts label {
-    display: inline-block;
-    margin-left: -4px;
-    margin-right: 6px;
-    position: relative;
-    top: -1px;
-  }
-  section#drawOpts button {
-    left: -2px;
-    top: -2px;
-  }
-
-section#container {
-  background-color: #ffffff;
-  height: auto;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 680px;
+  max-width: 960px;
+  overflow: auto;
+  padding: 10px;
 }
 
-section#generated-images {
+#container {
+  background-color: transparent;
+  display: grid;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  max-width: 960px;
+  /* width: 100%; */
+}
+  #container .square {
+    border: 1px solid #777777;
+    cursor: url(../images/pencil-24.png), pointer;
+  }
+
+#generated-images {
   background: #dddddd;
   display: none;
   float: left;
   overflow-y: scroll;
   padding-left: 10px;
 }
-  section#generated-images a {
+  #generated-images a {
     color: #000;
     text-decoration: none;
   }
-  section#generated-images div.gen-img {
+  #generated-images div.gen-img {
     background-color: #eee;
     border: 2px dashed #888;
     margin-bottom: 5px;
     padding: 5px;
   }
-    section#generated-images div.gen-img span.img-header {
+    #generated-images div.gen-img span.img-header {
       border: none;
       font-family: monospace;
       font-size: 0.9em;
     }
-    section#generated-images div.gen-img a.gen-img-x {
+    #generated-images div.gen-img a.gen-img-x {
       color: #880000;
       font-family: monospace;
       font-size: 0.9em;
       text-decoration: none;
     }
-    section#generated-images div.gen-img a.gen-img-x:hover {
+    #generated-images div.gen-img a.gen-img-x:hover {
       color: #ff0000;
     }
-    section#generated-images div.gen-img img {
+    #generated-images div.gen-img img {
       border: 1px solid #777777;
       display: block;
       margin: 5px auto;
     }
-      section#generated-images div.gen-img div.file-links a.file-link {
+      #generated-images div.gen-img div.file-links a.file-link {
         border-bottom: 2px dotted #444;
         display: inline-block;
         font-size: 0.9em;
       }
-      section#generated-images div.gen-img div.file-links a.file-link:hover {
+      #generated-images div.gen-img div.file-links a.file-link:hover {
         border-bottom: 2px dashed #222;
       }
-
-/* custom classes */
-.square {
-  cursor: url(../images/pencil-24.png), pointer;
-  display: inline-block;
-  border: 1px solid #777777;
-  float: left;
-}

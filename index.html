@@ -103,23 +103,24 @@
   </header>
 
   <nav>
-    <section id="drawOpts">
-      <label>Color:</label>
+    <section>
+      <label for="color-picker-fg" title="Foreground color (Left mouse button)">FG (LMB)</label>
+      <span>#<input class="jscolor" id="color-picker-fg" value="#000000" /></span>
 
-      <span>FG (LMB)</span> #<input class="jscolor" id="color-picker-fg" value="#000000" />
-      <span>BG (RMB)</span> #<input class="jscolor" id="color-picker-bg" value="#FFFFFF" />
+      <label for="color-picker-bg" title="Background color (Right mouse button)">BG (RMB)</label>
+      <span>#<input class="jscolor" id="color-picker-bg" value="#FFFFFF" /></span>
     </section>
 
-    <section id="saveOpts">
+    <section>
       <button id="button-generate-image">Generate Image</button>
       <button id="button-clear-grid" class="danger">Reset Image</button>
     </section>
   </nav>
 
-  <div id="content">
-    <section id="container"></section>
-    <section id="generated-images"></section>
-  </div>
+  <section id="content">
+    <div id="container"></div>
+    <div id="generated-images"></div>
+  </section>
 
   <!-- JAVASCRIPT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

@@ -32,7 +32,7 @@ async function modalOpen(type) {
 
           <hr />
 
-          <p>Sketchage based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a></p>
+          <div>Sketchage based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>".</div>
         `,
         null,
         null
@@ -43,15 +43,44 @@ async function modalOpen(type) {
       this.myModal = new Modal('perm', 'Settings',
         `
           <section id="settings">
-            <label for="text-square-count">Square Count</label>
-            <input type="number" id="text-square-count" max="128" min="4" value="32" />
-            <button id="button-square-count-recreate" class="button-img">&check;</button>
-            <button id="button-square-count-default" class="button-text">Default</button>
 
-            <label for="text-grid-width">Grid Width</label>
-            <input type="number" id="text-grid-width" value="640" />
-            <button id="button-grid-width-resize" class="button-img">&check;</button>
-            <button id="button-grid-width-default" class="button-text">Default</button>
+            <!-- square count -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Square Count</div>
+                <div class="description">Grid squares per row. Must be even.</div>
+              </div>
+              <div class="control">
+                <div class="container wide">
+                  <input type="number" id="text-square-count" max="128" min="4" step="2" value="32" onchange="Sketchage.changeSetting('squareCount')" onkeyup="Sketchage.changeSetting('squareCount', event)" />
+                  <button id="button-square-count-recreate" onclick="Sketchage.changeSetting('squareCountResize')">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button id="button-square-count-default" title="Reset to default"onclick="Sketchage.changeSetting('squareCountDefault')">
+                    <i class="fas fa-rotate-left"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- grid width -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Grid Width</div>
+                <div class="description">Grid width, in pixels</div>
+              </div>
+              <div class="control">
+                <div class="container wide">
+                  <input type="number" id="text-grid-width" value="640" onchange="Sketchage.changeSetting('gridWidth', event)" />
+                  <button id="button-grid-width-resize" onclick="Sketchage.changeSetting('gridWidthResize')">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button id="button-grid-width-default" title="Reset to default" onclick="Sketchage.changeSetting('gridWidthDefault')">
+                    <i class="fas fa-rotate-left"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <!-- clickless mode -->
             <div class="setting-row">
@@ -82,6 +111,7 @@ async function modalOpen(type) {
                 </div>
               </div>
             </div>
+
           </section>
         `,
         null,
@@ -115,6 +145,26 @@ Sketchage.loadGlobalSettings = function() {
     var lsConfig = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
     if (lsConfig) {
+      if (lsConfig.squareCount) {
+        Sketchage.settings.squareCount = lsConfig.squareCount
+
+        var setting = document.getElementById('text-square-count')
+
+        if (setting) {
+          setting.value = lsConfig.squareCount
+        }
+      }
+
+      if (lsConfig.gridWidth) {
+        Sketchage.settings.gridWidth = lsConfig.gridWidth
+
+        var setting = document.getElementById('text-grid-width')
+
+        if (setting) {
+          setting.value = lsConfig.gridWidth
+        }
+      }
+
       if (lsConfig.clicklessMode) {
         Sketchage.settings.clicklessMode = lsConfig.clicklessMode
 
@@ -139,6 +189,147 @@ Sketchage.loadGlobalSettings = function() {
     Sketchage.settings.clicklessMode = false
     Sketchage.settings.rainbowMode = false
   }
+}
+
+Sketchage.changeSetting = function(setting, event = null) {
+  switch (setting) {
+    case 'squareCount':
+      var settingVal = document.getElementById('text-square-count').value
+
+      if (settingVal != '') {
+        Sketchage.settings.squareCount = settingVal
+
+        Sketchage.saveGlobalSetting('squareCount', settingVal)
+      }
+
+      if (event && event.which === 13) {
+        event.preventDefault();
+        $("#button-square-count-recreate").click();
+      }
+      break
+
+    case 'squareCountResize':
+      if (confirm('Changing the square count will clear the image. Proceed?')) {
+        var settingVal = document.getElementById('text-square-count').value
+
+        if (settingVal != '') {
+          Sketchage.settings.squareCount = settingVal
+
+          Sketchage.saveToLocalStorage();
+          Sketchage.saveGlobalSetting('squareCount', settingVal)
+
+          Sketchage.makeGrid();
+        }
+      }
+      break
+
+    case 'squareCountDefault':
+      if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
+        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+        $("text-square-count").val(SQUARE_COUNT_DEFAULT);
+        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+        Sketchage.makeGrid();
+      }
+      break
+
+    case 'gridWidth':
+      var settingVal = document.getElementById('text-grid-width').value
+
+      if (settingVal != '') {
+        Sketchage.settings.gridWidth = settingVal
+
+        Sketchage.saveGlobalSetting('gridWidth', settingVal)
+      }
+
+      if (event && event.which === 13) {
+        event.preventDefault();
+        $("#button-grid-width-resize").click();
+      }
+      break
+
+    case 'gridWidthResize':
+      if (confirm('Changing the grid width will clear the image. Proceed?')) {
+        var settingVal = document.getElementById('text-grid-width').value
+
+        if (settingVal != '') {
+          Sketchage.settings.gridWidth = settingVal
+
+          Sketchage.dom.container.css("width", settingVal);
+          Sketchage.dom.container.css("height", settingVal);
+
+          Sketchage.saveToLocalStorage();
+          Sketchage.saveGlobalSetting('gridWidth', settingVal)
+
+          Sketchage.makeGrid();
+        }
+      }
+      break
+
+    case 'gridWidthDefault':
+      if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
+        Sketchage.dom.container.css("width", GRID_WIDTH_DEFAULT);
+        Sketchage.dom.container.css("height", GRID_WIDTH_DEFAULT);
+        $("#text-grid-width").val(GRID_WIDTH_DEFAULT);
+        Sketchage.settings.gridWidth = GRID_WIDTH_DEFAULT;
+        Sketchage.makeGrid();
+      }
+      break
+
+    case 'clicklessMode':
+      var st = document.getElementById('button-setting-clickless-mode').dataset.status
+
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
+
+        Sketchage.settings.clicklessMode = true;
+
+        Sketchage.saveGlobalSetting('clicklessMode', true)
+      } else {
+        document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
+
+        Sketchage.settings.clicklessMode = false;
+
+        Sketchage.saveGlobalSetting('clicklessMode', false)
+      }
+      break
+
+    case 'rainbowMode':
+      var st = document.getElementById('button-setting-rainbow-mode').dataset.status
+
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
+
+        Sketchage.settings.rainbowMode = true;
+        Sketchage.colorFG = $("#color-picker-fg").css("background-color");
+        Sketchage.colorBG = $("#color-picker-bg").css("background-color");
+
+        Sketchage.saveGlobalSetting('rainbowMode', true)
+      } else {
+        document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
+
+        Sketchage.settings.rainbowMode = false;
+
+        Sketchage.saveGlobalSetting('rainbowMode', false)
+      }
+      break
+
+  }
+}
+Sketchage.saveGlobalSetting = function(setting, value) {
+  // console.log('saving setting to LS...', setting, value)
+
+  var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+
+  if (settings) {
+    // set temp obj that will go to LS
+    settings[setting] = value
+    // set internal code model
+    Sketchage.settings[setting] = value
+
+    localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(settings))
+  }
+
+  // console.log('!global setting saved!', this.bogdle.settings)
 }
 
 Sketchage.attachEventListeners = function() {
@@ -186,55 +377,10 @@ Sketchage.attachEventListeners = function() {
     $("#check-rainbow").prop("checked", false);
   });
 
-  // attach event handlers to size tools
-  $("#text-square-count").keyup(function(e) {
-    var code = e.which;
-    if (code === 13) {
-      e.preventDefault();
-      $("#button-square-count-recreate").click();
-    }
-  });
-  $("#button-square-count-recreate").click(function() {
-    if (confirm('Changing the square count will clear the image. Proceed?')) {
-      Sketchage.squareCount = $("#text-square-count").val();
-      Sketchage.saveToLocalStorage();
-      Sketchage.makeGrid();
-    }
-  });
-  $("#button-square-count-default").click(function() {
-    if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
-      Sketchage.squareCount = SQUARE_COUNT_DEFAULT;
-      $("text-square-count").val(SQUARE_COUNT_DEFAULT);
-      Sketchage.makeGrid();
-    }
-  });
-  $("#text-grid-width").keyup(function(e) {
-    var code = e.which;
-    if (code === 13) {
-      e.preventDefault();
-      $("#button-grid-width-resize").click();
-    }
-  });
-  $("#button-grid-width-resize").click(function() {
-    if (confirm('Changing the grid width will clear the image. Proceed?')) {
-      Sketchage.dom.container.css("width", $("#text-grid-width").val());
-      Sketchage.dom.container.css("height", $("#text-grid-width").val());
-      Sketchage.saveToLocalStorage();
-      Sketchage.makeGrid();
-    }
-  });
-  $("#button-grid-width-default").click(function() {
-    if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
-      Sketchage.dom.container.css("width", GRID_WIDTH_DEFAULT);
-      Sketchage.dom.container.css("height", GRID_WIDTH_DEFAULT);
-      $("#text-grid-width").val(GRID_WIDTH_DEFAULT);
-      Sketchage.makeGrid();
-    }
-  });
-  $("#button-generate-image").click(function() {
+  Sketchage.dom.interactive.btnGenImage.click(function() {
     Sketchage.generateImage();
   });
-  $("#button-clear-grid").click(function() {
+  Sketchage.dom.interactive.btnClearGrid.click(function() {
     if (confirm('Are you sure you want to reset the image?')) {
       $('.square').css('background-color', Sketchage.colorTransparent);
 
@@ -259,67 +405,6 @@ Sketchage.attachEventListeners = function() {
       Sketchage.dom.navOverlay.classList.toggle('show')
     }
   }
-}
-
-Sketchage.changeSetting = function(setting) {
-  switch (setting) {
-    case 'clicklessMode':
-      var st = document.getElementById('button-setting-clickless-mode').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
-
-        Sketchage.settings.clicklessMode = true;
-
-        Sketchage.saveGlobalSetting('clicklessMode', true)
-      } else {
-        document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
-
-        Sketchage.settings.clicklessMode = false;
-
-        Sketchage.saveGlobalSetting('clicklessMode', false)
-      }
-
-      break
-
-    case 'rainbowMode':
-      var st = document.getElementById('button-setting-rainbow-mode').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
-
-        Sketchage.settings.rainbowMode = true;
-        Sketchage.colorFG = $("#color-picker-fg").css("background-color");
-        Sketchage.colorBG = $("#color-picker-bg").css("background-color");
-
-        Sketchage.saveGlobalSetting('rainbowMode', true)
-      } else {
-        document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
-
-        Sketchage.settings.rainbowMode = false;
-
-        Sketchage.saveGlobalSetting('rainbowMode', false)
-      }
-
-      break
-
-  }
-}
-Sketchage.saveGlobalSetting = function(setting, value) {
-  // console.log('saving setting to LS...', setting, value)
-
-  var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
-
-  if (settings) {
-    // set temp obj that will go to LS
-    settings[setting] = value
-    // set internal code model
-    Sketchage.settings[setting] = value
-
-    localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(settings))
-  }
-
-  // console.log('!global setting saved!', this.bogdle.settings)
 }
 
 // drawing functions
@@ -388,42 +473,46 @@ Sketchage.makeGrid = function() {
   $("#gen-img").remove();
 
   // create squares
-  for(var i = 0; i < Sketchage.settings.squareCount; i++) {
-    for(var j = 0; j < Sketchage.settings.squareCount-1; j++) {
+  for (var i = 0; i < Sketchage.settings.squareCount; i++) {
+    for (var j = 0; j < Sketchage.settings.squareCount-1; j++) {
       Sketchage.dom.container.append("<div class='square' id='" + j + "_" + i + "'></div>");
     }
     Sketchage.dom.container.append("<div class='square' id='" + j + "_" + i + "'></div>");
   }
 
-  var containerWidth = Sketchage.dom.container.width();
+  var containerWidth = Sketchage.settings.gridWidth;
+  console.log('containerWidth', containerWidth);
   var squareBorder = 1;
   var squareWidth = containerWidth/Sketchage.settings.squareCount - (2 * squareBorder);
+  console.log('squareWidth', squareWidth);
 
-  $(".square").css({
-    width: squareWidth,
-    height: squareWidth,
-    background: Sketchage.colorTransparent
+  Sketchage.dom.container.css({
+    gridTemplateColumns: `repeat(${Sketchage.settings.squareCount}, 1fr)`,
+    height: Sketchage.settings.gridWidth,
+    width: Sketchage.settings.gridWidth,
   });
 
-  // main draw handler
+  // color in each square
+  $(".square").css({
+    background: Sketchage.colorTransparent,
+    height: squareWidth,
+    width: squareWidth
+  });
+
+  // attach draw event handler
   $(".square").on("mouseenter mousedown touchend touchmove", function(e) {
     if (Sketchage.settings.rainbowMode) {
       Sketchage.colorFG = Sketchage.getRandomColor();
       Sketchage.colorBG = Sketchage.getRandomColor();
     }
 
+    e.preventDefault();
+
     // choose Sketchage.color based on mouse button
     switch (e.which) {
-      case 1:
-        e.preventDefault();
-        Sketchage.color = Sketchage.colorFG;
-        break;
-      case 3:
-        e.preventDefault();
-        Sketchage.color = Sketchage.colorBG;
-        break;
-      default:
-      Sketchage.color = Sketchage.colorFG;
+      case 1: Sketchage.color = Sketchage.colorFG; break;
+      case 3: Sketchage.color = Sketchage.colorBG; break;
+      default: Sketchage.color = Sketchage.colorFG; break;
     }
 
     if (Sketchage.settings.clicklessMode) {
