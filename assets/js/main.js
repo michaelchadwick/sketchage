@@ -6,16 +6,17 @@ Sketchage.settings = {
   "squareCount": SQUARE_COUNT_DEFAULT,
   "gridWidth": GRID_WIDTH_DEFAULT,
   "clicklessMode": false,
-  "rainbowMode": false
+  "rainbowMode": false,
+  "showRulers": false
 }
 
-Sketchage.mouseIsDown = false;
-Sketchage.altIsDown = false;
+Sketchage.mouseIsDown = false
+Sketchage.altIsDown = false
 
-Sketchage.color = "";
-Sketchage.colorTransparent = COLOR_BG_DEFAULT;
-Sketchage.colorFG = COLOR_FG_DEFAULT;
-Sketchage.colorBG = COLOR_BG_DEFAULT;
+Sketchage.color = ""
+Sketchage.colorTransparent = COLOR_BG_DEFAULT
+Sketchage.colorFG = COLOR_FG_DEFAULT
+Sketchage.colorBG = COLOR_BG_DEFAULT
 
 // modal methods
 async function modalOpen(type) {
@@ -112,6 +113,21 @@ async function modalOpen(type) {
               </div>
             </div>
 
+            <!-- show ruler -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Show Rulers</div>
+                <div class="description">Experimental: show pixel rulers</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div id="button-setting-show-rulers" data-status="" class="switch" onclick="Sketchage.changeSetting('showRulers')">
+                    <span class="knob"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </section>
         `,
         null,
@@ -184,10 +200,11 @@ Sketchage.loadGlobalSettings = function() {
           setting.dataset.status = 'true'
         }
       }
+
+      if (lsConfig.showRulers) {
+        Sketchage.enableRulers()
+      }
     }
-  } else {
-    Sketchage.settings.clicklessMode = false
-    Sketchage.settings.rainbowMode = false
   }
 }
 
@@ -202,8 +219,8 @@ Sketchage.changeSetting = function(setting, event = null) {
       }
 
       if (event && event.which === 13) {
-        event.preventDefault();
-        $("#button-square-count-recreate").click();
+        event.preventDefault()
+        $("#button-square-count-recreate").click()
       }
       break
 
@@ -213,10 +230,10 @@ Sketchage.changeSetting = function(setting, event = null) {
 
         if (settingVal != '') {
           // save to code/LS
-          Sketchage.saveGlobalSetting('squareCount', settingVal);
+          Sketchage.saveGlobalSetting('squareCount', settingVal)
 
           // remake grid
-          Sketchage.makeGrid();
+          Sketchage.makeGrid()
         }
       }
       break
@@ -224,17 +241,17 @@ Sketchage.changeSetting = function(setting, event = null) {
     case 'squareCountDefault':
       if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
         // update container DOM
-        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
-        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT;
+        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
+        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
 
         // update setting DOM
-        $("text-square-count").val(SQUARE_COUNT_DEFAULT);
+        $("text-square-count").val(SQUARE_COUNT_DEFAULT)
 
         // save to code/LS
-        Sketchage.saveGlobalSetting('squareCount', settingVal);
+        Sketchage.saveGlobalSetting('squareCount', settingVal)
 
         // remake grid
-        Sketchage.makeGrid();
+        Sketchage.makeGrid()
       }
       break
 
@@ -247,8 +264,8 @@ Sketchage.changeSetting = function(setting, event = null) {
       }
 
       if (event && event.which === 13) {
-        event.preventDefault();
-        $("#button-grid-width-resize").click();
+        event.preventDefault()
+        $("#button-grid-width-resize").click()
       }
       break
 
@@ -258,14 +275,14 @@ Sketchage.changeSetting = function(setting, event = null) {
 
         if (settingVal != '') {
           // update container DOM
-          Sketchage.dom.grid.css("width", settingVal);
-          Sketchage.dom.grid.css("height", settingVal);
+          Sketchage.dom.gridInner.css("width", settingVal)
+          Sketchage.dom.gridInner.css("height", settingVal)
 
           // save to code/LS
           Sketchage.saveGlobalSetting('gridWidth', settingVal)
 
           // remake grid
-          Sketchage.makeGrid();
+          Sketchage.makeGrid()
         }
       }
       break
@@ -273,17 +290,17 @@ Sketchage.changeSetting = function(setting, event = null) {
     case 'gridWidthDefault':
       if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
         // update container DOM
-        Sketchage.dom.grid.css("width", GRID_WIDTH_DEFAULT);
-        Sketchage.dom.grid.css("height", GRID_WIDTH_DEFAULT);
+        Sketchage.dom.gridInner.css("width", GRID_WIDTH_DEFAULT)
+        Sketchage.dom.gridInner.css("height", GRID_WIDTH_DEFAULT)
 
         // update setting DOM
-        $("#text-grid-width").val(GRID_WIDTH_DEFAULT);
+        $("#text-grid-width").val(GRID_WIDTH_DEFAULT)
 
         // save to code/LS
-        Sketchage.saveGlobalSetting('gridWidth', GRID_WIDTH_DEFAULT);
+        Sketchage.saveGlobalSetting('gridWidth', GRID_WIDTH_DEFAULT)
 
         // remake grid
-        Sketchage.makeGrid();
+        Sketchage.makeGrid()
       }
       break
 
@@ -313,8 +330,8 @@ Sketchage.changeSetting = function(setting, event = null) {
         document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
         // update color DOM
-        Sketchage.colorFG = $("#color-picker-fg").css("background-color");
-        Sketchage.colorBG = $("#color-picker-bg").css("background-color");
+        Sketchage.colorFG = $("#color-picker-fg").css("background-color")
+        Sketchage.colorBG = $("#color-picker-bg").css("background-color")
 
         // save to code/LS
         Sketchage.saveGlobalSetting('rainbowMode', true)
@@ -327,6 +344,27 @@ Sketchage.changeSetting = function(setting, event = null) {
       }
       break
 
+    case 'showRulers':
+      var st = document.getElementById('button-setting-show-rulers').dataset.status
+
+      if (st == '' || st == 'false') {
+        // update setting DOM
+        document.getElementById('button-setting-show-rulers').dataset.status = 'true'
+
+        Sketchage.enableRulers()
+
+        // save to code/LS
+        Sketchage.saveGlobalSetting('showRulers', true)
+      } else {
+        // update setting DOM
+        document.getElementById('button-setting-show-rulers').dataset.status = 'false'
+
+        Sketchage.disableRulers()
+
+        // save to code/LS
+        Sketchage.saveGlobalSetting('showRulers', false)
+      }
+      break
   }
 }
 Sketchage.saveGlobalSetting = function(setting, value) {
@@ -351,27 +389,27 @@ Sketchage.saveGlobalSetting = function(setting, value) {
 Sketchage.attachEventListeners = function() {
   // main input event handlers
   Sketchage.dom.body.keydown(function(e) {
-    var code = e.which;
+    var code = e.which
     if (code === 18) {
-      Sketchage.altIsDown = true;
+      Sketchage.altIsDown = true
     }
-  });
+  })
   Sketchage.dom.body.keyup(function(e) {
-    var code = e.which;
+    var code = e.which
     if (code === 18) {
-      Sketchage.altIsDown = false;
+      Sketchage.altIsDown = false
     }
-  });
-  Sketchage.dom.grid.mousedown(function() {
-    Sketchage.mouseIsDown = true;
+  })
+  Sketchage.dom.gridInner.mousedown(function() {
+    Sketchage.mouseIsDown = true
   }).mouseup(function() {
-    Sketchage.mouseIsDown = false;
-  });
+    Sketchage.mouseIsDown = false
+  })
 
   // disallow right-clicking on canvas
-  Sketchage.dom.grid.bind('contextmenu', function(e) {
-    e.preventDefault();
-  });
+  Sketchage.dom.gridInner.bind('contextmenu', function(e) {
+    e.preventDefault()
+  })
 
   // attach event handlers to header buttons
   Sketchage.dom.interactive.btnNav.click(() => {
@@ -385,24 +423,24 @@ Sketchage.attachEventListeners = function() {
 
   // attach event handlers to color radio options
   $("#color-picker-fg").change(function() {
-    Sketchage.colorFG = this.jscolor.toHEXString();
-    $("#check-rainbow").prop("checked", false);
-  });
+    Sketchage.colorFG = this.jscolor.toHEXString()
+    Sketchage.changeSetting('rainbowMode', false)
+  })
   $("#color-picker-bg").change(function() {
-    Sketchage.colorBG = this.jscolor.toHEXString();
-    $("#check-rainbow").prop("checked", false);
-  });
+    Sketchage.colorBG = this.jscolor.toHEXString()
+    Sketchage.changeSetting('rainbowMode', false)
+  })
 
   Sketchage.dom.interactive.btnGenImage.click(function() {
-    Sketchage.generateImage();
-  });
+    Sketchage.generateImage()
+  })
   Sketchage.dom.interactive.btnClearGrid.click(function() {
     if (confirm('Are you sure you want to reset the image?')) {
-      $('.square').css('background-color', Sketchage.colorTransparent);
+      $('.square').css('background-color', Sketchage.colorTransparent)
 
-      Sketchage.clearLocalStorage();
+      Sketchage.clearLocalStorage()
     }
-  });
+  })
 
   // handle both clicks and touches outside of modals
   Sketchage.handleClickTouch = function(event) {
@@ -423,198 +461,228 @@ Sketchage.attachEventListeners = function() {
   }
 }
 
+Sketchage.enableRulers = function() {
+  // show background-image (ruler ticks)
+  Sketchage.dom.body.css('background-image', 'linear-gradient(90deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(90deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0), linear-gradient(0deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(0deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0)')
+  // show ruler numbers
+  Sketchage.dom.rulerX.css('display', 'flex')
+  Sketchage.dom.rulerY.css('display', 'flex')
+}
+Sketchage.disableRulers = function() {
+  // hide background-image (ruler ticks)
+  Sketchage.dom.body.css('background-image', 'none')
+  // hide ruler numbers
+  Sketchage.dom.rulerX.css('display', 'none')
+  Sketchage.dom.rulerY.css('display', 'none')
+}
+
 // drawing functions
 Sketchage.generateImage = function() {
-  Sketchage.dom.grid.css("float", "left");
+  Sketchage.dom.gridInner.css("float", "left")
 
   Sketchage.dom.genImages.css({
     "display" : "block",
-    "height" : Sketchage.dom.grid.height()
-  });
+    "height" : Sketchage.dom.gridInner.height()
+  })
 
-  generateLowResBitmap(5, Sketchage.settings.squareCount);
+  generateLowResBitmap(5, Sketchage.settings.squareCount)
 
-  $newest_img = Sketchage.dom.genImages.last().find('img').last();
-  $newest_img_src = $newest_img.attr('src');
+  $newest_img = Sketchage.dom.genImages.last().find('img').last()
+  $newest_img_src = $newest_img.attr('src')
 
   $.ajax({
     url: 'assets/scripts/gd_convert.php',
     type: 'post',
     data: { "imageConversion": $newest_img_src },
     success: function(imgPath) {
-      // console.log('image path', imgPath);
+      // console.log('image path', imgPath)
 
       $html = `
         <div class="file-links">
           <a class="file-link" href="${imgPath}.gif" target="_blank">GIF</a> | <a class="file-link" href="${imgPath}.jpg" target="_blank">JPG</a> | <a class="file-link" href="${imgPath}.png" target="_blank">PNG</a>
         </div>
-      `;
+      `
 
-      $newest_img.after($html);
+      $newest_img.after($html)
     },
-    error: function(error) { console.error('img convert failed', error); }
-  });
+    error: function(error) { console.error('img convert failed', error) }
+  })
 
   Sketchage.dom.genImages.find('div').find('a.gen-img-x').click(function(event) {
     event.preventDefault()
 
     if (Sketchage.dom.genImages.find('div').length == 0) {
-      Sketchage.dom.grid.css("float", "none");
-      Sketchage.dom.genImages.css("display", "none");
+      Sketchage.dom.gridInner.css("float", "none")
+      Sketchage.dom.genImages.css("display", "none")
     }
-  });
+  })
 }
 Sketchage.draw = function(square, color) {
   if (Sketchage.altIsDown) {
-    $(square).css("background-color", Sketchage.colorTransparent);
+    $(square).css("background-color", Sketchage.colorTransparent)
   }
   else {
-    $(square).css("background-color", color);
-    Sketchage.saveToLocalStorage();
+    $(square).css("background-color", color)
+    Sketchage.saveToLocalStorage()
   }
 }
 
 // helper utility
 Sketchage.getRandomColor = function() {
-  return "#" + Math.floor(Math.random()*16777215).toString(16);
+  return "#" + Math.floor(Math.random()*16777215).toString(16)
 }
 
-// grid makers
+// make grid of squares and adjust ruler
 Sketchage.makeGrid = function() {
-  // console.log('making new grid');
-
   // remove any existing squares
-  $("#grid .square").remove();
+  Sketchage.dom.gridInner.find('.square').remove()
   // remove generated image
-  $("#gen-img").remove();
+  Sketchage.dom.genImages.remove()
 
   // create squares
   for (var i = 0; i < Sketchage.settings.squareCount; i++) {
     for (var j = 0; j < Sketchage.settings.squareCount-1; j++) {
-      Sketchage.dom.grid.append("<div class='square' id='" + j + "_" + i + "'></div>");
+      Sketchage.dom.gridInner.append("<div class='square' id='" + j + "_" + i + "'></div>")
     }
-    Sketchage.dom.grid.append("<div class='square' id='" + j + "_" + i + "'></div>");
+
+    Sketchage.dom.gridInner.append("<div class='square' id='" + j + "_" + i + "'></div>")
   }
 
-  var squareBorder = 1;
+  var squareBorder = 1
+  var squareWidth = (Sketchage.settings.gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder)
 
-  var gridWidth = Sketchage.settings.gridWidth;
-  var squareWidth = (gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder);
-
-  Sketchage.dom.grid.css({
+  Sketchage.dom.gridInner.css({
     gridTemplateColumns: `repeat(${Sketchage.settings.squareCount}, 1fr)`,
     height: Sketchage.settings.gridWidth,
-    width: Sketchage.settings.gridWidth,
-  });
+    width: Sketchage.settings.gridWidth
+  })
 
   // color in each square
   $(".square").css({
     background: Sketchage.colorTransparent,
     height: squareWidth,
     width: squareWidth
-  });
+  })
 
   // attach draw event handler
   $(".square").on("mouseenter mousedown touchend touchmove", function(e) {
     if (Sketchage.settings.rainbowMode) {
-      Sketchage.colorFG = Sketchage.getRandomColor();
-      Sketchage.colorBG = Sketchage.getRandomColor();
+      Sketchage.colorFG = Sketchage.getRandomColor()
+      Sketchage.colorBG = Sketchage.getRandomColor()
     }
 
-    e.preventDefault();
+    e.preventDefault()
 
     // choose Sketchage.color based on mouse button
     switch (e.which) {
-      case 1: Sketchage.color = Sketchage.colorFG; break;
-      case 3: Sketchage.color = Sketchage.colorBG; break;
-      default: Sketchage.color = Sketchage.colorFG; break;
+      case 1: Sketchage.color = Sketchage.colorFG; break
+      case 3: Sketchage.color = Sketchage.colorBG; break
+      default: Sketchage.color = Sketchage.colorFG; break
     }
 
     if (Sketchage.settings.clicklessMode) {
-      Sketchage.draw(this, Sketchage.color);
+      Sketchage.draw(this, Sketchage.color)
     } else if (Sketchage.mouseIsDown) {
-      Sketchage.draw(this, Sketchage.color);
+      Sketchage.draw(this, Sketchage.color)
     } else {
       $(this).mousedown(function() {
-        Sketchage.draw(this, Sketchage.color);
-      });
+        Sketchage.draw(this, Sketchage.color)
+      })
     }
-  });
+  })
+
+  Sketchage.resizeRulerBackground()
+}
+
+Sketchage.resizeRulerBackground = function() {
+  var clientW = document.documentElement.clientWidth
+  var headerHeight = 121
+  var adjustRulerXLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 1
+  var adjustRulerXTop = headerHeight
+  var adjustRulerYLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 20
+  var adjustRulerYTop = headerHeight
+
+  $(".ruler-x").transition({
+    x: adjustRulerXLeft,
+    y: adjustRulerXTop,
+    width: `${Sketchage.settings.gridWidth}px`,
+    duration: 0
+  })
+
+  $(".ruler-y").transition({
+    height: `${Sketchage.settings.gridWidth}px`,
+    x: adjustRulerYLeft,
+    y: adjustRulerYTop,
+    duration: 0
+  })
+
+  $("body").css('background-position', `${adjustRulerXLeft + 1}px ${adjustRulerXTop}px`)
 }
 
 // local storage functions
 Sketchage.loadFromLocalStorage = function() {
-  let lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY));
+  let lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (lsSettings) {
-    Sketchage.settings.squareCount = lsSettings.squareCount;
-    Sketchage.settings.gridWidth = lsSettings.gridWidth;
-    Sketchage.settings.clicklessMode = lsSettings.clicklessMode;
-    Sketchage.settings.rainbowMode = lsSettings.rainbowMode;
+    Sketchage.settings = lsSettings
   } else {
-    Sketchage.saveToLocalStorage();
+    Sketchage.saveToLocalStorage()
   }
 
-  let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY);
+  let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
 
   if (lsImgData) {
-    let load = window.confirm('Previous image/settings data found. Load?');
+    let load = window.confirm('Previous image/settings data found. Load?')
 
     if (load) {
-      console.log('user chose to load previous data, so creating grid and then updating');
+      // console.log('user chose to load previous data, so creating grid and then updating')
 
-      Sketchage.makeGrid();
+      Sketchage.makeGrid()
 
-      let colors = lsImgData.split(';');
+      let colors = lsImgData.split(';')
 
       colors.forEach(function(c) {
-        c = c.split(':');
-        $(`#${c[0]}`).css('background-color', c[1]);
-      });
+        c = c.split(':')
+        $(`#${c[0]}`).css('background-color', c[1])
+      })
     } else {
-      console.log('user declined loading previous data, so creating grid with defaults');
+      // console.log('user declined loading previous data, so creating grid with defaults')
 
-      Sketchage.makeGrid();
+      Sketchage.makeGrid()
     }
   } else {
-    console.log('no local storage, so creating grid with defaults');
+    // console.log('no local storage, so creating grid with defaults')
 
-    Sketchage.makeGrid();
+    Sketchage.makeGrid()
   }
 }
 Sketchage.saveToLocalStorage = function() {
-  let serial_img = '';
+  let serial_img = ''
 
   $(".square").each(function() {
-    let id = $(this).attr('id');
-    let color = $(this).css('background-color');
+    let id = $(this).attr('id')
+    let color = $(this).css('background-color')
 
-    serial_img = serial_img.concat(`${id}:${color};`);
-  });
+    serial_img = serial_img.concat(`${id}:${color};`)
+  })
 
-  localStorage.setItem(SKETCHAGE_IMAGE_DATA_KEY, serial_img);
-
-  let newLS = {
-    "squareCount": Sketchage.settings.squareCount,
-    "gridWidth": Sketchage.settings.gridWidth,
-    "clicklessMode": Sketchage.settings.clicklessMode,
-    "rainbowMode": Sketchage.settings.rainbowMode
-  }
-
-  localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(newLS));
+  localStorage.setItem(SKETCHAGE_IMAGE_DATA_KEY, serial_img)
+  localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
 }
 Sketchage.clearLocalStorage = function() {
   if (localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)) {
-    localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY);
+    localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY)
   }
   if (localStorage.getItem(SKETCHAGE_SETTINGS_KEY)) {
-    localStorage.removeItem(SKETCHAGE_SETTINGS_KEY);
+    localStorage.removeItem(SKETCHAGE_SETTINGS_KEY)
   }
 }
 
 // When the user clicks or touches anywhere outside of the modal, close it
 window.addEventListener('click', Sketchage.handleClickTouch)
 window.addEventListener('touchend', Sketchage.handleClickTouch)
+
+window.addEventListener('resize', Sketchage.resizeRulerBackground)
 
 /* ===================================================== */
 

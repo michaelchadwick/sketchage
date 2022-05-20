@@ -9,7 +9,10 @@ Sketchage.dom = {
   "navOverlay": $('#nav-overlay'),
   "navContent": ('$nav-content'),
   "grid": $('#grid'),
-  "genImages": $("#generated-images")
+  "gridInner": $('#grid-inner'),
+  "genImages": $("#generated-images"),
+  "rulerX": $(".ruler-x"),
+  "rulerY": $(".ruler-y"),
 }
 
 // DOM > interactive elements
@@ -20,9 +23,4 @@ Sketchage.dom.interactive = {
   "btnSettings": $('#button-settings'),
   "btnGenImage": $('#button-generate-image'),
   "btnClearGrid": $('#button-clear-grid')
-}
-
-// DOM > settings modal elements
-Sketchage.dom.settings = {
-// TODO
 }

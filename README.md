@@ -11,3 +11,7 @@ Building off of [mixophrygian](https://github.com/mixophrygian)'s original ["Etc
 * Colorpicker tool
 * Help box
 * Save your image to BMP
+
+## Ruler
+
+Thanks to Mads Stoumann for the help on [making a ruler](https://dev.to/madsstoumann/build-a-css-ruler-2opn), and [jQuery.Transit](https://ricostacruz.com/jquery.transit) for positioning it.

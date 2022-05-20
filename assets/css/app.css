@@ -15,7 +15,34 @@ html {
 }
 
 body {
-  background-color: #cccccc;
+  --ruler-num-c: #888;
+  --ruler-num-fz: 10px;
+  --ruler-num-pi: 0.75ch;
+  --ruler-unit: 1px;
+  --ruler-x: 1;
+  --ruler-y: 1;
+
+  --ruler1-bdw: 1px;
+  --ruler1-c: #BBB;
+  --ruler1-h: 8px;
+  --ruler1-space: 5;
+
+  --ruler2-bdw: 1px;
+  --ruler2-c: #BBB;
+  --ruler2-h: 20px;
+  --ruler2-space: 50;
+
+  background-attachment: fixed;
+  background-image: none;
+  background-position: 0 0;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size:
+    calc(var(--ruler-unit) * var(--ruler1-space) * var(--ruler-x)) var(--ruler1-h),
+    calc(var(--ruler-unit) * var(--ruler2-space) * var(--ruler-x)) var(--ruler2-h),
+    var(--ruler1-h) calc(var(--ruler-unit) * var(--ruler1-space) * var(--ruler-y)),
+    var(--ruler2-h) calc(var(--ruler-unit) * var(--ruler2-space) * var(--ruler-y));
+
+  background-color: #dddddd;
   color: #111;
   font-family: 'Arial', sans-serif;
   font-size: 1rem;
@@ -361,24 +388,34 @@ nav {
 section#content {
   display: flex;
   justify-content: center;
-  margin: 0 auto;
+  margin: 15px auto 0;
   max-width: 960px;
   overflow: auto;
   padding: 10px;
 }
 
 #grid {
-  background-color: transparent;
-  display: grid;
-  grid-column-gap: 0;
-  grid-row-gap: 0;
-  max-width: 960px;
-  /* width: 100%; */
+  align-items: center;
+  /* background-color: rgb(21, 93, 161, 0.5); */
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
-  #grid .square {
-    border: 1px solid #777777;
-    cursor: url(../images/pencil-24.png), pointer;
+  #grid #grid-inner {
+    -webkit-backface-visibility: hidden;
+    background-color: transparent;
+    display: grid;
+    grid-column-gap: 0;
+    grid-row-gap: 0;
+    margin: 0;
+    max-width: 1000px;
+    padding: 0;
   }
+    #grid #grid-inner .square {
+      /* border: 1px solid #777777; */
+      cursor: url(../images/pencil-24.png), pointer;
+    }
 
 #generated-images {
   background: #dddddd;
@@ -424,3 +461,56 @@ section#content {
       #generated-images div.gen-img div.file-links a.file-link:hover {
         border-bottom: 2px dashed #222;
       }
+
+/* Ruler Numbers */
+.ruler-x,
+.ruler-y {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--ruler-num-c);
+  counter-reset: d 0;
+  display: none;
+  font-size: var(--ruler-num-fz);
+  line-height: 1;
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: fixed;
+}
+.ruler-x {
+  height: var(--ruler2-h);
+  inset-block-start: 0;
+  inset-inline-start: calc(var(--ruler-unit) * var(--ruler2-space));
+  opacity: var(--ruler-x);
+  width: 100%;
+}
+.ruler-y {
+  flex-direction: column;
+  height: 100%;
+  inset-block-start: calc(var(--ruler-unit) * var(--ruler2-space));
+  inset-inline-start: 0;
+  opacity: var(--ruler-y);
+  width: var(--ruler2-h);
+}
+.ruler-x li {
+  align-self: flex-end;
+}
+.ruler-x li,
+.ruler-y li {
+  counter-increment: d var(--ruler2-space);
+  flex: 0 0 calc(var(--ruler-unit) * var(--ruler2-space));
+}
+.ruler-x li::after {
+  content: counter(d)"";
+  line-height: 1;
+  padding-inline-start: var(--ruler-num-pi);
+}
+.ruler-y li::after {
+  content: counter(d)"";
+  display: block;
+  padding-inline-end: var(--ruler-num-pi);
+  transform: rotate(-90deg) translateY(-13px);
+  transform-origin: 100% 0%;
+  text-align: end;
+  width: 100%;
+}
