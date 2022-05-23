@@ -254,11 +254,11 @@ header {
       }
         header .menu-left #nav-overlay #nav-content {
           animation: SlideRight 200ms;
-          background-color: #6cb6fb;
+          background-color: #b7dcff;
           border-radius: 0;
           box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
           box-sizing: border-box;
-          margin-top: 51px;
+          margin-top: 41px;
           max-height: calc(100% - 41px);
           max-width: 500px;
           overflow-y: auto;
@@ -297,7 +297,7 @@ header {
               padding: 4px 0 4px 18px;
             }
             header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-              background-color: #91c791;
+              background-color: #dddddd;
             }
           header .menu-left #nav-overlay #nav-content #button-nav-close {
             font-size: 20px;
