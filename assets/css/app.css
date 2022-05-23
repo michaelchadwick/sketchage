@@ -453,14 +453,18 @@ section#content {
       display: block;
       margin: 5px auto;
     }
-      #generated-images div.gen-img div.file-links a.file-link {
-        border-bottom: 2px dotted #444;
-        display: inline-block;
-        font-size: 0.9em;
+      #generated-images div.gen-img div.file-links {
+        display: flex;
+        justify-content: space-evenly;
       }
-      #generated-images div.gen-img div.file-links a.file-link:hover {
-        border-bottom: 2px dashed #222;
-      }
+        #generated-images div.gen-img div.file-links a.file-link {
+          border-bottom: 2px dotted #444;
+          display: inline-block;
+          font-size: 0.9em;
+        }
+        #generated-images div.gen-img div.file-links a.file-link:hover {
+          border-bottom: 2px dashed #222;
+        }
 
 /* Ruler Numbers */
 .ruler-x,

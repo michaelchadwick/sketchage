@@ -10,7 +10,8 @@ Sketchage.dom = {
   "navContent": ('$nav-content'),
   "grid": $('#grid'),
   "gridInner": $('#grid-inner'),
-  "genImages": $("#generated-images"),
+  "genImageContainer": $("#generated-images"),
+  "genImages": $("#generated-images .gen-img"),
   "rulerX": $(".ruler-x"),
   "rulerY": $(".ruler-y"),
 }

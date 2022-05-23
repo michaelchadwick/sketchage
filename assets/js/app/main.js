@@ -157,8 +157,8 @@ Sketchage.initApp = function() {
 }
 
 Sketchage.loadGlobalSettings = function() {
-  if (localStorage.getItem(SKETCHAGE_SETTINGS_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+  if (localStorage.getItem(LS_SETTINGS_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
     if (lsConfig) {
       if (lsConfig.squareCount) {
@@ -207,7 +207,6 @@ Sketchage.loadGlobalSettings = function() {
     }
   }
 }
-
 Sketchage.changeSetting = function(setting, event = null) {
   switch (setting) {
     case 'squareCount':
@@ -370,7 +369,7 @@ Sketchage.changeSetting = function(setting, event = null) {
 Sketchage.saveGlobalSetting = function(setting, value) {
   // console.log('saving setting to LS...', setting, value)
 
-  var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+  var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
   if (settings) {
     // set internal code model
@@ -380,7 +379,7 @@ Sketchage.saveGlobalSetting = function(setting, value) {
     settings[setting] = value
 
     // save all settings to LS
-    localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(settings))
+    localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
   }
 
   // console.log('!global setting saved!', this.bogdle.settings)
@@ -441,23 +440,23 @@ Sketchage.attachEventListeners = function() {
       Sketchage.clearLocalStorage()
     }
   })
+}
 
-  // handle both clicks and touches outside of modals
-  Sketchage.handleClickTouch = function(event) {
-    var dialog = document.getElementsByClassName('modal-dialog')[0]
+// handle both clicks and touches outside of modals
+Sketchage.handleClickTouch = function(event) {
+  var dialog = document.getElementsByClassName('modal-dialog')[0]
 
-    if (dialog) {
-      var isConfirm = dialog.classList.contains('modal-confirm')
+  if (dialog) {
+    var isConfirm = dialog.classList.contains('modal-confirm')
 
-      // only close if not a confirmation!
-      if (event.target == dialog && !isConfirm) {
-        dialog.remove()
-      }
+    // only close if not a confirmation!
+    if (event.target == dialog && !isConfirm) {
+      dialog.remove()
     }
+  }
 
-    if (event.target == Sketchage.dom.navOverlay) {
-      Sketchage.dom.navOverlay.classList.toggle('show')
-    }
+  if (event.target == Sketchage.dom.navOverlay) {
+    Sketchage.dom.navOverlay.classList.toggle('show')
   }
 }
 
@@ -480,14 +479,14 @@ Sketchage.disableRulers = function() {
 Sketchage.generateImage = function() {
   Sketchage.dom.gridInner.css("float", "left")
 
-  Sketchage.dom.genImages.css({
+  Sketchage.dom.genImageContainer.css({
     "display" : "block",
     "height" : Sketchage.dom.gridInner.height()
   })
 
   generateLowResBitmap(5, Sketchage.settings.squareCount)
 
-  $newest_img = Sketchage.dom.genImages.last().find('img').last()
+  $newest_img = Sketchage.dom.genImageContainer.last().find('img').last()
   $newest_img_src = $newest_img.attr('src')
 
   $.ajax({
@@ -495,7 +494,7 @@ Sketchage.generateImage = function() {
     type: 'post',
     data: { "imageConversion": $newest_img_src },
     success: function(imgPath) {
-      // console.log('image path', imgPath)
+      console.log('image path', imgPath)
 
       $html = `
         <div class="file-links">
@@ -505,7 +504,9 @@ Sketchage.generateImage = function() {
 
       $newest_img.after($html)
     },
-    error: function(error) { console.error('img convert failed', error) }
+    error: function(error) {
+      console.error('img convert failed', error)
+    }
   })
 
   Sketchage.dom.genImages.find('div').find('a.gen-img-x').click(function(event) {
@@ -536,7 +537,7 @@ Sketchage.getRandomColor = function() {
 Sketchage.makeGrid = function() {
   // remove any existing squares
   Sketchage.dom.gridInner.find('.square').remove()
-  // remove generated image
+  // remove generated images
   Sketchage.dom.genImages.remove()
 
   // create squares
@@ -621,7 +622,7 @@ Sketchage.resizeRulerBackground = function() {
 
 // local storage functions
 Sketchage.loadFromLocalStorage = function() {
-  let lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+  let lsSettings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
   if (lsSettings) {
     Sketchage.settings = lsSettings
@@ -629,7 +630,7 @@ Sketchage.loadFromLocalStorage = function() {
     Sketchage.saveToLocalStorage()
   }
 
-  let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
+  let lsImgData = localStorage.getItem(LS_IMAGE_DATA_KEY)
 
   if (lsImgData) {
     let load = window.confirm('Previous image/settings data found. Load?')
@@ -666,15 +667,15 @@ Sketchage.saveToLocalStorage = function() {
     serial_img = serial_img.concat(`${id}:${color};`)
   })
 
-  localStorage.setItem(SKETCHAGE_IMAGE_DATA_KEY, serial_img)
-  localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
+  localStorage.setItem(LS_IMAGE_DATA_KEY, serial_img)
+  localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
 }
 Sketchage.clearLocalStorage = function() {
   if (localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)) {
     localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY)
   }
-  if (localStorage.getItem(SKETCHAGE_SETTINGS_KEY)) {
-    localStorage.removeItem(SKETCHAGE_SETTINGS_KEY)
+  if (localStorage.getItem(LS_SETTINGS_KEY)) {
+    localStorage.removeItem(LS_SETTINGS_KEY)
   }
 }
 
@@ -684,7 +685,8 @@ window.addEventListener('touchend', Sketchage.handleClickTouch)
 
 window.addEventListener('resize', Sketchage.resizeRulerBackground)
 
-/* ===================================================== */
+/* ******************************** *
+ * START THE ENGINE                 *
+ * ******************************** */
 
-// start the engine
-Sketchage.initApp()
+window.onload = Sketchage.initApp
