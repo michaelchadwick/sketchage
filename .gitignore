@@ -1,3 +1,4 @@
 dandelion.yml
 data
 !assets/icons
+!assets/js/vendor

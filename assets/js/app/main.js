@@ -11,7 +11,9 @@ Sketchage.settings = {
 }
 
 Sketchage.mouseIsDown = false
-Sketchage.altIsDown = false
+Sketchage.altIsDown = false // erase
+Sketchage.ctrlIsDown = false // eyedropper
+Sketchage.shiftIsDown = false // paint bucket
 
 Sketchage.color = ""
 Sketchage.colorTransparent = COLOR_BG_DEFAULT
@@ -382,7 +384,7 @@ Sketchage.saveGlobalSetting = function(setting, value) {
     localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
   }
 
-  // console.log('!global setting saved!', this.bogdle.settings)
+  // console.log('!global setting saved!', Sketchage.settings)
 }
 
 Sketchage.attachEventListeners = function() {
@@ -522,10 +524,17 @@ Sketchage.draw = function(square, color) {
   if (Sketchage.altIsDown) {
     $(square).css("background-color", Sketchage.colorTransparent)
   }
+  else if (Sketchage.shiftIsDown) {
+    // TODO: paint bucket
+  }
+  else if (Sketchage.ctrlIsDown) {
+    // TODO: eyedropper
+  }
   else {
     $(square).css("background-color", color)
-    Sketchage.saveToLocalStorage()
   }
+
+  Sketchage.saveToLocalStorage()
 }
 
 // helper utility
