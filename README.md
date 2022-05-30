@@ -8,9 +8,14 @@ Building off of [mixophrygian](https://github.com/mixophrygian)'s original ["Etc
 * Change grid width/height
 * Change square count from main interface
 * Click to draw by default (with "clickless" mode still available)
+* Rainbow color mode
 * Colorpicker tool
-* Help box
-* Save your image to BMP
+* Save your image to BMP, GIF, JPG, PNG
+
+## Color Stuff
+
+* [bitmap.js](http://mrcoles.com/low-res-paint)
+* [jscolor](https://jscolor.com) is the bee's knees.
 
 ## Ruler
 
