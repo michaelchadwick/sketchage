@@ -2,6 +2,7 @@
 /* app entry point and main functions */
 /* global $, Sketchage */
 
+// settings: saved in LOCAL STORAGE
 Sketchage.settings = {
   "squareCount": SQUARE_COUNT_DEFAULT,
   "gridWidth": GRID_WIDTH_DEFAULT,
@@ -10,16 +11,22 @@ Sketchage.settings = {
   "showRulers": false
 }
 
-Sketchage.mouseIsDown = false
-Sketchage.altIsDown = false // erase
-Sketchage.ctrlIsDown = false // eyedropper
-Sketchage.shiftIsDown = false // paint bucket
+// config: only saved while game is loaded
+Sketchage.config = {
+  "mouseIsDown": false,
+  "altIsDown": false, // erase
+  "ctrlIsDown": false, // eyedropper
+  "shiftIsDown": false, // paint bucket
+  "color": "",
+  // TODO: actually make this transparent somehow (for PNG)
+  "colorTransparent": COLOR_BG_DEFAULT,
+  "colorFG": COLOR_FG_DEFAULT,
+  "colorBG": COLOR_BG_DEFAULT
+}
 
-Sketchage.color = ""
-// TODO: actually make this transparent somehow (for PNG)
-Sketchage.colorTransparent = COLOR_BG_DEFAULT
-Sketchage.colorFG = COLOR_FG_DEFAULT
-Sketchage.colorBG = COLOR_BG_DEFAULT
+/*************************************************************************
+ * public methods *
+ *************************************************************************/
 
 // modal methods
 async function modalOpen(type) {
@@ -56,11 +63,11 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container wide">
-                  <input type="number" id="text-square-count" max="128" min="4" step="2" value="32" onchange="Sketchage.changeSetting('squareCount')" onkeyup="Sketchage.changeSetting('squareCount', event)" />
-                  <button id="button-square-count-recreate" onclick="Sketchage.changeSetting('squareCountResize')">
+                  <input type="number" id="text-square-count" max="128" min="4" step="2" value="32" onchange="Sketchage._changeSetting('squareCount')" onkeyup="Sketchage._changeSetting('squareCount', event)" />
+                  <button id="button-square-count-recreate" onclick="Sketchage._changeSetting('squareCountResize')">
                     <i class="fas fa-check"></i>
                   </button>
-                  <button id="button-square-count-default" title="Reset to default"onclick="Sketchage.changeSetting('squareCountDefault')">
+                  <button id="button-square-count-default" title="Reset to default"onclick="Sketchage._changeSetting('squareCountDefault')">
                     <i class="fas fa-rotate-left"></i>
                   </button>
                 </div>
@@ -75,11 +82,11 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container wide">
-                  <input type="number" id="text-grid-width" value="640" onchange="Sketchage.changeSetting('gridWidth')" onkeyup="Sketchage.changeSetting('gridWidth', event)"/>
-                  <button id="button-grid-width-resize" onclick="Sketchage.changeSetting('gridWidthResize')">
+                  <input type="number" id="text-grid-width" value="640" onchange="Sketchage._changeSetting('gridWidth')" onkeyup="Sketchage._changeSetting('gridWidth', event)"/>
+                  <button id="button-grid-width-resize" onclick="Sketchage._changeSetting('gridWidthResize')">
                     <i class="fas fa-check"></i>
                   </button>
-                  <button id="button-grid-width-default" title="Reset to default" onclick="Sketchage.changeSetting('gridWidthDefault')">
+                  <button id="button-grid-width-default" title="Reset to default" onclick="Sketchage._changeSetting('gridWidthDefault')">
                     <i class="fas fa-rotate-left"></i>
                   </button>
                 </div>
@@ -94,7 +101,7 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-clickless-mode" data-status="" class="switch" onclick="Sketchage.changeSetting('clicklessMode')">
+                  <div id="button-setting-clickless-mode" data-status="" class="switch" onclick="Sketchage._changeSetting('clicklessMode')">
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -109,7 +116,7 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-rainbow-mode" data-status="" class="switch" onclick="Sketchage.changeSetting('rainbowMode')">
+                  <div id="button-setting-rainbow-mode" data-status="" class="switch" onclick="Sketchage._changeSetting('rainbowMode')">
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -124,7 +131,7 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-show-rulers" data-status="" class="switch" onclick="Sketchage.changeSetting('showRulers')">
+                  <div id="button-setting-show-rulers" data-status="" class="switch" onclick="Sketchage._changeSetting('showRulers')">
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -137,7 +144,7 @@ async function modalOpen(type) {
         null
       )
 
-      Sketchage.loadGlobalSettings()
+      Sketchage._loadSettings()
 
       break
   }
@@ -152,14 +159,18 @@ Sketchage.initApp = function() {
     document.title = '(LH) ' + document.title
   }
 
-  Sketchage.loadFromLocalStorage()
+  Sketchage._loadFromLocalStorage()
 
-  Sketchage.loadGlobalSettings()
+  Sketchage._loadSettings()
 
-  Sketchage.attachEventListeners()
+  Sketchage._attachEventListeners()
 }
 
-Sketchage.loadGlobalSettings = function() {
+/*************************************************************************
+ * _private methods *
+ *************************************************************************/
+
+Sketchage._loadSettings = function() {
   if (localStorage.getItem(LS_SETTINGS_KEY)) {
     var lsConfig = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
@@ -205,19 +216,19 @@ Sketchage.loadGlobalSettings = function() {
       }
 
       if (lsConfig.showRulers) {
-        Sketchage.enableRulers()
+        Sketchage._enableRulers()
       }
     }
   }
 }
-Sketchage.changeSetting = function(setting, event = null) {
+Sketchage._changeSetting = function(setting, event = null) {
   switch (setting) {
     case 'squareCount':
       var settingVal = document.getElementById('text-square-count').value
 
       if (settingVal != '') {
         // save to code/LS
-        Sketchage.saveGlobalSetting('squareCount', settingVal)
+        Sketchage._saveSetting('squareCount', settingVal)
       }
 
       if (event && event.which === 13) {
@@ -232,10 +243,10 @@ Sketchage.changeSetting = function(setting, event = null) {
 
         if (settingVal != '') {
           // save to code/LS
-          Sketchage.saveGlobalSetting('squareCount', settingVal)
+          Sketchage._saveSetting('squareCount', settingVal)
 
           // remake grid
-          Sketchage.makeGrid()
+          Sketchage._makeGrid()
         }
       }
       break
@@ -250,10 +261,10 @@ Sketchage.changeSetting = function(setting, event = null) {
         $("text-square-count").val(SQUARE_COUNT_DEFAULT)
 
         // save to code/LS
-        Sketchage.saveGlobalSetting('squareCount', settingVal)
+        Sketchage._saveSetting('squareCount', settingVal)
 
         // remake grid
-        Sketchage.makeGrid()
+        Sketchage._makeGrid()
       }
       break
 
@@ -262,7 +273,7 @@ Sketchage.changeSetting = function(setting, event = null) {
 
       if (settingVal != '') {
         // save to code/LS
-        Sketchage.saveGlobalSetting('gridWidth', settingVal)
+        Sketchage._saveSetting('gridWidth', settingVal)
       }
 
       if (event && event.which === 13) {
@@ -281,10 +292,10 @@ Sketchage.changeSetting = function(setting, event = null) {
           Sketchage.dom.gridInner.css("height", settingVal)
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('gridWidth', settingVal)
+          Sketchage._saveSetting('gridWidth', settingVal)
 
           // remake grid
-          Sketchage.makeGrid()
+          Sketchage._makeGrid()
         }
       }
       break
@@ -299,10 +310,10 @@ Sketchage.changeSetting = function(setting, event = null) {
         $("#text-grid-width").val(GRID_WIDTH_DEFAULT)
 
         // save to code/LS
-        Sketchage.saveGlobalSetting('gridWidth', GRID_WIDTH_DEFAULT)
+        Sketchage._saveSetting('gridWidth', GRID_WIDTH_DEFAULT)
 
         // remake grid
-        Sketchage.makeGrid()
+        Sketchage._makeGrid()
       }
       break
 
@@ -317,13 +328,13 @@ Sketchage.changeSetting = function(setting, event = null) {
           document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('clicklessMode', true)
+          Sketchage._saveSetting('clicklessMode', true)
         } else {
           // update setting DOM
           document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('clicklessMode', false)
+          Sketchage._saveSetting('clicklessMode', false)
         }
       }
       break
@@ -339,17 +350,17 @@ Sketchage.changeSetting = function(setting, event = null) {
           document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
           // update color DOM
-          Sketchage.colorFG = $("#color-picker-fg").css("background-color")
-          Sketchage.colorBG = $("#color-picker-bg").css("background-color")
+          Sketchage.config.colorFG = $("#color-picker-fg").css('background-color')
+          Sketchage.config.colorBG = $("#color-picker-bg").css('background-color')
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('rainbowMode', true)
+          Sketchage._saveSetting('rainbowMode', true)
         } else {
           // update setting DOM
           document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('rainbowMode', false)
+          Sketchage._saveSetting('rainbowMode', false)
         }
       }
       break
@@ -364,24 +375,24 @@ Sketchage.changeSetting = function(setting, event = null) {
           // update setting DOM
           document.getElementById('button-setting-show-rulers').dataset.status = 'true'
 
-          Sketchage.enableRulers()
+          Sketchage._enableRulers()
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('showRulers', true)
+          Sketchage._saveSetting('showRulers', true)
         } else {
           // update setting DOM
           document.getElementById('button-setting-show-rulers').dataset.status = 'false'
 
-          Sketchage.disableRulers()
+          Sketchage._disableRulers()
 
           // save to code/LS
-          Sketchage.saveGlobalSetting('showRulers', false)
+          Sketchage._saveSetting('showRulers', false)
         }
       }
       break
   }
 }
-Sketchage.saveGlobalSetting = function(setting, value) {
+Sketchage._saveSetting = function(setting, value) {
   // console.log('saving setting to LS...', setting, value)
 
   var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
@@ -400,24 +411,24 @@ Sketchage.saveGlobalSetting = function(setting, value) {
   // console.log('!global setting saved!', Sketchage.settings)
 }
 
-Sketchage.attachEventListeners = function() {
+Sketchage._attachEventListeners = function() {
   // main input event handlers
   Sketchage.dom.body.keydown(function(e) {
     var code = e.which
     if (code === 18) {
-      Sketchage.altIsDown = true
+      Sketchage.config.altHeld = true
     }
   })
   Sketchage.dom.body.keyup(function(e) {
     var code = e.which
     if (code === 18) {
-      Sketchage.altIsDown = false
+      Sketchage.config.altHeld = false
     }
   })
   Sketchage.dom.gridInner.mousedown(function() {
-    Sketchage.mouseIsDown = true
+    Sketchage.config.mouseIsDown = true
   }).mouseup(function() {
-    Sketchage.mouseIsDown = false
+    Sketchage.config.mouseIsDown = false
   })
 
   // disallow right-clicking on canvas
@@ -436,23 +447,23 @@ Sketchage.attachEventListeners = function() {
   Sketchage.dom.interactive.btnSettings.click(() => modalOpen('settings'))
 
   // attach event handlers to color radio options
-  $("#color-picker-fg").change(function() {
-    Sketchage.colorFG = this.jscolor.toHEXString()
-    Sketchage.changeSetting('rainbowMode', false)
+  Sketchage.dom.interactive.colorFG.change(function() {
+    Sketchage.config.colorFG = this.jscolor.toHEXString()
+    Sketchage._changeSetting('rainbowMode', false)
   })
-  $("#color-picker-bg").change(function() {
-    Sketchage.colorBG = this.jscolor.toHEXString()
-    Sketchage.changeSetting('rainbowMode', false)
+  Sketchage.dom.interactive.colorBG.change(function() {
+    Sketchage.config.colorBG = this.jscolor.toHEXString()
+    Sketchage._changeSetting('rainbowMode', false)
   })
 
   Sketchage.dom.interactive.btnGenImage.click(function() {
-    Sketchage.generateImage()
+    Sketchage._generateImage()
   })
   Sketchage.dom.interactive.btnClearGrid.click(function() {
     if (confirm('Are you sure you want to reset the image?')) {
-      $('.square').css('background-color', Sketchage.colorTransparent)
+      $('.square').css('background-color', Sketchage.config.colorTransparent)
 
-      Sketchage.clearLocalStorage()
+      Sketchage._clearLocalStorage()
     }
   })
 
@@ -466,11 +477,11 @@ Sketchage.attachEventListeners = function() {
       switch (event.key) {
         case 'Control':
           $('.square').addClass('eyedropper')
-          Sketchage.ctrlIsDown = true
+          Sketchage.config.ctrlHeld = true
           break
         case 'Shift':
           $('.square').addClass('paintbucket')
-          Sketchage.shiftIsDown = true
+          Sketchage.config.shiftHeld = true
           break
 
       }
@@ -479,19 +490,19 @@ Sketchage.attachEventListeners = function() {
   document.addEventListener('keyup', (event) => {
     $('.square').removeClass('eyedropper')
     $('.square').removeClass('paintbucket')
-    Sketchage.ctrlIsDown = false
-    Sketchage.shiftIsDown = false
+    Sketchage.config.ctrlHeld = false
+    Sketchage.config.shiftHeld = false
   })
 
   // When the user clicks or touches anywhere outside of the modal, close it
-  window.addEventListener('click', Sketchage.handleClickTouch)
-  window.addEventListener('touchend', Sketchage.handleClickTouch)
+  window.addEventListener('click', Sketchage._handleClickTouch)
+  window.addEventListener('touchend', Sketchage._handleClickTouch)
 
-  window.addEventListener('resize', Sketchage.resizeRulerBackground)
+  window.addEventListener('resize', Sketchage._resizeRulerBackground)
 }
 
 // handle both clicks and touches outside of modals
-Sketchage.handleClickTouch = function(event) {
+Sketchage._handleClickTouch = function(event) {
   var dialog = document.getElementsByClassName('modal-dialog')[0]
 
   if (dialog) {
@@ -508,14 +519,14 @@ Sketchage.handleClickTouch = function(event) {
   }
 }
 
-Sketchage.enableRulers = function() {
+Sketchage._enableRulers = function() {
   // show background-image (ruler ticks)
   Sketchage.dom.body.css('background-image', 'linear-gradient(90deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(90deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0), linear-gradient(0deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(0deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0)')
   // show ruler numbers
   Sketchage.dom.rulerX.css('display', 'flex')
   Sketchage.dom.rulerY.css('display', 'flex')
 }
-Sketchage.disableRulers = function() {
+Sketchage._disableRulers = function() {
   // hide background-image (ruler ticks)
   Sketchage.dom.body.css('background-image', 'none')
   // hide ruler numbers
@@ -524,7 +535,7 @@ Sketchage.disableRulers = function() {
 }
 
 // drawing functions
-Sketchage.generateImage = function() {
+Sketchage._generateImage = function() {
   Sketchage.dom.gridInner.css("float", "left")
 
   Sketchage.dom.genImageContainer.css({
@@ -566,36 +577,85 @@ Sketchage.generateImage = function() {
     }
   })
 }
-Sketchage.draw = function(square, color) {
-  if (Sketchage.altIsDown) {
+Sketchage._draw = function(square, color) {
+  if (Sketchage.config.altHeld) {
     // erase color back to transparent (this is just BG color right now)
-    $(square).css("background-color", Sketchage.colorTransparent)
+    $(square).css('background-color', Sketchage.config.colorTransparent)
   }
-  else if (Sketchage.ctrlIsDown) {
-    // TODO: eyedropper
+  else if (Sketchage.config.ctrlHeld) {
     // change FG color to whatever color the square is
-    const squareColor = $(square).css("background-color")
+    const squareColor = $(square).css('background-color')
     document.querySelector('#color-picker-fg').jscolor.fromString(squareColor)
-
   }
-  else if (Sketchage.shiftIsDown) {
+  else if (Sketchage.config.shiftHeld) {
     // TODO: paint bucket
-    // change square color, and all squares near it that are the same color?
+
+    Sketchage._floodFill(square, color)
   }
   else {
-    $(square).css("background-color", color)
+    $(square).css('background-color', color)
   }
 
-  Sketchage.saveToLocalStorage()
+  Sketchage._saveToLocalStorage()
+}
+
+Sketchage._floodFill = function(square, newColor) {
+  // grab reference to current square and its background-color
+  const squareId = $(square).attr('id').split('_')
+  const squareX = parseInt(squareId[0])
+  const squareY = parseInt(squareId[1])
+
+  // make sure it's a
+  let prevColor = $(square).css('background-color')
+  let prevColorHex = prevColor.split('(')[1].split(')')[0].split(',')
+  prevColorHex = Sketchage._rgbToHex(prevColorHex[0].trim(), prevColorHex[1].trim(), prevColorHex[2].trim())
+
+  // console.log(`changing '${prevColorHex}' to '${newColor}'`)
+
+  if (newColor.toLowerCase() == prevColorHex.toLowerCase()) {
+    // console.log('prevColor is same as newColor, so doing nothing')
+    return
+  }
+
+  // change square color to FG/BG color
+  // recurse over nearby squares, too
+  Sketchage._floodFillUtil(squareX, squareY, prevColor, newColor)
+}
+Sketchage._floodFillUtil = function(squareX, squareY, prevColor, newColor) {
+  const square = `#${squareX}_${squareY}`
+
+  // if we have traveled outside the bounds of the grid, exit
+  if (squareX < 0 || squareX >= Sketchage.config.squareCount
+    || squareY < 0 || squareY >= Sketchage.config.squareCount) {
+      return
+  }
+  // if the next square we check isn't the same color as the OG, exit
+  if ($(square).css('background-color') !== prevColor) return
+
+  // replace the color at current square
+  $(square).css('background-color', newColor)
+
+  // recurse for N, E, S, W
+  Sketchage._floodFillUtil(squareX, squareY + 1, prevColor, newColor)
+  Sketchage._floodFillUtil(squareX + 1, squareY, prevColor, newColor)
+  Sketchage._floodFillUtil(squareX, squareY - 1, prevColor, newColor)
+  Sketchage._floodFillUtil(squareX - 1, squareY, prevColor, newColor)
+}
+Sketchage._colorToHex = function(color) {
+  var hexadecimal = parseInt(color).toString(16);
+  return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+}
+Sketchage._rgbToHex = function(r, g, b) {
+  return "#" + Sketchage._colorToHex(r) + Sketchage._colorToHex(g) + Sketchage._colorToHex(b);
 }
 
 // helper utility
-Sketchage.getRandomColor = function() {
+Sketchage._getRandomColor = function() {
   return "#" + Math.floor(Math.random()*16777215).toString(16)
 }
 
 // make grid of squares and adjust ruler
-Sketchage.makeGrid = function() {
+Sketchage._makeGrid = function() {
   // remove any existing squares
   Sketchage.dom.gridInner.find('.square').remove()
   // remove generated images
@@ -621,7 +681,7 @@ Sketchage.makeGrid = function() {
 
   // color in each square
   $(".square").css({
-    background: Sketchage.colorTransparent,
+    backgroundColor: Sketchage.config.colorTransparent,
     height: squareWidth,
     width: squareWidth
   })
@@ -629,34 +689,34 @@ Sketchage.makeGrid = function() {
   // attach draw event handler
   $(".square").on("mouseenter mousedown touchend touchmove", function(e) {
     if (Sketchage.settings.rainbowMode) {
-      Sketchage.colorFG = Sketchage.getRandomColor()
-      Sketchage.colorBG = Sketchage.getRandomColor()
+      Sketchage.config.colorFG = Sketchage._getRandomColor()
+      Sketchage.config.colorBG = Sketchage._getRandomColor()
     }
 
     e.preventDefault()
 
-    // choose Sketchage.color based on mouse button
+    // choose Sketchage.config.color based on mouse button
     switch (e.which) {
-      case 1: Sketchage.color = Sketchage.colorFG; break
-      case 3: Sketchage.color = Sketchage.colorBG; break
-      default: Sketchage.color = Sketchage.colorFG; break
+      case 1: Sketchage.config.color = Sketchage.config.colorFG; break
+      case 3: Sketchage.config.color = Sketchage.config.colorBG; break
+      default: Sketchage.config.color = Sketchage.config.colorFG; break
     }
 
     if (Sketchage.settings.clicklessMode) {
-      Sketchage.draw(this, Sketchage.color)
-    } else if (Sketchage.mouseIsDown) {
-      Sketchage.draw(this, Sketchage.color)
+      Sketchage._draw(this, Sketchage.config.color)
+    } else if (Sketchage.config.mouseIsDown) {
+      Sketchage._draw(this, Sketchage.config.color)
     } else {
       $(this).mousedown(function() {
-        Sketchage.draw(this, Sketchage.color)
+        Sketchage._draw(this, Sketchage.config.color)
       })
     }
   })
 
-  Sketchage.resizeRulerBackground()
+  Sketchage._resizeRulerBackground()
 }
 
-Sketchage.resizeRulerBackground = function() {
+Sketchage._resizeRulerBackground = function() {
   var clientW = document.documentElement.clientWidth
   var headerHeight = 121
   var adjustRulerXLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 1
@@ -682,13 +742,13 @@ Sketchage.resizeRulerBackground = function() {
 }
 
 // local storage functions
-Sketchage.loadFromLocalStorage = function() {
+Sketchage._loadFromLocalStorage = function() {
   let lsSettings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
   if (lsSettings) {
     Sketchage.settings = lsSettings
   } else {
-    Sketchage.saveToLocalStorage()
+    Sketchage._saveToLocalStorage()
   }
 
   let lsImgData = localStorage.getItem(LS_IMAGE_DATA_KEY)
@@ -699,26 +759,30 @@ Sketchage.loadFromLocalStorage = function() {
     if (load) {
       // console.log('user chose to load previous data, so creating grid and then updating')
 
-      Sketchage.makeGrid()
+      Sketchage._makeGrid()
 
       let colors = lsImgData.split(';')
+      let id = ''
+      let color = ''
 
       colors.forEach(function(c) {
         c = c.split(':')
-        $(`#${c[0]}`).css('background-color', c[1])
+        id = `#${c[0]}`
+        color = c[1]
+        $(id).css('background-color', color)
       })
     } else {
       // console.log('user declined loading previous data, so creating grid with defaults')
 
-      Sketchage.makeGrid()
+      Sketchage._makeGrid()
     }
   } else {
     // console.log('no local storage, so creating grid with defaults')
 
-    Sketchage.makeGrid()
+    Sketchage._makeGrid()
   }
 }
-Sketchage.saveToLocalStorage = function() {
+Sketchage._saveToLocalStorage = function() {
   let serial_img = ''
 
   $(".square").each(function() {
@@ -731,7 +795,7 @@ Sketchage.saveToLocalStorage = function() {
   localStorage.setItem(LS_IMAGE_DATA_KEY, serial_img)
   localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
 }
-Sketchage.clearLocalStorage = function() {
+Sketchage._clearLocalStorage = function() {
   if (localStorage.getItem(LS_IMAGE_DATA_KEY)) {
     localStorage.removeItem(LS_IMAGE_DATA_KEY)
   }
