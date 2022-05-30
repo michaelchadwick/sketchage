@@ -380,9 +380,8 @@ nav {
     }
     nav section input.jscolor {
       border-radius: 4px;
-      margin-left: 2px;
       padding: 3px;
-      width: 50px;
+      width: 60px;
     }
 
 section#content {
@@ -415,6 +414,16 @@ section#content {
     #grid #grid-inner .square {
       /* border: 1px solid #777777; */
       cursor: url(../images/pencil-24.png), pointer;
+    }
+
+    #grid #grid-inner .square.eyedropper {
+      /* border: 1px solid #777777; */
+      cursor: url(../images/eyedropper-24.png), pointer;
+    }
+
+    #grid #grid-inner .square.paintbucket {
+      /* border: 1px solid #777777; */
+      cursor: url(../images/paintbucket-24.png), pointer;
     }
 
 #generated-images {

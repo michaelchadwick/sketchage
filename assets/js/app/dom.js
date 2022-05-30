@@ -22,6 +22,8 @@ Sketchage.dom.interactive = {
   "btnNavClose": $('#button-nav-close'),
   "btnHelp": $('#button-help'),
   "btnSettings": $('#button-settings'),
+  "colorFG": $('#color-picker-fg'),
+  "colorBG": $('#color-picker-bg'),
   "btnGenImage": $('#button-generate-image'),
   "btnClearGrid": $('#button-clear-grid')
 }

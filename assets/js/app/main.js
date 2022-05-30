@@ -16,6 +16,7 @@ Sketchage.ctrlIsDown = false // eyedropper
 Sketchage.shiftIsDown = false // paint bucket
 
 Sketchage.color = ""
+// TODO: actually make this transparent somehow (for PNG)
 Sketchage.colorTransparent = COLOR_BG_DEFAULT
 Sketchage.colorFG = COLOR_FG_DEFAULT
 Sketchage.colorBG = COLOR_BG_DEFAULT
@@ -74,7 +75,7 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container wide">
-                  <input type="number" id="text-grid-width" value="640" onchange="Sketchage.changeSetting('gridWidth', event)" />
+                  <input type="number" id="text-grid-width" value="640" onchange="Sketchage.changeSetting('gridWidth')" onkeyup="Sketchage.changeSetting('gridWidth', event)"/>
                   <button id="button-grid-width-resize" onclick="Sketchage.changeSetting('gridWidthResize')">
                     <i class="fas fa-check"></i>
                   </button>
@@ -306,64 +307,76 @@ Sketchage.changeSetting = function(setting, event = null) {
       break
 
     case 'clicklessMode':
-      var st = document.getElementById('button-setting-clickless-mode').dataset.status
+      var st = document.getElementById('button-setting-clickless-mode')
 
-      if (st == '' || st == 'false') {
-        // update setting DOM
-        document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
+      if (st) {
+        st = st.dataset.status
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('clicklessMode', true)
-      } else {
-        // update setting DOM
-        document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
+        if (st == '' || st == 'false') {
+          // update setting DOM
+          document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('clicklessMode', false)
+          // save to code/LS
+          Sketchage.saveGlobalSetting('clicklessMode', true)
+        } else {
+          // update setting DOM
+          document.getElementById('button-setting-clickless-mode').dataset.status = 'false'
+
+          // save to code/LS
+          Sketchage.saveGlobalSetting('clicklessMode', false)
+        }
       }
       break
 
     case 'rainbowMode':
-      var st = document.getElementById('button-setting-rainbow-mode').dataset.status
+      var st = document.getElementById('button-setting-rainbow-mode')
 
-      if (st == '' || st == 'false') {
-        // update setting DOM
-        document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
+      if (st) {
+        st = st.dataset.status
 
-        // update color DOM
-        Sketchage.colorFG = $("#color-picker-fg").css("background-color")
-        Sketchage.colorBG = $("#color-picker-bg").css("background-color")
+        if (st == '' || st == 'false') {
+          // update setting DOM
+          document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('rainbowMode', true)
-      } else {
-        // update setting DOM
-        document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
+          // update color DOM
+          Sketchage.colorFG = $("#color-picker-fg").css("background-color")
+          Sketchage.colorBG = $("#color-picker-bg").css("background-color")
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('rainbowMode', false)
+          // save to code/LS
+          Sketchage.saveGlobalSetting('rainbowMode', true)
+        } else {
+          // update setting DOM
+          document.getElementById('button-setting-rainbow-mode').dataset.status = 'false'
+
+          // save to code/LS
+          Sketchage.saveGlobalSetting('rainbowMode', false)
+        }
       }
       break
 
     case 'showRulers':
-      var st = document.getElementById('button-setting-show-rulers').dataset.status
+      var st = document.getElementById('button-setting-show-rulers')
 
-      if (st == '' || st == 'false') {
-        // update setting DOM
-        document.getElementById('button-setting-show-rulers').dataset.status = 'true'
+      if (st) {
+        st = st.dataset.status
 
-        Sketchage.enableRulers()
+        if (st == '' || st == 'false') {
+          // update setting DOM
+          document.getElementById('button-setting-show-rulers').dataset.status = 'true'
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('showRulers', true)
-      } else {
-        // update setting DOM
-        document.getElementById('button-setting-show-rulers').dataset.status = 'false'
+          Sketchage.enableRulers()
 
-        Sketchage.disableRulers()
+          // save to code/LS
+          Sketchage.saveGlobalSetting('showRulers', true)
+        } else {
+          // update setting DOM
+          document.getElementById('button-setting-show-rulers').dataset.status = 'false'
 
-        // save to code/LS
-        Sketchage.saveGlobalSetting('showRulers', false)
+          Sketchage.disableRulers()
+
+          // save to code/LS
+          Sketchage.saveGlobalSetting('showRulers', false)
+        }
       }
       break
   }
@@ -442,6 +455,39 @@ Sketchage.attachEventListeners = function() {
       Sketchage.clearLocalStorage()
     }
   })
+
+  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
+  document.addEventListener('keydown', (event) => {
+    var modKeys = ['Alt', 'Control', 'Meta', 'Shift']
+
+    if (modKeys.some(key => event.getModifierState(key))) {
+      console.log('a modifier key is being held', event.key)
+
+      switch (event.key) {
+        case 'Control':
+          $('.square').addClass('eyedropper')
+          Sketchage.ctrlIsDown = true
+          break
+        case 'Shift':
+          $('.square').addClass('paintbucket')
+          Sketchage.shiftIsDown = true
+          break
+
+      }
+    }
+  })
+  document.addEventListener('keyup', (event) => {
+    $('.square').removeClass('eyedropper')
+    $('.square').removeClass('paintbucket')
+    Sketchage.ctrlIsDown = false
+    Sketchage.shiftIsDown = false
+  })
+
+  // When the user clicks or touches anywhere outside of the modal, close it
+  window.addEventListener('click', Sketchage.handleClickTouch)
+  window.addEventListener('touchend', Sketchage.handleClickTouch)
+
+  window.addEventListener('resize', Sketchage.resizeRulerBackground)
 }
 
 // handle both clicks and touches outside of modals
@@ -522,13 +568,19 @@ Sketchage.generateImage = function() {
 }
 Sketchage.draw = function(square, color) {
   if (Sketchage.altIsDown) {
+    // erase color back to transparent (this is just BG color right now)
     $(square).css("background-color", Sketchage.colorTransparent)
-  }
-  else if (Sketchage.shiftIsDown) {
-    // TODO: paint bucket
   }
   else if (Sketchage.ctrlIsDown) {
     // TODO: eyedropper
+    // change FG color to whatever color the square is
+    const squareColor = $(square).css("background-color")
+    document.querySelector('#color-picker-fg').jscolor.fromString(squareColor)
+
+  }
+  else if (Sketchage.shiftIsDown) {
+    // TODO: paint bucket
+    // change square color, and all squares near it that are the same color?
   }
   else {
     $(square).css("background-color", color)
@@ -680,19 +732,13 @@ Sketchage.saveToLocalStorage = function() {
   localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
 }
 Sketchage.clearLocalStorage = function() {
-  if (localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)) {
-    localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY)
+  if (localStorage.getItem(LS_IMAGE_DATA_KEY)) {
+    localStorage.removeItem(LS_IMAGE_DATA_KEY)
   }
   if (localStorage.getItem(LS_SETTINGS_KEY)) {
     localStorage.removeItem(LS_SETTINGS_KEY)
   }
 }
-
-// When the user clicks or touches anywhere outside of the modal, close it
-window.addEventListener('click', Sketchage.handleClickTouch)
-window.addEventListener('touchend', Sketchage.handleClickTouch)
-
-window.addEventListener('resize', Sketchage.resizeRulerBackground)
 
 /* ******************************** *
  * START THE ENGINE                 *
