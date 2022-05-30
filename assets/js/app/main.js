@@ -461,7 +461,7 @@ Sketchage.attachEventListeners = function() {
     var modKeys = ['Alt', 'Control', 'Meta', 'Shift']
 
     if (modKeys.some(key => event.getModifierState(key))) {
-      console.log('a modifier key is being held', event.key)
+      // console.log('a modifier key is being held', event.key)
 
       switch (event.key) {
         case 'Control':
