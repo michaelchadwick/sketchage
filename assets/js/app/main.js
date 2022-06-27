@@ -39,7 +39,7 @@ async function modalOpen(type) {
 
           <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!).</p>
 
-          <p>The "Generate Image" button will save your creation as a BMP that you can right-click to save to your computer.</p>
+          <p>The "Save Image" button will save your creation as a BMP (w/ GIF, JPG, and PNG options, too) that you can right-click to save to your computer.</p>
 
           <hr />
 
@@ -551,7 +551,7 @@ Sketchage._generateImage = function() {
     type: 'post',
     data: { "imageConversion": $newest_img_src },
     success: function(imgPath) {
-      console.log('image path', imgPath)
+      // console.log('image path', imgPath)
 
       $html = `
         <div class="file-links">
