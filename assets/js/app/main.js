@@ -171,53 +171,51 @@ Sketchage.initApp = function() {
  *************************************************************************/
 
 Sketchage._loadSettings = function() {
-  if (localStorage.getItem(LS_SETTINGS_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+  var lsSettings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
-    if (lsConfig) {
-      if (lsConfig.squareCount) {
-        Sketchage.settings.squareCount = lsConfig.squareCount
+  if (lsSettings) {
+    if (lsSettings.squareCount) {
+      Sketchage.settings.squareCount = lsSettings.squareCount
 
-        var setting = document.getElementById('text-square-count')
+      var setting = document.getElementById('text-square-count')
 
-        if (setting) {
-          setting.value = lsConfig.squareCount
-        }
+      if (setting) {
+        setting.value = lsSettings.squareCount
       }
+    }
 
-      if (lsConfig.gridWidth) {
-        Sketchage.settings.gridWidth = lsConfig.gridWidth
+    if (lsSettings.gridWidth) {
+      Sketchage.settings.gridWidth = lsSettings.gridWidth
 
-        var setting = document.getElementById('text-grid-width')
+      var setting = document.getElementById('text-grid-width')
 
-        if (setting) {
-          setting.value = lsConfig.gridWidth
-        }
+      if (setting) {
+        setting.value = lsSettings.gridWidth
       }
+    }
 
-      if (lsConfig.clicklessMode) {
-        Sketchage.settings.clicklessMode = lsConfig.clicklessMode
+    if (lsSettings.clicklessMode) {
+      Sketchage.settings.clicklessMode = lsSettings.clicklessMode
 
-        var setting = document.getElementById('button-setting-clickless-mode')
+      var setting = document.getElementById('button-setting-clickless-mode')
 
-        if (setting) {
-          setting.dataset.status = 'true'
-        }
+      if (setting) {
+        setting.dataset.status = 'true'
       }
+    }
 
-      if (lsConfig.rainbowMode) {
-        Sketchage.settings.rainbowMode = lsConfig.rainbowMode
+    if (lsSettings.rainbowMode) {
+      Sketchage.settings.rainbowMode = lsSettings.rainbowMode
 
-        var setting = document.getElementById('button-setting-rainbow-mode')
+      var setting = document.getElementById('button-setting-rainbow-mode')
 
-        if (setting) {
-          setting.dataset.status = 'true'
-        }
+      if (setting) {
+        setting.dataset.status = 'true'
       }
+    }
 
-      if (lsConfig.showRulers) {
-        Sketchage._enableRulers()
-      }
+    if (lsSettings.showRulers) {
+      Sketchage._enableRulers()
     }
   }
 }
@@ -590,63 +588,13 @@ Sketchage._draw = function(square, color) {
   else if (Sketchage.config.shiftHeld) {
     // TODO: paint bucket
 
-    Sketchage._floodFill(square, color)
+    Sketchage.__floodFill(square, color)
   }
   else {
     $(square).css('background-color', color)
   }
 
   Sketchage._saveToLocalStorage()
-}
-
-Sketchage._floodFill = function(square, newColor) {
-  // grab reference to current square and its background-color
-  const squareId = $(square).attr('id').split('_')
-  const squareX = parseInt(squareId[0])
-  const squareY = parseInt(squareId[1])
-
-  // make sure it's a
-  let prevColor = $(square).css('background-color')
-  let prevColorHex = prevColor.split('(')[1].split(')')[0].split(',')
-  prevColorHex = Sketchage._rgbToHex(prevColorHex[0].trim(), prevColorHex[1].trim(), prevColorHex[2].trim())
-
-  // console.log(`changing '${prevColorHex}' to '${newColor}'`)
-
-  if (newColor.toLowerCase() == prevColorHex.toLowerCase()) {
-    // console.log('prevColor is same as newColor, so doing nothing')
-    return
-  }
-
-  // change square color to FG/BG color
-  // recurse over nearby squares, too
-  Sketchage._floodFillUtil(squareX, squareY, prevColor, newColor)
-}
-Sketchage._floodFillUtil = function(squareX, squareY, prevColor, newColor) {
-  const square = `#${squareX}_${squareY}`
-
-  // if we have traveled outside the bounds of the grid, exit
-  if (squareX < 0 || squareX >= Sketchage.config.squareCount
-    || squareY < 0 || squareY >= Sketchage.config.squareCount) {
-      return
-  }
-  // if the next square we check isn't the same color as the OG, exit
-  if ($(square).css('background-color') !== prevColor) return
-
-  // replace the color at current square
-  $(square).css('background-color', newColor)
-
-  // recurse for N, E, S, W
-  Sketchage._floodFillUtil(squareX, squareY + 1, prevColor, newColor)
-  Sketchage._floodFillUtil(squareX + 1, squareY, prevColor, newColor)
-  Sketchage._floodFillUtil(squareX, squareY - 1, prevColor, newColor)
-  Sketchage._floodFillUtil(squareX - 1, squareY, prevColor, newColor)
-}
-Sketchage._colorToHex = function(color) {
-  var hexadecimal = parseInt(color).toString(16);
-  return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
-}
-Sketchage._rgbToHex = function(r, g, b) {
-  return "#" + Sketchage._colorToHex(r) + Sketchage._colorToHex(g) + Sketchage._colorToHex(b);
 }
 
 // helper utility
@@ -802,6 +750,60 @@ Sketchage._clearLocalStorage = function() {
   if (localStorage.getItem(LS_SETTINGS_KEY)) {
     localStorage.removeItem(LS_SETTINGS_KEY)
   }
+}
+
+/*************************************************************************
+ * _private __helper methods *
+ *************************************************************************/
+
+Sketchage.__floodFill = function(square, newColor) {
+  // grab reference to current square and its background-color
+  const squareId = $(square).attr('id').split('_')
+  const squareX = parseInt(squareId[0])
+  const squareY = parseInt(squareId[1])
+
+  // make sure it's a
+  let prevColor = $(square).css('background-color')
+  let prevColorHex = prevColor.split('(')[1].split(')')[0].split(',')
+  prevColorHex = Sketchage.__rgbToHex(prevColorHex[0].trim(), prevColorHex[1].trim(), prevColorHex[2].trim())
+
+  // console.log(`changing '${prevColorHex}' to '${newColor}'`)
+
+  if (newColor.toLowerCase() == prevColorHex.toLowerCase()) {
+    // console.log('prevColor is same as newColor, so doing nothing')
+    return
+  }
+
+  // change square color to FG/BG color
+  // recurse over nearby squares, too
+  Sketchage.__floodFillUtil(squareX, squareY, prevColor, newColor)
+}
+Sketchage.__floodFillUtil = function(squareX, squareY, prevColor, newColor) {
+  const square = `#${squareX}_${squareY}`
+
+  // if we have traveled outside the bounds of the grid, exit
+  if (squareX < 0 || squareX >= Sketchage.config.squareCount
+    || squareY < 0 || squareY >= Sketchage.config.squareCount) {
+      return
+  }
+  // if the next square we check isn't the same color as the OG, exit
+  if ($(square).css('background-color') !== prevColor) return
+
+  // replace the color at current square
+  $(square).css('background-color', newColor)
+
+  // recurse for N, E, S, W
+  Sketchage.__floodFillUtil(squareX, squareY + 1, prevColor, newColor)
+  Sketchage.__floodFillUtil(squareX + 1, squareY, prevColor, newColor)
+  Sketchage.__floodFillUtil(squareX, squareY - 1, prevColor, newColor)
+  Sketchage.__floodFillUtil(squareX - 1, squareY, prevColor, newColor)
+}
+Sketchage.__colorToHex = function(color) {
+  var hexadecimal = parseInt(color).toString(16);
+  return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+}
+Sketchage.__rgbToHex = function(r, g, b) {
+  return "#" + Sketchage.__colorToHex(r) + Sketchage.__colorToHex(g) + Sketchage.__colorToHex(b);
 }
 
 /* ******************************** *
