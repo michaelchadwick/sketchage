@@ -152,7 +152,7 @@ async function modalOpen(type) {
 
 Sketchage.initApp = function() {
   // set env
-  Sketchage.env = ENV_PROD_URL.includes(document.location.hostname) ? 'prod' : 'local'
+  Sketchage.env = SKETCHAGE_ENV_PROD_URL.includes(document.location.hostname) ? 'prod' : 'local'
 
   // if local dev, show debug stuff
   if (Sketchage.env == 'local') {
@@ -171,7 +171,7 @@ Sketchage.initApp = function() {
  *************************************************************************/
 
 Sketchage._loadSettings = function() {
-  var lsSettings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+  var lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (lsSettings) {
     if (lsSettings.squareCount) {
@@ -393,7 +393,7 @@ Sketchage._changeSetting = function(setting, event = null) {
 Sketchage._saveSetting = function(setting, value) {
   // console.log('saving setting to LS...', setting, value)
 
-  var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+  var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (settings) {
     // set internal code model
@@ -403,7 +403,7 @@ Sketchage._saveSetting = function(setting, value) {
     settings[setting] = value
 
     // save all settings to LS
-    localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
+    localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(settings))
   }
 
   // console.log('!global setting saved!', Sketchage.settings)
@@ -691,7 +691,7 @@ Sketchage._resizeRulerBackground = function() {
 
 // local storage functions
 Sketchage._loadFromLocalStorage = function() {
-  let lsSettings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+  let lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (lsSettings) {
     Sketchage.settings = lsSettings
@@ -699,7 +699,7 @@ Sketchage._loadFromLocalStorage = function() {
     Sketchage._saveToLocalStorage()
   }
 
-  let lsImgData = localStorage.getItem(LS_IMAGE_DATA_KEY)
+  let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
 
   if (lsImgData) {
     let load = window.confirm('Previous image/settings data found. Load?')
@@ -740,15 +740,15 @@ Sketchage._saveToLocalStorage = function() {
     serial_img = serial_img.concat(`${id}:${color};`)
   })
 
-  localStorage.setItem(LS_IMAGE_DATA_KEY, serial_img)
-  localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
+  localStorage.setItem(SKETCHAGE_IMAGE_DATA_KEY, serial_img)
+  localStorage.setItem(SKETCHAGE_SETTINGS_KEY, JSON.stringify(Sketchage.settings))
 }
 Sketchage._clearLocalStorage = function() {
-  if (localStorage.getItem(LS_IMAGE_DATA_KEY)) {
-    localStorage.removeItem(LS_IMAGE_DATA_KEY)
+  if (localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)) {
+    localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY)
   }
-  if (localStorage.getItem(LS_SETTINGS_KEY)) {
-    localStorage.removeItem(LS_SETTINGS_KEY)
+  if (localStorage.getItem(SKETCHAGE_SETTINGS_KEY)) {
+    localStorage.removeItem(SKETCHAGE_SETTINGS_KEY)
   }
 }
 
