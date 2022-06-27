@@ -35,7 +35,13 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Use Sketchage',
         `
-          <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box. Hold the <strong>Alt</strong> key to erase cells instead.</p>
+          <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box.</p>
+
+          <ul>
+            <li><strong>Alt</strong>-click: erase cells</li>
+            <li><strong>Shift</strong>-click: fill cells (i.e. paint bucket)</li>
+            <li><strong>Ctrl</strong>-click: eyedropper</li>
+          </ul>
 
           <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!).</p>
 
