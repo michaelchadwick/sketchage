@@ -3,26 +3,10 @@
 /* global $, Sketchage */
 
 // settings: saved in LOCAL STORAGE
-Sketchage.settings = {
-  "squareCount": SQUARE_COUNT_DEFAULT,
-  "gridWidth": GRID_WIDTH_DEFAULT,
-  "clicklessMode": false,
-  "rainbowMode": false,
-  "showRulers": false
-}
+Sketchage.settings = {}
 
 // config: only saved while game is loaded
-Sketchage.config = {
-  "mouseIsDown": false,
-  "altIsDown": false, // erase
-  "ctrlIsDown": false, // eyedropper
-  "shiftIsDown": false, // paint bucket
-  "color": "",
-  // TODO: actually make this transparent somehow (for PNG)
-  "colorTransparent": COLOR_BG_DEFAULT,
-  "colorFG": COLOR_FG_DEFAULT,
-  "colorBG": COLOR_BG_DEFAULT
-}
+Sketchage.config = SKETCHAGE_DEFAULTS.config
 
 /*************************************************************************
  * public methods *
@@ -165,9 +149,9 @@ Sketchage.initApp = function() {
     document.title = '(LH) ' + document.title
   }
 
-  Sketchage._loadFromLocalStorage()
-
   Sketchage._loadSettings()
+
+  Sketchage._loadImageData()
 
   Sketchage._attachEventListeners()
 }
@@ -176,8 +160,8 @@ Sketchage.initApp = function() {
  * _private methods *
  *************************************************************************/
 
-Sketchage._loadSettings = function() {
-  var lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+Sketchage._loadSettings = async function() {
+  const lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (lsSettings) {
     if (lsSettings.squareCount) {
@@ -223,61 +207,90 @@ Sketchage._loadSettings = function() {
     if (lsSettings.showRulers) {
       Sketchage._enableRulers()
     }
+  } else {
+    Sketchage.settings = SKETCHAGE_DEFAULTS.settings
+
+    Sketchage._saveToLocalStorage()
   }
 }
-Sketchage._changeSetting = function(setting, event = null) {
+Sketchage._changeSetting = async function(setting, event = null) {
   switch (setting) {
     case 'squareCount':
-      var settingVal = document.getElementById('text-square-count').value
+      const squareCountValue = document.getElementById('text-square-count').value
 
-      if (settingVal != '') {
+      if (squareCountValue != '') {
         // save to code/LS
-        Sketchage._saveSetting('squareCount', settingVal)
+        Sketchage._saveSetting('squareCount', parseInt(squareCountValue))
       }
 
       if (event && event.which === 13) {
         event.preventDefault()
+
         $("#button-square-count-recreate").click()
       }
       break
 
     case 'squareCountResize':
-      if (confirm('Changing the square count will clear the image. Proceed?')) {
-        var settingVal = document.getElementById('text-square-count').value
+      const squareCountResizeConfirmed = await new Modal(
+        'confirm',
+        'Change Square Count',
+        'Changing the square count will clear the image. Proceed?',
+        'Yes',
+        'No'
+      ).question()
 
-        if (settingVal != '') {
-          // save to code/LS
-          Sketchage._saveSetting('squareCount', settingVal)
+      try {
+        if (squareCountResizeConfirmed) {
+          const squareCountValue = document.getElementById('text-square-count').value
 
-          // remake grid
-          Sketchage._makeGrid()
+          if (squareCountValue != '') {
+            // save to code/LS
+            Sketchage._saveSetting('squareCount', parseInt(squareCountValue))
+
+            // remake grid
+            Sketchage._makeGrid()
+          }
         }
+      } catch(err) {
+        console.error('could not change square count', err)
       }
       break
 
     case 'squareCountDefault':
-      if (confirm('Resetting the square count to default will clear the image. Proceed?')) {
-        // update container DOM
-        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
-        Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
+      const squareCountDefaultConfirmed = await new Modal(
+        'confirm',
+        'Reset Square Count to Default',
+        'Resetting the square count to default will clear the image. Proceed?',
+        'Yes',
+        'No'
+      ).question()
 
-        // update setting DOM
-        $("text-square-count").val(SQUARE_COUNT_DEFAULT)
+      try {
+        if (squareCountDefaultConfirmed) {
+          // update container DOM
+          Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
+          Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
 
-        // save to code/LS
-        Sketchage._saveSetting('squareCount', settingVal)
+          // update setting DOM
+          $("text-square-count").val(SQUARE_COUNT_DEFAULT)
 
-        // remake grid
-        Sketchage._makeGrid()
+          // save to code/LS
+          Sketchage._saveSetting('squareCount', SQUARE_COUNT_DEFAULT)
+
+          // remake grid
+          Sketchage._makeGrid()
+        }
+      } catch(err) {
+        console.error('could not reset square count to default', err)
       }
       break
 
     case 'gridWidth':
-      var settingVal = document.getElementById('text-grid-width').value
+      const gridWidthValue = document.getElementById('text-grid-width').value
 
-      if (settingVal != '') {
+      if (gridWidthValue != '') {
         // save to code/LS
-        Sketchage._saveSetting('gridWidth', settingVal)
+        Sketchage._saveSetting('gridWidth', parseInt(gridWidthValue))
       }
 
       if (event && event.which === 13) {
@@ -287,47 +300,69 @@ Sketchage._changeSetting = function(setting, event = null) {
       break
 
     case 'gridWidthResize':
-      if (confirm('Changing the grid width will clear the image. Proceed?')) {
-        var settingVal = document.getElementById('text-grid-width').value
+      const gridWidthResizeConfirmed = await new Modal('confirm', 'Reset Square Count',
+        'Changing the grid width will clear the image. Proceed?',
+        'Yes',
+        'No'
+      ).question()
 
-        if (settingVal != '') {
-          // update container DOM
-          Sketchage.dom.gridInner.css("width", settingVal)
-          Sketchage.dom.gridInner.css("height", settingVal)
+      try {
+        if (gridWidthResizeConfirmed) {
+          const gridWidthValue = document.getElementById('text-grid-width').value
 
-          // save to code/LS
-          Sketchage._saveSetting('gridWidth', settingVal)
+          if (gridWidthValue != '') {
+            // update container DOM
+            Sketchage.dom.gridInner.css("width", gridWidthValue)
+            Sketchage.dom.gridInner.css("height", gridWidthValue)
 
-          // remake grid
-          Sketchage._makeGrid()
+            // save to code/LS
+            Sketchage._saveSetting('gridWidth', parseInt(gridWidthValue))
+
+            // remake grid
+            Sketchage._makeGrid()
+          }
         }
+      } catch(err) {
+        console.error('could not change the grid width', err)
       }
       break
 
     case 'gridWidthDefault':
-      if (confirm('Resetting the grid width to default will clear the image. Proceed?')) {
-        // update container DOM
-        Sketchage.dom.gridInner.css("width", GRID_WIDTH_DEFAULT)
-        Sketchage.dom.gridInner.css("height", GRID_WIDTH_DEFAULT)
+      const gridWidthDefaultConfirmed = await new Modal(
+        'confirm',
+        'Reset Grid Width to Default',
+        'Resetting the grid width to default will clear the image. Proceed?',
+        'Yes',
+        'No'
+      ).question()
 
-        // update setting DOM
-        $("#text-grid-width").val(GRID_WIDTH_DEFAULT)
+      try {
+        if (gridWidthDefaultConfirmed) {
+          // update container DOM
+          Sketchage.dom.gridInner.css("width", GRID_WIDTH_DEFAULT)
+          Sketchage.dom.gridInner.css("height", GRID_WIDTH_DEFAULT)
 
-        // save to code/LS
-        Sketchage._saveSetting('gridWidth', GRID_WIDTH_DEFAULT)
+          // update setting DOM
+          $("#text-grid-width").val(GRID_WIDTH_DEFAULT)
 
-        // remake grid
-        Sketchage._makeGrid()
+          // save to code/LS
+          Sketchage._saveSetting('gridWidth', GRID_WIDTH_DEFAULT)
+
+          // remake grid
+          Sketchage._makeGrid()
+        }
+      } catch(err) {
+        console.error('could not change grid width to default', err)
       }
       break
 
     case 'clicklessMode':
-      var st = document.getElementById('button-setting-clickless-mode')
+      const clicklessModeButton = document.getElementById('button-setting-clickless-mode')
 
-      if (st) {
-        st = st.dataset.status
+      if (clicklessModeButton) {
+        const clicklessModeStatus = clicklessModeButton.dataset.status
 
-        if (st == '' || st == 'false') {
+        if (clicklessModeStatus == '' || clicklessModeStatus == 'false') {
           // update setting DOM
           document.getElementById('button-setting-clickless-mode').dataset.status = 'true'
 
@@ -344,12 +379,12 @@ Sketchage._changeSetting = function(setting, event = null) {
       break
 
     case 'rainbowMode':
-      var st = document.getElementById('button-setting-rainbow-mode')
+      const rainbowModeButton = document.getElementById('button-setting-rainbow-mode')
 
-      if (st) {
-        st = st.dataset.status
+      if (rainbowModeButton) {
+        const rainbowModeStatus = rainbowModeButton.dataset.status
 
-        if (st == '' || st == 'false') {
+        if (rainbowModeStatus == '' || rainbowModeStatus == 'false') {
           // update setting DOM
           document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
@@ -370,12 +405,12 @@ Sketchage._changeSetting = function(setting, event = null) {
       break
 
     case 'showRulers':
-      var st = document.getElementById('button-setting-show-rulers')
+      const showRulersButton = document.getElementById('button-setting-show-rulers')
 
-      if (st) {
-        st = st.dataset.status
+      if (showRulersButton) {
+        const showRulersStatus = showRulersButton.dataset.status
 
-        if (st == '' || st == 'false') {
+        if (showRulersStatus == '' || showRulersStatus == 'false') {
           // update setting DOM
           document.getElementById('button-setting-show-rulers').dataset.status = 'true'
 
@@ -413,6 +448,51 @@ Sketchage._saveSetting = function(setting, value) {
   }
 
   // console.log('!global setting saved!', Sketchage.settings)
+}
+
+Sketchage._loadImageData = async function() {
+  const lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
+
+  if (lsImgData) {
+    console.log('found previous image data')
+
+    const prevImageDataConfirmed = await new Modal(
+      'confirm',
+      'Previous Image Data Found',
+      'Previous image data was found. Do you want to load it?',
+      'Yes',
+      'No'
+    ).question()
+
+    try {
+      if (prevImageDataConfirmed) {
+        console.log('user chose to load previous data, so creating grid and then updating')
+
+        Sketchage._makeGrid()
+
+        let colors = lsImgData.split(';')
+        let id = ''
+        let color = ''
+
+        colors.forEach(function(c) {
+          c = c.split(':')
+          id = `#${c[0]}`
+          color = c[1]
+          $(id).css('background-color', color)
+        })
+      } else {
+        // console.log('user declined loading previous data, so creating grid with defaults')
+
+        Sketchage._makeGrid()
+      }
+    } catch (err) {
+      console.error('data load failed', err)
+    }
+  } else {
+    console.log('no previous image data found, so creating grid with defaults')
+
+    Sketchage._makeGrid()
+  }
 }
 
 Sketchage._attachEventListeners = function() {
@@ -463,11 +543,23 @@ Sketchage._attachEventListeners = function() {
   Sketchage.dom.interactive.btnGenImage.click(function() {
     Sketchage._generateImage()
   })
-  Sketchage.dom.interactive.btnClearGrid.click(function() {
-    if (confirm('Are you sure you want to reset the image?')) {
-      $('.square').css('background-color', Sketchage.config.colorTransparent)
+  Sketchage.dom.interactive.btnClearGrid.click(async function() {
+    const resetImageConfirmed = await new Modal(
+      'confirm',
+      'Reset Image',
+      'Are you sure you want to reset the image?',
+      'Yes',
+      'No'
+    ).question()
 
-      Sketchage._clearLocalStorage()
+    try {
+      if (resetImageConfirmed) {
+        $('.square').css('background-color', Sketchage.config.colorTransparent)
+
+        Sketchage._clearLocalStorage()
+      }
+    } catch (err) {
+      console.error('could not reset image', err)
     }
   })
 
@@ -589,11 +681,13 @@ Sketchage._draw = function(square, color) {
   else if (Sketchage.config.ctrlHeld) {
     // change FG color to whatever color the square is
     const squareColor = $(square).css('background-color')
+
+    Sketchage.config.color = squareColor
     document.querySelector('#color-picker-fg').jscolor.fromString(squareColor)
+
+    console.log('Sketchage.config.color', Sketchage.config.color)
   }
   else if (Sketchage.config.shiftHeld) {
-    // TODO: paint bucket
-
     Sketchage.__floodFill(square, color)
   }
   else {
@@ -610,6 +704,8 @@ Sketchage._getRandomColor = function() {
 
 // make grid of squares and adjust ruler
 Sketchage._makeGrid = function() {
+  console.log('making new grid', Sketchage.settings.squareCount)
+
   // remove any existing squares
   Sketchage.dom.gridInner.find('.square').remove()
   // remove generated images
@@ -695,47 +791,7 @@ Sketchage._resizeRulerBackground = function() {
   $("body").css('background-position', `${adjustRulerXLeft + 1}px ${adjustRulerXTop}px`)
 }
 
-// local storage functions
-Sketchage._loadFromLocalStorage = function() {
-  let lsSettings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
-
-  if (lsSettings) {
-    Sketchage.settings = lsSettings
-  } else {
-    Sketchage._saveToLocalStorage()
-  }
-
-  let lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
-
-  if (lsImgData) {
-    let load = window.confirm('Previous image/settings data found. Load?')
-
-    if (load) {
-      // console.log('user chose to load previous data, so creating grid and then updating')
-
-      Sketchage._makeGrid()
-
-      let colors = lsImgData.split(';')
-      let id = ''
-      let color = ''
-
-      colors.forEach(function(c) {
-        c = c.split(':')
-        id = `#${c[0]}`
-        color = c[1]
-        $(id).css('background-color', color)
-      })
-    } else {
-      // console.log('user declined loading previous data, so creating grid with defaults')
-
-      Sketchage._makeGrid()
-    }
-  } else {
-    // console.log('no local storage, so creating grid with defaults')
-
-    Sketchage._makeGrid()
-  }
-}
+// save settings and image data to localStorage
 Sketchage._saveToLocalStorage = function() {
   let serial_img = ''
 
@@ -752,9 +808,6 @@ Sketchage._saveToLocalStorage = function() {
 Sketchage._clearLocalStorage = function() {
   if (localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)) {
     localStorage.removeItem(SKETCHAGE_IMAGE_DATA_KEY)
-  }
-  if (localStorage.getItem(SKETCHAGE_SETTINGS_KEY)) {
-    localStorage.removeItem(SKETCHAGE_SETTINGS_KEY)
   }
 }
 
