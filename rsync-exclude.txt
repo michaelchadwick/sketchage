@@ -1,9 +1,7 @@
 .git/
 .eslintignore
-.eslintrc.js
-.eslintrc.json
+.eslintrc*
 .gitignore
-.sass-lint.yml
 CONTRIBUTING.md
 LICENSE.md
 README.md
@@ -12,3 +10,4 @@ data
 node_modules/*
 gulpfile.js
 rsync-exclude.txt
+TODO.md
