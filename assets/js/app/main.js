@@ -645,7 +645,7 @@ Sketchage._generateImage = function() {
   $newest_img_src = $newest_img.attr('src')
 
   $.ajax({
-    url: 'assets/scripts/gd_convert.php',
+    url: 'assets/php/gd_convert.php',
     type: 'post',
     data: { "imageConversion": $newest_img_src },
     success: function(imgPath) {
