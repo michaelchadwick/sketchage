@@ -16,10 +16,8 @@ const COLOR_BG_DEFAULT = 'rgba(255, 255, 255, 255)';
 
 const SKETCHAGE_DEFAULTS = {
   'config': {
+    'mode': 'draw',
     'mouseIsDown': false,
-    'altIsDown': false, // erase
-    'ctrlIsDown': false, // eyedropper
-    'shiftIsDown': false, // paint bucket
     'color': '',
     // TODO: actually make this transparent somehow (for PNG)
     'colorTransparent': COLOR_BG_DEFAULT,

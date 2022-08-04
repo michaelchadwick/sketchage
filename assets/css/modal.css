@@ -83,19 +83,34 @@
   width: 100%;
 }
   .modal-text p {
-    margin-bottom: 1em;
+    margin-bottom: 0;
   }
 
   .modal-text a {
     color: #043d72;
   }
 
-  .modal-text ul,
-  .modal-text {
+  .modal-text ul {
     list-style-type: none;
     margin: 0;
     padding: 10px;
   }
+    .modal-text ul.icons {
+      margin-left: 13px;
+    }
+      .modal-text ul.icons li.icon-copy {
+        list-style-image: url(../images/copy-16.png);
+      }
+      .modal-text ul.icons li.icon-draw {
+        list-style-image: url(../images/draw-16.png);
+      }
+      .modal-text ul.icons li.icon-erase {
+        list-style-image: url(../images/erase-16.png);
+      }
+      .modal-text ul.icons li.icon-fill {
+        list-style-image: url(../images/fill-16.png);
+      }
+
     .modal-text ul ul {
       padding: 2px 10px;
     }

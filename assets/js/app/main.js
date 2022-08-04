@@ -30,15 +30,14 @@ Sketchage.modalOpen = async function(type) {
         `
           <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box.</p>
 
-          <ul>
-            <li><strong>Alt</strong>-click: erase cells</li>
-            <li><strong>Shift</strong>-click: fill cells (i.e. paint bucket)</li>
-            <li><strong>Ctrl</strong>-click: eyedropper</li>
+          <ul class="icons">
+            <li class="icon-draw">Draw with current FG color (key: D)</li>
+            <li class="icon-erase">Erase to current BG color (key: E)</li>
+            <li class="icon-copy">Copy current color (key: C)</li>
+            <li class="icon-fill">Fill area with current color (key: F)</li>
           </ul>
 
-          <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!).</p>
-
-          <p>The "Save Image" button will save your creation as a BMP (w/ GIF, JPG, and PNG options, too) that you can right-click to save to your computer.</p>
+          <p>The number of squares and overall grid width can be adjusted (but it will clear the grid!). Hit the "Export Image" button to save your creation as a BMP (w/ GIF, JPG, and PNG options, too) that you can right-click to save to your computer.</p>
 
           <hr />
 
@@ -465,33 +464,37 @@ Sketchage._loadImageData = async function() {
   const lsImgData = localStorage.getItem(SKETCHAGE_IMAGE_DATA_KEY)
 
   if (lsImgData) {
-    const prevImageDataConfirmed = await new Modal(
-      'confirm',
-      'Previous Image Data Found',
-      'Previous image data was found. Do you want to load it?',
-      'Yes',
-      'No'
-    ).question()
+    const isPristine = lsImgData.split(';').map(cell => cell.split(':')[1]).every(c => c == 'rgb(255, 255, 255)')
 
-    try {
-      if (prevImageDataConfirmed) {
-        Sketchage._makeGrid()
+    if (!isPristine) {
+      const prevImageDataConfirmed = await new Modal(
+        'confirm',
+        'Previous Image Data Found',
+        'Previous image data was found. Do you want to load it?',
+        'Yes',
+        'No'
+      ).question()
 
-        let colors = lsImgData.split(';')
-        let id = ''
-        let color = ''
+      try {
+        if (prevImageDataConfirmed) {
+          Sketchage._makeGrid()
 
-        colors.forEach(function(c) {
-          c = c.split(':')
-          id = `#${c[0]}`
-          color = c[1]
-          $(id).css('background-color', color)
-        })
-      } else {
-        Sketchage._makeGrid()
+          let colors = lsImgData.split(';')
+          let id = ''
+          let color = ''
+
+          colors.forEach(function(c) {
+            c = c.split(':')
+            id = `#${c[0]}`
+            color = c[1]
+            $(id).css('background-color', color)
+          })
+        } else {
+          Sketchage._makeGrid()
+        }
+      } catch (err) {
+        console.error('data load failed', err)
       }
-    } catch (err) {
-      console.error('data load failed', err)
     }
   } else {
     Sketchage._makeGrid()
@@ -500,18 +503,6 @@ Sketchage._loadImageData = async function() {
 
 Sketchage._attachEventListeners = function() {
   // main input event handlers
-  Sketchage.dom.body.keydown(function(e) {
-    var code = e.which
-    if (code === 18) {
-      Sketchage.config.altHeld = true
-    }
-  })
-  Sketchage.dom.body.keyup(function(e) {
-    var code = e.which
-    if (code === 18) {
-      Sketchage.config.altHeld = false
-    }
-  })
   Sketchage.dom.gridInner.mousedown(function() {
     Sketchage.config.mouseIsDown = true
   }).mouseup(function() {
@@ -556,30 +547,35 @@ Sketchage._attachEventListeners = function() {
     }
   })
 
+  Sketchage.dom.interactive.modes.click(function(event) {
+    let target = event.target
+
+    if (event.target.tagName == 'IMG') {
+      target = event.target.parentElement
+    }
+
+    const mode = target.dataset.mode
+
+    document.querySelector('#mode-selection button.current').classList.remove('current')
+    target.classList.add('current')
+
+    Sketchage._changeMode(mode)
+  })
+
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
     var modKeys = ['Alt', 'Control', 'Meta', 'Shift']
 
-    if (modKeys.some(key => event.getModifierState(key))) {
-      switch (event.key) {
-        case 'Control':
-          $('#grid-inner').addClass('eyedropper')
-          Sketchage.config.ctrlHeld = true
-          break
-
-        case 'Shift':
-          $('#grid-inner').addClass('paintbucket')
-          Sketchage.config.shiftHeld = true
-          break
-
-      }
-    }
+    // STUB
+    if (modKeys.some(key => event.getModifierState(key))) {}
   })
-  document.addEventListener('keyup', () => {
-    $('#grid-inner').removeClass('eyedropper')
-    $('#grid-inner').removeClass('paintbucket')
-    Sketchage.config.ctrlHeld = false
-    Sketchage.config.shiftHeld = false
+  document.addEventListener('keyup', (event) => {
+    switch (event.code) {
+      case 'KeyC': Sketchage._changeMode('copy'); break
+      case 'KeyD': Sketchage._changeMode('draw'); break
+      case 'KeyE': Sketchage._changeMode('erase'); break
+      case 'KeyF': Sketchage._changeMode('fill'); break
+    }
   })
 
   // When the user clicks or touches anywhere outside of the modal, close it
@@ -597,6 +593,16 @@ Sketchage._jscolorFGChange = () => {
 Sketchage._jscolorBGChange = () => {
   Sketchage.config.colorBG = this.jscolor.toString()
   Sketchage._changeSetting('rainbowMode', false)
+}
+
+Sketchage._changeMode = (mode) => {
+  Sketchage.config.mode = mode
+
+  document.querySelector('#mode-selection button.current').classList.remove('current')
+  document.querySelector(`#mode-selection button[data-mode=${mode}]`).classList.add('current')
+
+  document.querySelector('#grid').classList.remove(...document.querySelector('#grid').classList)
+  document.querySelector('#grid').classList.add(mode)
 }
 
 // handle both clicks and touches outside of modals
@@ -736,35 +742,41 @@ Sketchage._makeGrid = function() {
 
 // main drawing function
 Sketchage._draw = function(square) {
-  // eraser
-  if (Sketchage.config.altHeld) {
-    // erase color back to transparent (this is just BG color right now)
-    $(square).css('background-color', Sketchage.config.colorTransparent)
-  }
-  // copy color (eyedropper)
-  else if (Sketchage.config.ctrlHeld) {
-    // grab background-color of current square
-    const squareColor = $(square).css('background-color')
+  switch (Sketchage.config.mode) {
+    case 'erase':
+      // erase color back to transparent (this is just BG color right now)
+      $(square).css('background-color', Sketchage.config.colorTransparent)
 
-    // set current color and update jscolor
-    Sketchage.config.color = squareColor
-    document.querySelector('#color-picker-fg').jscolor.fromString(squareColor)
-  }
-  // fill (paintbucket)
-  else if (Sketchage.config.shiftHeld) {
-    if (!Sketchage.settings.rainbowMode) {
-      Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
-    }
+      break
 
-    Sketchage.__floodFill(square, Sketchage.config.color)
-  }
-  // draw (pencil)
-  else {
-    if (!Sketchage.settings.rainbowMode) {
-      Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
-    }
+    case 'copy':
+      // grab background-color of current square
+      const squareColor = $(square).css('background-color')
 
-    $(square).css('background-color', Sketchage.config.color)
+      // set current color and update jscolor
+      Sketchage.config.color = squareColor
+      document.querySelector('#color-picker-fg').jscolor.fromString(squareColor)
+
+      break
+
+    case 'fill':
+      if (!Sketchage.settings.rainbowMode) {
+        Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+      }
+
+      Sketchage.__floodFill(square, Sketchage.config.color)
+
+      break
+
+    case 'draw':
+    default:
+      if (!Sketchage.settings.rainbowMode) {
+        Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+      }
+
+      $(square).css('background-color', Sketchage.config.color)
+
+      break
   }
 
   Sketchage.__saveImageData()
@@ -830,7 +842,14 @@ Sketchage.__floodFill = function(square, newColor) {
   const squareY = parseInt(squareId[1])
 
   let prevColor = $(square).css('background-color')
-  // let prevColorHex = Sketchage.__rgbToHex(prevColor)
+
+  // might be missing alpha channel
+  if (prevColor.split(',').length < 4) {
+    prevColor = Sketchage.__rgbToRgba(prevColor)
+  }
+
+  console.log('prevColor', prevColor)
+  console.log('newColor', newColor)
 
   if (newColor == prevColor) {
     return
@@ -841,6 +860,8 @@ Sketchage.__floodFill = function(square, newColor) {
   Sketchage.__floodFillUtil(squareX, squareY, prevColor, newColor)
 }
 Sketchage.__floodFillUtil = function(squareX, squareY, prevColor, newColor) {
+  console.log('__floodFillUtil prevColor newColor', prevColor, newColor)
+
   const square = `#${squareX}_${squareY}`
 
   // if we have traveled outside the bounds of the grid, exit
@@ -849,23 +870,43 @@ Sketchage.__floodFillUtil = function(squareX, squareY, prevColor, newColor) {
       return
   }
   // if the next square we check isn't the same color as the OG, exit
-  if ($(square).css('background-color') !== prevColor) {
-    return
+  if (prevColor.split(',').length < 4) {
+    prevColor = Sketchage.__rgbToRgba(prevColor)
   }
 
-  // replace the color at current square
-  $(square).css('background-color', newColor)
+  const currentSquareColor = $(square).css('background-color')
 
-  // recurse for N, E, S, W
-  Sketchage.__floodFillUtil(squareX, squareY + 1, prevColor, newColor)
-  Sketchage.__floodFillUtil(squareX + 1, squareY, prevColor, newColor)
-  Sketchage.__floodFillUtil(squareX, squareY - 1, prevColor, newColor)
-  Sketchage.__floodFillUtil(squareX - 1, squareY, prevColor, newColor)
+  if (currentSquareColor !== prevColor) {
+    console.log('currentSquareColor !== prevColor')
+    return
+  } else {
+    // replace the color at current square
+    $(square).css('background-color', newColor)
+
+    // recurse for N, E, S, W
+    Sketchage.__floodFillUtil(squareX, squareY + 1, prevColor, newColor)
+    Sketchage.__floodFillUtil(squareX + 1, squareY, prevColor, newColor)
+    Sketchage.__floodFillUtil(squareX, squareY - 1, prevColor, newColor)
+    Sketchage.__floodFillUtil(squareX - 1, squareY, prevColor, newColor)
+  }
 }
 Sketchage.__colorToHex = function(color) {
   const hexadecimal = parseInt(color).toString(16);
 
   return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+}
+Sketchage.__rgbToRgba = function(rgb) {
+  // get "r, g, b" string
+  const colors = rgb.split("(")[1].split(")")[0].split(',')
+
+  // convert each value to hex
+  const R = colors[0].trim()
+  const G = colors[1].trim()
+  const B = colors[2].trim()
+
+  const rgba = `rgba(${R},${G},${B},1)`
+
+  return rgba;
 }
 Sketchage.__rgbToHex = function(rgb) {
   // get "r, g, b" string

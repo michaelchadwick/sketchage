@@ -113,30 +113,47 @@
 
   <nav>
     <section>
-      <label for="color-picker-fg" title="Foreground color (Left mouse button)">FG (LMB)</label>
-      <input id="color-picker-fg"
-        class="jscolor"
-        data-jscolor="{
-          format: 'hexa',
-          onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
-        }"
-        value="rgba(0, 0, 0, 1)"
-      />
+      <div id="color-selection">
+        <label for="color-picker-fg" title="Foreground color (Left mouse button)">FG (LMB)</label>
+        <input id="color-picker-fg"
+          class="jscolor"
+          data-jscolor="{
+            format: 'hexa',
+            onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
+          }"
+          value="rgba(0, 0, 0, 1)"
+        />
 
-      <label for="color-picker-bg" title="Background color (Right mouse button)">BG (RMB)</label>
-      <input id="color-picker-bg"
-        class="jscolor"
-        data-jscolor="{
-          format: 'hexa',
-          onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
-        }"
-        value="rgba(255, 255, 255, 1)"
-      />
+        <label for="color-picker-bg" title="Background color (Right mouse button)">BG (RMB)</label>
+        <input id="color-picker-bg"
+          class="jscolor"
+          data-jscolor="{
+            format: 'hexa',
+            onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
+          }"
+          value="rgba(255, 255, 255, 1)"
+        />
+      </div>
+
+      <div id="mode-selection">
+        <button id="mode-draw" data-mode="draw" class="current">
+          <img src="./assets/images/draw-24.png" alt="Draw" title="Draw" />
+        </button>
+        <button id="mode-erase" data-mode="erase">
+          <img src="./assets/images/erase-24.png" alt="Erase" title="Erase" />
+        </button>
+        <button id="mode-copy" data-mode="copy">
+          <img src="./assets/images/copy-24.png" alt="Copy Color" title="Copy Color" />
+        </button>
+        <button id="mode-fill" data-mode="fill">
+          <img src="./assets/images/fill-24.png" alt="Fill Color" title="Fill Color" />
+        </button>
+      </div>
     </section>
 
     <section>
       <button id="button-export-image">Export Image</button>
-      <button id="button-clear-grid" class="danger">Reset Image</button>
+      <button id="button-reset-image" class="danger">Reset Image</button>
     </section>
   </nav>
 
@@ -144,7 +161,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
   <section id="content">
-    <div id="grid">
+    <div id="grid" class="draw">
       <div id="grid-inner"></div>
     </div>
     <div id="generated-images"></div>

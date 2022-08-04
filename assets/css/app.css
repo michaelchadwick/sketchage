@@ -375,6 +375,24 @@ nav {
     justify-content: center;
     padding: 5px;
   }
+    nav section div#mode-selection {
+      display: flex;
+      flex-direction: row;
+      padding-left: 10px;
+    }
+      nav section div#mode-selection button {
+        background-color: #bbbbbb;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        padding: 5px;
+      }
+        nav section div#mode-selection button.current {
+          background-color: #6cb6fb;
+        }
+        nav section div#mode-selection button:hover {
+          background-color: #ffffff;
+        }
+
     nav section label {
       margin: 0 6px;
     }
@@ -401,6 +419,27 @@ section#content {
   margin: 0;
   padding: 0;
 }
+  #grid,
+  #grid.draw {
+    /* border: 1px solid #777777; */
+    cursor: url(../images/draw-24.png), pointer;
+  }
+
+  #grid.erase {
+    /* border: 1px solid #777777; */
+    cursor: url(../images/erase-24.png), pointer;
+  }
+
+  #grid.copy {
+    /* border: 1px solid #777777; */
+    cursor: url(../images/copy-24.png), pointer;
+  }
+
+  #grid.fill {
+    /* border: 1px solid #777777; */
+    cursor: url(../images/fill-24.png), pointer;
+  }
+
   #grid #grid-inner {
     -webkit-backface-visibility: hidden;
     background-color: transparent;
@@ -411,25 +450,8 @@ section#content {
     max-width: 1000px;
     padding: 0;
   }
-    #grid #grid-inner,
-    #grid #grid-inner.draw, {
-      /* border: 1px solid #777777; */
-      cursor: url(../images/pencil-24.png), pointer;
-    }
-
-    #grid #grid-inner.eraser {
-      /* border: 1px solid #777777; */
-      cursor: url(../images/eraser-24.png), pointer;
-    }
-
-    #grid #grid-inner.eyedropper {
-      /* border: 1px solid #777777; */
-      cursor: url(../images/eyedropper-24.png), pointer;
-    }
-
-    #grid #grid-inner.paintbucket {
-      /* border: 1px solid #777777; */
-      cursor: url(../images/paintbucket-24.png), pointer;
+    #grid #grid-inner .square {
+      transition: background-color 0.05s ease-in;
     }
 
 #generated-images {

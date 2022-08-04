@@ -24,6 +24,7 @@ Sketchage.dom.interactive = {
   'btnSettings': $('#button-settings'),
   'colorFG': $('#color-picker-fg'),
   'colorBG': $('#color-picker-bg'),
+  'modes': $('#mode-selection button'),
   'btnGenImage': $('#button-export-image'),
-  'btnClearGrid': $('#button-clear-grid')
+  'btnClearGrid': $('#button-reset-image')
 }
