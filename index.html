@@ -47,12 +47,14 @@
 </head>
 <body>
 
-  <ul class="ruler-x">
-    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-  </ul>
-  <ul class="ruler-y">
-    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-  </ul>
+  <section id="rulers">
+    <ul class="ruler-x">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="ruler-y">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+  </section>
 
   <header>
     <div class="menu-left">
@@ -112,14 +114,28 @@
   <nav>
     <section>
       <label for="color-picker-fg" title="Foreground color (Left mouse button)">FG (LMB)</label>
-      <input class="jscolor" id="color-picker-fg" data-jscolor="{format:'hexa'}" value="#000000" />
+      <input id="color-picker-fg"
+        class="jscolor"
+        data-jscolor="{
+          format: 'hexa',
+          onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
+        }"
+        value="rgba(0, 0, 0, 1)"
+      />
 
       <label for="color-picker-bg" title="Background color (Right mouse button)">BG (RMB)</label>
-      <input class="jscolor" id="color-picker-bg" data-jscolor="{format:'hexa'}" value="#ffffff" />
+      <input id="color-picker-bg"
+        class="jscolor"
+        data-jscolor="{
+          format: 'hexa',
+          onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
+        }"
+        value="rgba(255, 255, 255, 1)"
+      />
     </section>
 
     <section>
-      <button id="button-generate-image">Save Image</button>
+      <button id="button-export-image">Export Image</button>
       <button id="button-clear-grid" class="danger">Reset Image</button>
     </section>
   </nav>

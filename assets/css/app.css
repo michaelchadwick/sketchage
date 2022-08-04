@@ -411,17 +411,23 @@ section#content {
     max-width: 1000px;
     padding: 0;
   }
-    #grid #grid-inner .square {
+    #grid #grid-inner,
+    #grid #grid-inner.draw, {
       /* border: 1px solid #777777; */
       cursor: url(../images/pencil-24.png), pointer;
     }
 
-    #grid #grid-inner .square.eyedropper {
+    #grid #grid-inner.eraser {
+      /* border: 1px solid #777777; */
+      cursor: url(../images/eraser-24.png), pointer;
+    }
+
+    #grid #grid-inner.eyedropper {
       /* border: 1px solid #777777; */
       cursor: url(../images/eyedropper-24.png), pointer;
     }
 
-    #grid #grid-inner .square.paintbucket {
+    #grid #grid-inner.paintbucket {
       /* border: 1px solid #777777; */
       cursor: url(../images/paintbucket-24.png), pointer;
     }
