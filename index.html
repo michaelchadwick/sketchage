@@ -112,26 +112,32 @@
   </header>
 
   <nav>
-    <section>
+    <section id="tools">
       <div id="color-selection">
-        <label for="color-picker-fg" title="Foreground color (Left mouse button)">FG (LMB)</label>
+        <label for="color-picker-fg"
+          id="fg-label"
+          title="Foreground color (Left mouse button)"
+        >FG (LMB)</label>
         <input id="color-picker-fg"
           class="jscolor"
           data-jscolor="{
-            format: 'hexa',
             onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
           }"
-          value="rgba(0, 0, 0, 1)"
+          title="Foreground color (Left mouse button)"
+          value="#000000ff"
         />
 
-        <label for="color-picker-bg" title="Background color (Right mouse button)">BG (RMB)</label>
+        <label for="color-picker-bg"
+          id="bg-label"
+          title="Background color (Right mouse button)"
+        >BG (RMB)</label>
         <input id="color-picker-bg"
           class="jscolor"
           data-jscolor="{
-            format: 'hexa',
-            onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
+            onChange: 'Sketchage._jscolorBGChange(this.valueElement.value)'
           }"
-          value="rgba(255, 255, 255, 1)"
+          title="Background color (Right mouse button)"
+          value="#ffffffff"
         />
       </div>
 
@@ -151,7 +157,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="buttons">
       <button id="button-export-image">Export Image</button>
       <button id="button-reset-image" class="danger">Reset Image</button>
     </section>

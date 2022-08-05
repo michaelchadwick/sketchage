@@ -133,6 +133,10 @@ button {
       position: relative;
     }
 
+input.jscolor {
+  font-family: 'Menlo', monospace, sans-serif;
+}
+
 .container {
   align-items: center;
   display: flex;
@@ -363,35 +367,71 @@ header {
     }
 
 nav {
+  background-color: #b5cce1;
+  border-bottom: 1px solid #000000;
   margin: 0 auto;
   text-align: center;
   width: 100%;
 }
   nav section {
     align-items: center;
-    background: #eeeeee;
     display: flex;
     font-family: "Consolas", sans-serif;
     justify-content: center;
     padding: 5px;
   }
-    nav section div#mode-selection {
-      display: flex;
-      flex-direction: row;
-      padding-left: 10px;
+    nav section#tools {
+      padding: 2px 0 0;
     }
-      nav section div#mode-selection button {
-        background-color: #bbbbbb;
-        border: 1px solid #000000;
-        border-radius: 5px;
-        padding: 5px;
+    nav section#buttons {
+      padding: 2px 5px;
+    }
+      nav section#buttons button {
+        margin-right: 0;
       }
-        nav section div#mode-selection button.current {
-          background-color: #6cb6fb;
+      @media (min-width: 768px) {
+        nav section#buttons button {
+          margin-right: 3px;
         }
-        nav section div#mode-selection button:hover {
-          background-color: #ffffff;
+      }
+      nav section div {
+        width: 50%;
+      }
+      @media (min-width: 768px) {
+        nav section div {
+          width: auto;
         }
+      }
+        nav section div#color-selection label {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          nav section div#color-selection label {
+            display: inline;
+          }
+        }
+        nav section div#mode-selection {
+          display: flex;
+          flex-direction: row;
+          padding-left: 0;
+        }
+        @media (min-width: 768px) {
+          nav section div#mode-selection {
+            padding-left: 10px;
+          }
+        }
+          nav section div#mode-selection button {
+            background-color: #bbbbbb;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            padding: 5px;
+          }
+            nav section div#mode-selection button.current {
+              background-color: #6cb6fb;
+            }
+            nav section div#mode-selection button:hover {
+              background-color: #ffffff;
+            }
 
     nav section label {
       margin: 0 6px;
@@ -413,7 +453,6 @@ section#content {
 
 #grid {
   align-items: center;
-  /* background-color: rgb(21, 93, 161, 0.5); */
   display: flex;
   justify-content: center;
   margin: 0;
@@ -421,22 +460,18 @@ section#content {
 }
   #grid,
   #grid.draw {
-    /* border: 1px solid #777777; */
     cursor: url(../images/draw-24.png), pointer;
   }
 
   #grid.erase {
-    /* border: 1px solid #777777; */
     cursor: url(../images/erase-24.png), pointer;
   }
 
   #grid.copy {
-    /* border: 1px solid #777777; */
     cursor: url(../images/copy-24.png), pointer;
   }
 
   #grid.fill {
-    /* border: 1px solid #777777; */
     cursor: url(../images/fill-24.png), pointer;
   }
 

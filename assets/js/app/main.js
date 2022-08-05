@@ -3,6 +3,7 @@
 /* global $, Sketchage, jscolor */
 
 jscolor.presets.default = {
+  format: 'any',
   palette: [
 		'#000000ff', '#7d7d7dff', '#870014ff', '#ec1c23ff', '#ff7e26ff',
 		'#fef100ff', '#22b14bff', '#00a1e7ff', '#3f47ccff', '#a349a4ff',
@@ -175,7 +176,7 @@ Sketchage._loadSettings = async function() {
     if (lsSettings.squareCount) {
       Sketchage.settings.squareCount = lsSettings.squareCount
 
-      var setting = document.getElementById('text-square-count')
+      const setting = document.getElementById('text-square-count')
 
       if (setting) {
         setting.value = lsSettings.squareCount
@@ -185,7 +186,7 @@ Sketchage._loadSettings = async function() {
     if (lsSettings.gridWidth) {
       Sketchage.settings.gridWidth = lsSettings.gridWidth
 
-      var setting = document.getElementById('text-grid-width')
+      const setting = document.getElementById('text-grid-width')
 
       if (setting) {
         setting.value = lsSettings.gridWidth
@@ -195,7 +196,7 @@ Sketchage._loadSettings = async function() {
     if (lsSettings.clicklessMode) {
       Sketchage.settings.clicklessMode = lsSettings.clicklessMode
 
-      var setting = document.getElementById('button-setting-clickless-mode')
+      const setting = document.getElementById('button-setting-clickless-mode')
 
       if (setting) {
         setting.dataset.status = Sketchage.settings.clicklessMode
@@ -205,7 +206,7 @@ Sketchage._loadSettings = async function() {
     if (lsSettings.rainbowMode) {
       Sketchage.settings.rainbowMode = lsSettings.rainbowMode
 
-      var setting = document.getElementById('button-setting-rainbow-mode')
+      const setting = document.getElementById('button-setting-rainbow-mode')
 
       if (setting) {
         setting.dataset.status = Sketchage.settings.rainbowMode
@@ -444,7 +445,7 @@ Sketchage._changeSetting = async function(setting, event = null) {
 Sketchage._saveSetting = function(setting, value) {
   // console.log('saving setting to LS...', setting, value)
 
-  var settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
+  const settings = JSON.parse(localStorage.getItem(SKETCHAGE_SETTINGS_KEY))
 
   if (settings) {
     // set internal code model
@@ -556,7 +557,7 @@ Sketchage._attachEventListeners = function() {
 
     const mode = target.dataset.mode
 
-    document.querySelector('#mode-selection button.current').classList.remove('current')
+    $('#mode-selection button.current').classList.remove('current')
     target.classList.add('current')
 
     Sketchage._changeMode(mode)
@@ -564,7 +565,7 @@ Sketchage._attachEventListeners = function() {
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
-    var modKeys = ['Alt', 'Control', 'Meta', 'Shift']
+    const modKeys = ['Alt', 'Control', 'Meta', 'Shift']
 
     // STUB
     if (modKeys.some(key => event.getModifierState(key))) {}
@@ -598,19 +599,19 @@ Sketchage._jscolorBGChange = () => {
 Sketchage._changeMode = (mode) => {
   Sketchage.config.mode = mode
 
-  document.querySelector('#mode-selection button.current').classList.remove('current')
-  document.querySelector(`#mode-selection button[data-mode=${mode}]`).classList.add('current')
+  $('#mode-selection button.current').removeClass('current')
+  $(`#mode-selection button[data-mode=${mode}]`).addClass('current')
 
-  document.querySelector('#grid').classList.remove(...document.querySelector('#grid').classList)
-  document.querySelector('#grid').classList.add(mode)
+  $('#grid').removeClass()
+  $('#grid').addClass(mode)
 }
 
 // handle both clicks and touches outside of modals
 Sketchage._handleClickTouch = function(event) {
-  var dialog = document.getElementsByClassName('modal-dialog')[0]
+  const dialog = document.getElementsByClassName('modal-dialog')[0]
 
   if (dialog) {
-    var isConfirm = dialog.classList.contains('modal-confirm')
+    const isConfirm = dialog.classList.contains('modal-confirm')
 
     // only close if not a confirmation!
     if (event.target == dialog && !isConfirm) {
@@ -687,15 +688,15 @@ Sketchage._makeGrid = function() {
 
   // create squares
   for (var i = 0; i < Sketchage.settings.squareCount; i++) {
-    for (var j = 0; j < Sketchage.settings.squareCount-1; j++) {
-      Sketchage.dom.gridInner.append("<div class='square' id='" + j + "_" + i + "'></div>")
+    for (var j = 0; j < Sketchage.settings.squareCount - 1; j++) {
+      Sketchage.dom.gridInner.append(`<div class='square' id='${j}_${i}'></div>`)
     }
 
-    Sketchage.dom.gridInner.append("<div class='square' id='" + j + "_" + i + "'></div>")
+    Sketchage.dom.gridInner.append(`<div class='square' id='${j}_${i}'></div>`)
   }
 
-  var squareBorder = 1
-  var squareWidth = (Sketchage.settings.gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder)
+  const squareBorder = 1
+  const squareWidth = (Sketchage.settings.gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder)
 
   Sketchage.dom.gridInner.css({
     gridTemplateColumns: `repeat(${Sketchage.settings.squareCount}, 1fr)`,
@@ -703,15 +704,16 @@ Sketchage._makeGrid = function() {
     width: Sketchage.settings.gridWidth
   })
 
-  // color in each square
-  $(".square").css({
-    backgroundColor: Sketchage.config.colorTransparent,
-    height: squareWidth,
-    width: squareWidth
+  const $squares = $('.square')
+
+  // for each square, set height, width, color, and attach an event handler
+  $squares.css({
+    'background-color': Sketchage.config.colorTransparent,
+    'height': squareWidth,
+    'width': squareWidth
   })
 
-  // attach draw event handler
-  $(".square").on("mouseenter mousedown touchend touchmove", function(e) {
+  $squares.on("mouseenter mousedown touchend touchmove", function(e) {
     if (Sketchage.settings.rainbowMode) {
       Sketchage.config.colorFG = Sketchage.__getRandomColor()
       Sketchage.config.colorBG = Sketchage.__getRandomColor()
@@ -727,12 +729,12 @@ Sketchage._makeGrid = function() {
     }
 
     if (Sketchage.settings.clicklessMode) {
-      Sketchage._draw(this)
+      Sketchage._draw(this, Sketchage.config.color)
     } else if (Sketchage.config.mouseIsDown) {
-      Sketchage._draw(this)
+      Sketchage._draw(this, Sketchage.config.color)
     } else {
       $(this).mousedown(function() {
-        Sketchage._draw(this)
+        Sketchage._draw(this, Sketchage.config.color)
       })
     }
   })
@@ -741,7 +743,9 @@ Sketchage._makeGrid = function() {
 }
 
 // main drawing function
-Sketchage._draw = function(square) {
+Sketchage._draw = function(square, color) {
+  let colorToUse = color
+
   switch (Sketchage.config.mode) {
     case 'erase':
       // erase color back to transparent (this is just BG color right now)
@@ -751,7 +755,9 @@ Sketchage._draw = function(square) {
 
     case 'copy':
       // grab background-color of current square
-      const squareColor = $(square).css('background-color')
+      let squareColor = $(square).css('background-color')
+
+      squareColor = Sketchage.__rgb2Hexa(squareColor)
 
       // set current color and update jscolor
       Sketchage.config.color = squareColor
@@ -761,20 +767,27 @@ Sketchage._draw = function(square) {
 
     case 'fill':
       if (!Sketchage.settings.rainbowMode) {
-        Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+        colorToUse = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+        Sketchage.config.color = colorToUse
       }
 
-      Sketchage.__floodFill(square, Sketchage.config.color)
+      // grab reference to current square and its background-color
+      const id = $(square).attr('id').split('_')
+      const x = parseInt(id[0])
+      const y = parseInt(id[1])
+
+      Sketchage.__startFill(x, y, colorToUse)
 
       break
 
     case 'draw':
     default:
       if (!Sketchage.settings.rainbowMode) {
-        Sketchage.config.color = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+        colorToUse = document.querySelector('#color-picker-fg').jscolor.toRGBAString()
+        Sketchage.config.color = colorToUse
       }
 
-      $(square).css('background-color', Sketchage.config.color)
+      $(square).css('background-color', colorToUse)
 
       break
   }
@@ -787,12 +800,12 @@ Sketchage._draw = function(square) {
  *************************************************************************/
 
 Sketchage.__resizeRulerBackground = function() {
-  var clientW = document.documentElement.clientWidth
-  var headerHeight = 121
-  var adjustRulerXLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 1
-  var adjustRulerXTop = headerHeight
-  var adjustRulerYLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 20
-  var adjustRulerYTop = headerHeight
+  const clientW = document.documentElement.clientWidth
+  const headerHeight = 121
+  const adjustRulerXLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 1
+  const adjustRulerXTop = headerHeight
+  const adjustRulerYLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 20
+  const adjustRulerYTop = headerHeight
 
   $(".ruler-x").transition({
     x: adjustRulerXLeft,
@@ -835,90 +848,91 @@ Sketchage.__clearLocalStorage = function() {
 Sketchage.__getRandomColor = function() {
   return "#" + Math.floor(Math.random() * 16777215).toString(16)
 }
-Sketchage.__floodFill = function(square, newColor) {
-  // grab reference to current square and its background-color
-  const squareId = $(square).attr('id').split('_')
-  const squareX = parseInt(squareId[0])
-  const squareY = parseInt(squareId[1])
 
-  let prevColor = $(square).css('background-color')
+Sketchage.__floodFill = function(x, y, prevColor, newColor) {
+  setTimeout(() => {
 
-  // might be missing alpha channel
-  if (prevColor.split(',').length < 4) {
-    prevColor = Sketchage.__rgbToRgba(prevColor)
-  }
+    const $square = $(`#${x}_${y}`)
+    const edge = Sketchage.config.squareCount
 
-  console.log('prevColor', prevColor)
-  console.log('newColor', newColor)
+    // if we have traveled outside the bounds of the grid, exit
+    if (x < 0 || x >= edge || y < 0 || y >= edge) return
 
-  if (newColor == prevColor) {
-    return
-  }
+    if (prevColor) {
+      // might be missing alpha channel
+      if (prevColor.split(',').length < 4) {
+        prevColor = Sketchage.__rgb2Rgba(prevColor)
+      }
 
-  // change square color to FG/BG color
-  // recurse over nearby squares, too
-  Sketchage.__floodFillUtil(squareX, squareY, prevColor, newColor)
-}
-Sketchage.__floodFillUtil = function(squareX, squareY, prevColor, newColor) {
-  console.log('__floodFillUtil prevColor newColor', prevColor, newColor)
+      let currentColor = $square.css('background-color')
+      currentColor = Sketchage.__rgb2Rgba(currentColor)
 
-  const square = `#${squareX}_${squareY}`
+      // if the next square we check isn't the same color as the OG, exit
+      if (currentColor !== prevColor) return
 
-  // if we have traveled outside the bounds of the grid, exit
-  if (squareX < 0 || squareX >= Sketchage.config.squareCount
-    || squareY < 0 || squareY >= Sketchage.config.squareCount) {
+      // replace the color at current square
+      $square.css('background-color', newColor)
+
+      // recurse for N, E, S, W
+      Sketchage.__floodFill(x, y + 1, prevColor, newColor)
+      Sketchage.__floodFill(x + 1, y, prevColor, newColor)
+      Sketchage.__floodFill(x, y - 1, prevColor, newColor)
+      Sketchage.__floodFill(x - 1, y, prevColor, newColor)
+    } else {
       return
-  }
-  // if the next square we check isn't the same color as the OG, exit
+    }
+
+  }, 0)
+}
+Sketchage.__startFill = function(x, y, newColor) {
+  let prevColor = $(`#${x}_${y}`).css('background-color')
   if (prevColor.split(',').length < 4) {
-    prevColor = Sketchage.__rgbToRgba(prevColor)
+    // might be missing alpha channel
+    prevColor = Sketchage.__rgb2Rgba(prevColor)
   }
 
-  const currentSquareColor = $(square).css('background-color')
+  // if current color is already the new color, don't do any filling
+  if (prevColor == newColor) return
 
-  if (currentSquareColor !== prevColor) {
-    console.log('currentSquareColor !== prevColor')
-    return
-  } else {
-    // replace the color at current square
-    $(square).css('background-color', newColor)
+  // change square color to FG/BG color, then recurse over nearby squares
+  Sketchage.__floodFill(x, y, prevColor, newColor)
+}
 
-    // recurse for N, E, S, W
-    Sketchage.__floodFillUtil(squareX, squareY + 1, prevColor, newColor)
-    Sketchage.__floodFillUtil(squareX + 1, squareY, prevColor, newColor)
-    Sketchage.__floodFillUtil(squareX, squareY - 1, prevColor, newColor)
-    Sketchage.__floodFillUtil(squareX - 1, squareY, prevColor, newColor)
+Sketchage.__dec2Hex = function(dec) {
+  const hex = parseInt(dec).toString(16);
+
+  return hex.length == 1 ? `0${hex}` : hex;
+}
+Sketchage.__rgb2Rgba = function(rgb) {
+  if (rgb !== undefined) {
+    const colors = rgb.split("(")[1].split(")")[0].split(',')
+
+    const R = colors[0].trim()
+    const G = colors[1].trim()
+    const B = colors[2].trim()
+
+    const rgba = `rgba(${R},${G},${B},1)`
+
+    return rgba;
   }
 }
-Sketchage.__colorToHex = function(color) {
-  const hexadecimal = parseInt(color).toString(16);
-
-  return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
-}
-Sketchage.__rgbToRgba = function(rgb) {
-  // get "r, g, b" string
+Sketchage.__rgb2Hexa = function(rgb) {
+  // get "r, g, b" (and maybe "a") string
   const colors = rgb.split("(")[1].split(")")[0].split(',')
 
   // convert each value to hex
-  const R = colors[0].trim()
-  const G = colors[1].trim()
-  const B = colors[2].trim()
+  const hexR = Sketchage.__dec2Hex(colors[0].trim())
+  const hexG = Sketchage.__dec2Hex(colors[1].trim())
+  const hexB = Sketchage.__dec2Hex(colors[2].trim())
 
-  const rgba = `rgba(${R},${G},${B},1)`
+  let hexA = 'ff'
 
-  return rgba;
-}
-Sketchage.__rgbToHex = function(rgb) {
-  // get "r, g, b" string
-  const colors = rgb.split("(")[1].split(")")[0].split(',')
-
-  // convert each value to hex
-  const hexR = Sketchage.__colorToHex(colors[0].trim())
-  const hexG = Sketchage.__colorToHex(colors[1].trim())
-  const hexB = Sketchage.__colorToHex(colors[2].trim())
+  if (colors.length == 4) {
+    hexA = Sketchage.__dec2Hex(colors[3].trim())
+  }
 
   // glue it back together
-  const hex = `${hexR}${hexG}${hexB}`
+  const hex = `${hexR}${hexG}${hexB}${hexA}`
 
   return hex
 }
