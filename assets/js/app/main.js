@@ -156,6 +156,10 @@ Sketchage.initApp = function() {
   // if local dev, show debug stuff
   if (Sketchage.env == 'local') {
     document.title = '(LH) ' + document.title
+
+    Sketchage.__updateScreenDims()
+  } else {
+    Sketchage.dom.interactive.screenDims.style.display = 'none'
   }
 
   Sketchage._loadSettings()
@@ -557,7 +561,7 @@ Sketchage._attachEventListeners = function() {
 
     const mode = target.dataset.mode
 
-    $('#mode-selection button.current').classList.remove('current')
+    $('#mode-selection button.current').removeClass('current')
     target.classList.add('current')
 
     Sketchage._changeMode(mode)
@@ -584,6 +588,7 @@ Sketchage._attachEventListeners = function() {
   window.addEventListener('touchend', Sketchage._handleClickTouch)
 
   window.addEventListener('resize', Sketchage.__resizeRulerBackground)
+  window.addEventListener('resize', Sketchage.__updateScreenDims)
 }
 
 // attach event handlers to jscolor pickers
@@ -739,6 +744,7 @@ Sketchage._makeGrid = function() {
     }
   })
 
+  Sketchage.__updateScreenDims()
   Sketchage.__resizeRulerBackground()
 }
 
@@ -798,6 +804,19 @@ Sketchage._draw = function(square, color) {
 /*************************************************************************
  * _private __helper methods *
  *************************************************************************/
+
+Sketchage.__updateScreenDims = function() {
+  const dims = `
+    <span><strong>viewportW</strong>: ${document.body.offsetWidth}</span>
+    <span><strong>viewPortH</strong>: ${document.body.offsetHeight}</span>
+    <span><strong>contentW</strong>: ${Sketchage.dom.content.width()}</span>
+    <span><strong>contentH</strong>: ${Sketchage.dom.content.height()}</span>
+    <span><strong>gridW</strong>: ${Sketchage.dom.grid.width()}</span>
+    <span><strong>gridH</strong>: ${Sketchage.dom.grid.height()}</span>
+  `
+
+  Sketchage.dom.interactive.screenDims[0].innerHTML = dims
+}
 
 Sketchage.__resizeRulerBackground = function() {
   const clientW = document.documentElement.clientWidth

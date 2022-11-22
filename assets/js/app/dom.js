@@ -7,7 +7,8 @@ Sketchage.dom = {
   'body': $('body'),
   'title': $('header'),
   'navOverlay': $('#nav-overlay'),
-  'navContent': ('$nav-content'),
+  'navContent': $('#nav-content'),
+  'content': $('#content'),
   'grid': $('#grid'),
   'gridInner': $('#grid-inner'),
   'genImageContainer': $('#generated-images'),
@@ -26,5 +27,6 @@ Sketchage.dom.interactive = {
   'colorBG': $('#color-picker-bg'),
   'modes': $('#mode-selection button'),
   'btnGenImage': $('#button-export-image'),
-  'btnClearGrid': $('#button-reset-image')
+  'btnClearGrid': $('#button-reset-image'),
+  'screenDims': $('#screen-dims')
 }

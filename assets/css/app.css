@@ -383,6 +383,37 @@ nav {
     nav section#tools {
       padding: 2px 0 0;
     }
+      nav section#tools div#color-selection label {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        nav section#tools div#color-selection label {
+          display: inline;
+        }
+      }
+      nav section#tools div#mode-selection {
+        display: flex;
+        flex-direction: row;
+        padding-left: 0;
+      }
+      @media (min-width: 768px) {
+        nav section#tools div#mode-selection {
+          padding-left: 10px;
+        }
+      }
+        nav section#tools div#mode-selection button {
+          background-color: #bbbbbb;
+          border: 1px solid #000000;
+          border-radius: 5px;
+          padding: 5px;
+        }
+          nav section#tools div#mode-selection button.current {
+            background-color: #6cb6fb;
+          }
+          nav section#tools div#mode-selection button:hover {
+            background-color: #ffffff;
+          }
+
     nav section#buttons {
       padding: 2px 5px;
     }
@@ -402,36 +433,12 @@ nav {
           width: auto;
         }
       }
-        nav section div#color-selection label {
-          display: none;
-        }
-        @media (min-width: 768px) {
-          nav section div#color-selection label {
-            display: inline;
-          }
-        }
-        nav section div#mode-selection {
-          display: flex;
-          flex-direction: row;
-          padding-left: 0;
-        }
-        @media (min-width: 768px) {
-          nav section div#mode-selection {
-            padding-left: 10px;
-          }
-        }
-          nav section div#mode-selection button {
-            background-color: #bbbbbb;
-            border: 1px solid #000000;
-            border-radius: 5px;
-            padding: 5px;
-          }
-            nav section div#mode-selection button.current {
-              background-color: #6cb6fb;
-            }
-            nav section div#mode-selection button:hover {
-              background-color: #ffffff;
-            }
+
+    nav section#screen-dims {
+      font-size: 0.75rem;
+      justify-content: space-around;
+      padding: 2px 0;
+    }
 
     nav section label {
       margin: 0 6px;
@@ -443,12 +450,13 @@ nav {
     }
 
 section#content {
+  background-color: #d9d9d9;
   display: flex;
   justify-content: center;
-  margin: 15px auto 0;
-  max-width: 960px;
+  margin: 0;
+  /* max-width: 960px; */
   overflow: auto;
-  padding: 10px;
+  padding: 20px 10px;
 }
 
 #grid {
