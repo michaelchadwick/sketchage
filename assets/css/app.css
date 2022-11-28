@@ -435,6 +435,7 @@ nav {
       }
 
     nav section#screen-dims {
+      display: none;
       font-size: 0.75rem;
       justify-content: space-around;
       padding: 2px 0;

@@ -157,9 +157,9 @@ Sketchage.initApp = function() {
   if (Sketchage.env == 'local') {
     document.title = '(LH) ' + document.title
 
+    Sketchage.dom.interactive.screenDims.style.display = 'flex'
+
     Sketchage.__updateScreenDims()
-  } else {
-    Sketchage.dom.interactive.screenDims.style.display = 'none'
   }
 
   Sketchage._loadSettings()
