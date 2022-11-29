@@ -285,7 +285,7 @@ Sketchage._changeSetting = async function(setting, event = null) {
           Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
 
           // update setting DOM
-          $("text-square-count").val(SQUARE_COUNT_DEFAULT)
+          $("#text-square-count").val(SQUARE_COUNT_DEFAULT)
 
           // save to code/LS
           Sketchage._saveSetting('squareCount', SQUARE_COUNT_DEFAULT)
