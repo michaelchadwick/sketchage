@@ -157,7 +157,7 @@ Sketchage.initApp = function() {
   if (Sketchage.env == 'local') {
     document.title = '(LH) ' + document.title
 
-    Sketchage.dom.interactive.screenDims.style.display = 'flex'
+    Sketchage.dom.interactive.screenDims.css('display', 'flex')
 
     Sketchage.__updateScreenDims()
   }
@@ -167,6 +167,8 @@ Sketchage.initApp = function() {
   Sketchage._loadImageData()
 
   Sketchage._attachEventListeners()
+
+  Sketchage._getNebyooApps()
 }
 
 /*************************************************************************
@@ -799,6 +801,20 @@ Sketchage._draw = function(square, color) {
   }
 
   Sketchage.__saveImageData()
+}
+
+Sketchage._getNebyooApps = async function() {
+  const response = await fetch('https://dave.neb.host/?sites')
+  const json = await response.json()
+  const apps = json.body
+  const appList = document.querySelector('.nav-list')
+
+  Object.values(apps).forEach(app => {
+    const appLink = document.createElement('a')
+    appLink.href = app.url
+    appLink.innerText = app.title
+    appList.appendChild(appLink)
+  })
 }
 
 /*************************************************************************
