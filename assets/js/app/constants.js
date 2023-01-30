@@ -32,3 +32,5 @@ const SKETCHAGE_DEFAULTS = {
     'showRulers': false
   }
 }
+
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'

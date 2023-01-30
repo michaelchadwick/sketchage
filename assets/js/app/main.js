@@ -804,7 +804,7 @@ Sketchage._draw = function(square, color) {
 }
 
 Sketchage._getNebyooApps = async function() {
-  const response = await fetch('https://dave.neb.host/?sites')
+  const response = await fetch(NEBYOOAPPS_SOURCE_URL)
   const json = await response.json()
   const apps = json.body
   const appList = document.querySelector('.nav-list')
@@ -813,6 +813,7 @@ Sketchage._getNebyooApps = async function() {
     const appLink = document.createElement('a')
     appLink.href = app.url
     appLink.innerText = app.title
+    appLink.target = '_blank'
     appList.appendChild(appLink)
   })
 }
