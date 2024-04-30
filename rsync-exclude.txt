@@ -1,7 +1,9 @@
+.DS_Store
 .git/
 .eslintignore
 .eslintrc*
 .gitignore
+.vscode
 CONTRIBUTING.md
 LICENSE.md
 README.md
