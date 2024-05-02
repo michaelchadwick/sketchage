@@ -27,7 +27,9 @@ Sketchage.modalOpen = async function(type) {
   switch(type) {
     case 'start':
     case 'help':
-      this.myModal = new Modal('perm', 'How to Use Sketchage',
+      this.myModal = new Modal(
+        "perm",
+        "How to Use Sketchage",
         `
           <p><strong>Sketchage</strong> is a super simple grid-based drawing program. Choose a foreground and background color from the picker, and then either left-click (FG) or right-click (BG) on a square, or click and drag around, to fill in the picture. If you want to just drag your mouse without clicking, check the "Clickless drawing" box.</p>
 
@@ -42,11 +44,11 @@ Sketchage.modalOpen = async function(type) {
 
           <hr />
 
-          <div>Sketchage based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>".</div>
+          <div>[Sketchage](https://github.com/michaelchadwick/sketchage) based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>".</div>
         `,
         null,
         null
-      )
+      );
       break
 
     case 'settings':
