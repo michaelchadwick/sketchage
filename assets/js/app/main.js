@@ -44,7 +44,7 @@ Sketchage.modalOpen = async function(type) {
 
           <hr />
 
-          <div>[Sketchage](https://github.com/michaelchadwick/sketchage) based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>".</div>
+          <div><a href="https://github.com/michaelchadwick/sketchage">Sketchage</a> based on <a href="https://github.com/mixophrygian">mixophrygian</a>'s "<a href="https://github.com/mixophrygian/Etcha-sketch">Etcha-sketch</a>".</div>
         `,
         null,
         null
