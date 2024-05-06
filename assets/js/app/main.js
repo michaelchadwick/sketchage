@@ -2,6 +2,9 @@
 /* app entry point and main functions */
 /* global $, Sketchage, jscolor */
 
+// TODO: make work on mobile? (force smaller grid size, maybe)
+// TODO: remove jQuery
+
 jscolor.presets.default = {
   format: 'any',
   palette: [
