@@ -12,4 +12,3 @@ data
 node_modules/*
 gulpfile.js
 rsync-exclude.txt
-TODO.md
