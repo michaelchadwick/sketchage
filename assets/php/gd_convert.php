@@ -28,7 +28,13 @@ if (isset($decoded['imageConversion'])) {
     $dir = '../../data/' . date('y-m-j_h-i-s') . '_' . $file_dir;
 
     if (!is_dir($dir)) {
-      mkdir($dir, 0744, true);
+      if (!mkdir($dir, 0744, true)) {
+        die(json_encode([
+          'data' => null,
+          'error' => 'Error: could not create image conversion data structure',
+          'ok' => false
+        ]));
+      }
     }
 
     $path = $dir . '/' . $file_name;
