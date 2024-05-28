@@ -1,32 +1,33 @@
 /* dom */
 /* grab references to dom elements */
-/* global $, Sketchage */
+/* global Sketchage */
 
 // DOM > main divs/elements
 Sketchage.dom = {
-  'body': $('body'),
-  'title': $('header'),
-  'navOverlay': $('#nav-overlay'),
-  'navContent': $('#nav-content'),
-  'content': $('#content'),
-  'grid': $('#grid'),
-  'gridInner': $('#grid-inner'),
-  'genImageContainer': $('#generated-images'),
-  'genImages': $('#generated-images .gen-img'),
-  'rulerX': $('.ruler-x'),
-  'rulerY': $('.ruler-y'),
+  'body': document.getElementsByTagName('body')[0],
+  'title': document.getElementsByTagName('header')[0],
+  'navOverlay': document.getElementById('nav-overlay'),
+  'navContent': document.getElementById('nav-content'),
+  'content': document.getElementById('content'),
+  'grid': document.getElementById('grid'),
+  'gridInner': document.getElementById('grid-inner'),
+  'genImageContainer': document.getElementById('generated-images'),
+  'genImages': document.querySelectorAll('#generated-images .gen-img'),
+  'genImageCloseLinks': document.querySelectorAll('#generated-images .gen-img a.gen-img-x'),
+  'rulerX': document.querySelector('.ruler-x'),
+  'rulerY': document.querySelector('.ruler-y'),
 }
 
 // DOM > interactive elements
 Sketchage.dom.interactive = {
-  'btnNav': $('#button-nav'),
-  'btnNavClose': $('#button-nav-close'),
-  'btnHelp': $('#button-help'),
-  'btnSettings': $('#button-settings'),
-  'colorFG': $('#color-picker-fg'),
-  'colorBG': $('#color-picker-bg'),
-  'modes': $('#mode-selection button'),
-  'btnGenImage': $('#button-export-image'),
-  'btnClearGrid': $('#button-reset-image'),
-  'screenDims': $('#screen-dims')
+  'btnNav': document.getElementById('button-nav'),
+  'btnNavClose': document.getElementById('button-nav-close'),
+  'btnHelp': document.getElementById('button-help'),
+  'btnSettings': document.getElementById('button-settings'),
+  'colorFG': document.getElementById('color-picker-fg'),
+  'colorBG': document.getElementById('color-picker-bg'),
+  'modes': document.querySelectorAll('#mode-selection button'),
+  'btnGenImage': document.getElementById('button-export-image'),
+  'btnClearGrid': document.getElementById('button-reset-image'),
+  'screenDims': document.getElementById('screen-dims')
 }

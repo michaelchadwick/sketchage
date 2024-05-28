@@ -1,9 +1,8 @@
 /* main */
 /* app entry point and main functions */
-/* global $, Sketchage, jscolor */
+/* global Sketchage, jscolor */
 
 // TODO: make work on mobile? (force smaller grid size, maybe)
-// TODO: remove jQuery
 
 jscolor.presets.default = {
   format: 'any',
@@ -30,6 +29,7 @@ Sketchage.modalOpen = async function(type) {
   switch(type) {
     case 'start':
     case 'help':
+      console.log('modal help')
       this.myModal = new Modal(
         "perm",
         "How to Use Sketchage",
@@ -162,7 +162,7 @@ Sketchage.initApp = function() {
   if (Sketchage.env == 'local') {
     document.title = '(LH) ' + document.title
 
-    Sketchage.dom.interactive.screenDims.css('display', 'flex')
+    Sketchage.dom.interactive.screenDims.style.setProperty('display', 'flex')
 
     Sketchage.__updateScreenDims()
   }
@@ -246,7 +246,7 @@ Sketchage._changeSetting = async function(setting, event = null) {
       if (event && event.which === 13) {
         event.preventDefault()
 
-        $("#button-square-count-resize").click()
+        document.getElementById("button-square-count-resize").click()
       }
       break
 
@@ -292,7 +292,7 @@ Sketchage._changeSetting = async function(setting, event = null) {
           Sketchage.settings.squareCount = SQUARE_COUNT_DEFAULT
 
           // update setting DOM
-          $("#text-square-count").val(SQUARE_COUNT_DEFAULT)
+          document.getElementById('text-square-count').value = SQUARE_COUNT_DEFAULT
 
           // save to code/LS
           Sketchage._saveSetting('squareCount', SQUARE_COUNT_DEFAULT)
@@ -315,7 +315,7 @@ Sketchage._changeSetting = async function(setting, event = null) {
 
       if (event && event.which === 13) {
         event.preventDefault()
-        $("#button-grid-width-resize").click()
+        document.getElementById("button-grid-width-resize").click()
       }
       break
 
@@ -332,8 +332,8 @@ Sketchage._changeSetting = async function(setting, event = null) {
 
           if (gridWidthValue != '') {
             // update container DOM
-            Sketchage.dom.gridInner.css("width", gridWidthValue)
-            Sketchage.dom.gridInner.css("height", gridWidthValue)
+            Sketchage.dom.gridInner.style.setProperty("width", `${gridWidthValue}px`)
+            Sketchage.dom.gridInner.style.setProperty("height", `${gridWidthValue}px`)
 
             // save to code/LS
             Sketchage._saveSetting('gridWidth', parseInt(gridWidthValue))
@@ -359,11 +359,11 @@ Sketchage._changeSetting = async function(setting, event = null) {
       try {
         if (gridWidthDefaultConfirmed) {
           // update container DOM
-          Sketchage.dom.gridInner.css("width", GRID_WIDTH_DEFAULT)
-          Sketchage.dom.gridInner.css("height", GRID_WIDTH_DEFAULT)
+          Sketchage.dom.gridInner.style.setProperty("width", `${GRID_WIDTH_DEFAULT}px`)
+          Sketchage.dom.gridInner.style.setProperty("height", `${GRID_WIDTH_DEFAULT}px`)
 
           // update setting DOM
-          $("#text-grid-width").val(GRID_WIDTH_DEFAULT)
+          document.getElementById("text-grid-width").value = GRID_WIDTH_DEFAULT
 
           // save to code/LS
           Sketchage._saveSetting('gridWidth', GRID_WIDTH_DEFAULT)
@@ -409,8 +409,8 @@ Sketchage._changeSetting = async function(setting, event = null) {
           document.getElementById('button-setting-rainbow-mode').dataset.status = 'true'
 
           // update color DOM
-          Sketchage.config.colorFG = $("#color-picker-fg").css('background-color')
-          Sketchage.config.colorBG = $("#color-picker-bg").css('background-color')
+          Sketchage.config.colorFG = getComputedStyle(document.getElementById("color-picker-fg")).getPropertyValue('background-color')
+          Sketchage.config.colorBG = getComputedStyle(document.getElementById("color-picker-bg")).getPropertyValue('background-color')
 
           // save to code/LS
           Sketchage._saveSetting('rainbowMode', true)
@@ -491,15 +491,18 @@ Sketchage._loadImageData = async function() {
         if (prevImageDataConfirmed) {
           Sketchage._makeGrid()
 
-          let colors = lsImgData.split(';')
+          const colors = lsImgData.split(';')
           let id = ''
           let color = ''
 
-          colors.forEach(function(c) {
+          colors.forEach((c) => {
             c = c.split(':')
-            id = `#${c[0]}`
+            id = c[0]
             color = c[1]
-            $(id).css('background-color', color)
+        
+            if (id) {
+              document.getElementById(id).style.setProperty('background-color', color)
+            }
           })
         } else {
           Sketchage._makeGrid()
@@ -515,31 +518,33 @@ Sketchage._loadImageData = async function() {
 
 Sketchage._attachEventListeners = function() {
   // main input event handlers
-  Sketchage.dom.gridInner.mousedown(function() {
+  Sketchage.dom.gridInner.addEventListener('mousedown', function() {
     Sketchage.config.mouseIsDown = true
-  }).mouseup(function() {
+  })
+  
+  Sketchage.dom.gridInner.addEventListener('mouseup', function() {
     Sketchage.config.mouseIsDown = false
   })
 
   // disallow right-clicking on canvas
-  Sketchage.dom.gridInner.bind('contextmenu', function(e) {
+  Sketchage.dom.gridInner.addEventListener('contextmenu', function(e) {
     e.preventDefault()
   })
 
   // attach event handlers to header buttons
-  Sketchage.dom.interactive.btnNav.click(() => {
-    Sketchage.dom.navOverlay.toggleClass('show')
+  Sketchage.dom.interactive.btnNav.addEventListener('click', () => {
+    Sketchage.dom.navOverlay.classList.toggle('show')
   })
-  Sketchage.dom.interactive.btnNavClose.click(() => {
-    Sketchage.dom.navOverlay.toggleClass('show')
+  Sketchage.dom.interactive.btnNavClose.addEventListener('click', () => {
+    Sketchage.dom.navOverlay.classList.toggle('show')
   })
-  Sketchage.dom.interactive.btnHelp.click(() => Sketchage.modalOpen('help'))
-  Sketchage.dom.interactive.btnSettings.click(() => Sketchage.modalOpen('settings'))
+  Sketchage.dom.interactive.btnHelp.addEventListener('click', () => Sketchage.modalOpen('help'))
+  Sketchage.dom.interactive.btnSettings.addEventListener('click', () => Sketchage.modalOpen('settings'))
 
-  Sketchage.dom.interactive.btnGenImage.click(function() {
+  Sketchage.dom.interactive.btnGenImage.addEventListener('click', () => {
     Sketchage._generateImage()
   })
-  Sketchage.dom.interactive.btnClearGrid.click(async function() {
+  Sketchage.dom.interactive.btnClearGrid.addEventListener('click', async () => {
     const resetImageConfirmed = await new Modal(
       'confirm',
       'Reset Image',
@@ -550,7 +555,9 @@ Sketchage._attachEventListeners = function() {
 
     try {
       if (resetImageConfirmed) {
-        $('.square').css('background-color', Sketchage.config.colorTransparent)
+        document.querySelectorAll('.square').forEach((square) => {
+          square.style.setProperty('background-color', Sketchage.config.colorTransparent)
+        })
 
         Sketchage.__clearLocalStorage()
       }
@@ -559,19 +566,21 @@ Sketchage._attachEventListeners = function() {
     }
   })
 
-  Sketchage.dom.interactive.modes.click(function(event) {
-    let target = event.target
+  Sketchage.dom.interactive.modes.forEach((mode) => {
+    mode.addEventListener('click', function(event) {
+      let target = event.target
 
-    if (event.target.tagName == 'IMG') {
-      target = event.target.parentElement
-    }
+      if (event.target.tagName == 'IMG') {
+        target = event.target.parentElement
+      }
 
-    const mode = target.dataset.mode
+      const mode = target.dataset.mode
 
-    $('#mode-selection button.current').removeClass('current')
-    target.classList.add('current')
+      document.querySelector('#mode-selection button.current').classList.remove('current')
+      target.classList.add('current')
 
-    Sketchage._changeMode(mode)
+      Sketchage._changeMode(mode)
+    })
   })
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
@@ -611,11 +620,11 @@ Sketchage._jscolorBGChange = () => {
 Sketchage._changeMode = (mode) => {
   Sketchage.config.mode = mode
 
-  $('#mode-selection button.current').removeClass('current')
-  $(`#mode-selection button[data-mode=${mode}]`).addClass('current')
+  document.querySelector('#mode-selection button.current').classList.remove('current')
+  document.querySelector(`#mode-selection button[data-mode=${mode}]`).classList.add('current')
 
-  $('#grid').removeClass()
-  $('#grid').addClass(mode)
+  document.querySelector('#grid').classList = ''
+  document.querySelector('#grid').classList.add(mode)
 }
 
 // handle both clicks and touches outside of modals
@@ -636,139 +645,153 @@ Sketchage._handleClickTouch = function(event) {
   }
 }
 
-Sketchage._enableRulers = function() {
-  // show background-image (ruler ticks)
-  Sketchage.dom.body.css('background-image', 'linear-gradient(90deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(90deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0), linear-gradient(0deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0), linear-gradient(0deg, var(--ruler2-c) 0 var(--ruler2-bdw), transparent 0)')
-  // show ruler numbers
-  Sketchage.dom.rulerX.css('display', 'flex')
-  Sketchage.dom.rulerY.css('display', 'flex')
-}
-Sketchage._disableRulers = function() {
-  // hide background-image (ruler ticks)
-  Sketchage.dom.body.css('background-image', 'none')
-  // hide ruler numbers
-  Sketchage.dom.rulerX.css('display', 'none')
-  Sketchage.dom.rulerY.css('display', 'none')
-}
+Sketchage._generateImage = async function() {
+  Sketchage.dom.gridInner.style.setProperty("float", "left")
 
-Sketchage._generateImage = function() {
-  Sketchage.dom.gridInner.css("float", "left")
+  Sketchage.dom.genImageContainer.style.setProperty("display", "block")
+  Sketchage.dom.genImageContainer.style.setProperty("height", `${Sketchage.dom.gridInner.clientHeight}px`)
 
-  Sketchage.dom.genImageContainer.css({
-    "display" : "block",
-    "height" : Sketchage.dom.gridInner.height()
-  })
+  const genImgId = generateLowResBitmap(5, Sketchage.settings.squareCount)
+  const genImgCloseId = `#${genImgId}-x`
 
-  generateLowResBitmap(5, Sketchage.settings.squareCount)
+  const newest_img = [...Sketchage.dom.genImageContainer.querySelectorAll('img')][0]
+  const newest_img_src = newest_img.getAttribute('src')
 
-  $newest_img = Sketchage.dom.genImageContainer.last().find('img').last()
-  $newest_img_src = $newest_img.attr('src')
-
-  $.ajax({
-    url: 'assets/php/gd_convert.php',
-    type: 'post',
-    data: { "imageConversion": $newest_img_src },
-    success: function(imgPath) {
-      $html = `
-        <div class="file-links">
-          <a class="file-link" href="${imgPath}.gif" target="_blank">GIF</a> | <a class="file-link" href="${imgPath}.jpg" target="_blank">JPG</a> | <a class="file-link" href="${imgPath}.png" target="_blank">PNG</a>
-        </div>
-      `
-
-      $newest_img.after($html)
+  const response = await fetch('assets/php/gd_convert.php', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept":       "application/json"
     },
-    error: function(error) {
-      console.error('img convert failed', error)
-    }
+    body: JSON.stringify({
+      "imageConversion": newest_img_src
+    })
   })
+  
+  const json = await response.json()
 
-  Sketchage.dom.genImages.find('div').find('a.gen-img-x').click(function(event) {
-    event.preventDefault()
+  if (json.error) {
+    console.error(json.error)
+  } else {
+    const imgPath = json.data
+    const html = `
+      <div class="file-links">
+        <a class="file-link" href="${imgPath}.gif" target="_blank">GIF</a> | <a class="file-link" href="${imgPath}.jpg" target="_blank">JPG</a> | <a class="file-link" href="${imgPath}.png" target="_blank">PNG</a>
+      </div>
+    `
 
-    if (Sketchage.dom.genImages.find('div').length == 0) {
-      Sketchage.dom.gridInner.css("float", "none")
-      Sketchage.dom.genImages.css("display", "none")
-    }
+    newest_img.parentElement.innerHTML += html
+    
+    // if any image is closed and there are now 0 generated images
+    // close the entire sidebar
+    Sketchage.dom.genImageCloseLinks.forEach((img) => {
+      img.addEventListener('click', (event) => {
+        event.preventDefault()
+
+        if (!Sketchage.dom.genImages.length) {
+          Sketchage.dom.gridInner.style.setProperty("float", "none")
+          Sketchage.dom.genImages.style.setProperty("display", "none")
+        }
+      })
+    })
+  }
+
+  document.querySelector(genImgCloseId).addEventListener('click', () => {
+    document.getElementById(genImgId).remove()
   })
 }
 
 Sketchage._makeGrid = function() {
   // remove any existing squares
-  Sketchage.dom.gridInner.find('.square').remove()
+  Sketchage.dom.gridInner.querySelectorAll('.square').forEach((square) => {
+    square.remove()
+  })
   // remove generated images
-  Sketchage.dom.genImages.remove()
+  Sketchage.dom.genImages.forEach((genImage) => {
+    genImage.remove()
+  })
 
   // create squares
   for (var i = 0; i < Sketchage.settings.squareCount; i++) {
     for (var j = 0; j < Sketchage.settings.squareCount - 1; j++) {
-      Sketchage.dom.gridInner.append(`<div class='square' id='${j}_${i}'></div>`)
+      const sq = document.createElement('div')
+      sq.classList.add('square')
+      sq.id = `${j}_${i}`
+
+      Sketchage.dom.gridInner.appendChild(sq)
     }
 
-    Sketchage.dom.gridInner.append(`<div class='square' id='${j}_${i}'></div>`)
+    const sq = document.createElement('div')
+    sq.classList.add('square')
+    sq.id = `${j}_${i}`
+
+    Sketchage.dom.gridInner.appendChild(sq)
   }
 
   const squareBorder = 1
   const squareWidth = (Sketchage.settings.gridWidth / Sketchage.settings.squareCount) - (2 * squareBorder)
 
-  Sketchage.dom.gridInner.css({
-    gridTemplateColumns: `repeat(${Sketchage.settings.squareCount}, 1fr)`,
-    height: Sketchage.settings.gridWidth,
-    width: Sketchage.settings.gridWidth
-  })
+  Sketchage.dom.gridInner.style.setProperty('grid-template-columns', `repeat(${Sketchage.settings.squareCount}, 1fr)`)
+  Sketchage.dom.gridInner.style.setProperty('height', `${Sketchage.settings.gridWidth}px`)
+  Sketchage.dom.gridInner.style.setProperty('width', `${Sketchage.settings.gridWidth}px`)
 
-  const $squares = $('.square')
+  const squares = document.querySelectorAll('.square')
 
   // for each square, set height, width, color, and attach an event handler
-  $squares.css({
-    'background-color': Sketchage.config.colorTransparent,
-    'height': squareWidth,
-    'width': squareWidth
-  })
+  squares.forEach((square) => {
+    square.style.setProperty('background-color', Sketchage.config.colorTransparent)
+    square.style.setProperty('height', `${squareWidth}px`)
+    square.style.setProperty('width', `${squareWidth}px`)
 
-  $squares.on("mouseenter mousedown touchend touchmove", function(e) {
-    if (Sketchage.settings.rainbowMode) {
-      Sketchage.config.colorFG = Sketchage.__getRandomColor()
-      Sketchage.config.colorBG = Sketchage.__getRandomColor()
-    }
+    const events = ['mouseenter', 'mousedown', 'touchend', 'touchmove']
 
-    e.preventDefault()
+    events.forEach((eventName) => {
+      square.addEventListener(eventName, (e) => {
+        e.preventDefault()       
+    
+        // choose Sketchage.config.color based on mouse button
+        switch (e.which) {
+          case 1: Sketchage.config.color = Sketchage.config.colorFG; break
+          case 3: Sketchage.config.color = Sketchage.config.colorBG; break
+          default: Sketchage.config.color = Sketchage.config.colorFG; break
+        }
 
-    // choose Sketchage.config.color based on mouse button
-    switch (e.which) {
-      case 1: Sketchage.config.color = Sketchage.config.colorFG; break
-      case 3: Sketchage.config.color = Sketchage.config.colorBG; break
-      default: Sketchage.config.color = Sketchage.config.colorFG; break
-    }
-
-    if (Sketchage.settings.clicklessMode) {
-      Sketchage._draw(this, Sketchage.config.color)
-    } else if (Sketchage.config.mouseIsDown) {
-      Sketchage._draw(this, Sketchage.config.color)
-    } else {
-      $(this).mousedown(function() {
-        Sketchage._draw(this, Sketchage.config.color)
+        if (Sketchage.settings.rainbowMode) {
+          Sketchage.config.colorFG = Sketchage.__getRandomColor()
+          Sketchage.config.colorBG = Sketchage.__getRandomColor()
+        }
+    
+        if (Sketchage.settings.clicklessMode) {
+          Sketchage._updateSquare(square, Sketchage.config.color)
+        } else if (Sketchage.config.mouseIsDown) {
+          Sketchage._updateSquare(square, Sketchage.config.color)
+        } else {
+          square.addEventListener('mousedown', () => {
+            Sketchage._updateSquare(square, Sketchage.config.color)
+          })
+        }
       })
-    }
+    })
   })
 
   Sketchage.__updateScreenDims()
   Sketchage.__resizeRulerBackground()
 }
 
-// main drawing function
-Sketchage._draw = function(square, color) {
+// main update function
+Sketchage._updateSquare = function(square, color) {
   let colorToUse = color
 
   switch (Sketchage.config.mode) {
     case 'erase':
       // erase color back to transparent (this is just BG color right now)
-      $(square).css('background-color', Sketchage.config.colorTransparent)
+      square.style.setProperty('background-color', Sketchage.config.colorTransparent)
 
       break
 
     case 'copy':
       // grab background-color of current square
-      let squareColor = $(square).css('background-color')
+      let squareColor = document.querySelector(square).style.getPropertyValue('background-color')
 
       squareColor = Sketchage.__rgb2Hexa(squareColor)
 
@@ -785,7 +808,7 @@ Sketchage._draw = function(square, color) {
       }
 
       // grab reference to current square and its background-color
-      const id = $(square).attr('id').split('_')
+      const id = document.querySelector(square).getAttribute('id').split('_')
       const x = parseInt(id[0])
       const y = parseInt(id[1])
 
@@ -800,7 +823,7 @@ Sketchage._draw = function(square, color) {
         Sketchage.config.color = colorToUse
       }
 
-      $(square).css('background-color', colorToUse)
+      square.style.setProperty('background-color', colorToUse)
 
       break
   }
@@ -831,48 +854,26 @@ Sketchage.__updateScreenDims = function() {
   const dims = `
     <span><strong>viewportW</strong>: ${document.body.offsetWidth}</span>
     <span><strong>viewPortH</strong>: ${document.body.offsetHeight}</span>
-    <span><strong>contentW</strong>: ${Sketchage.dom.content.width()}</span>
-    <span><strong>contentH</strong>: ${Sketchage.dom.content.height()}</span>
-    <span><strong>gridW</strong>: ${Sketchage.dom.grid.width()}</span>
-    <span><strong>gridH</strong>: ${Sketchage.dom.grid.height()}</span>
+    <span><strong>contentW</strong>: ${Sketchage.dom.content.clientWidth}</span>
+    <span><strong>contentH</strong>: ${Sketchage.dom.content.clientHeight}</span>
+    <span><strong>gridW</strong>: ${Sketchage.dom.grid.clientWidth}</span>
+    <span><strong>gridH</strong>: ${Sketchage.dom.grid.clientHeight}</span>
   `
 
-  Sketchage.dom.interactive.screenDims[0].innerHTML = dims
-}
-
-Sketchage.__resizeRulerBackground = function() {
-  const clientW = document.documentElement.clientWidth
-  const headerHeight = 121
-  const adjustRulerXLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 1
-  const adjustRulerXTop = headerHeight
-  const adjustRulerYLeft = ((clientW - Sketchage.settings.gridWidth) / 2) - 20
-  const adjustRulerYTop = headerHeight
-
-  $(".ruler-x").transition({
-    x: adjustRulerXLeft,
-    y: adjustRulerXTop,
-    width: `${Sketchage.settings.gridWidth}px`,
-    duration: 0
-  })
-
-  $(".ruler-y").transition({
-    height: `${Sketchage.settings.gridWidth}px`,
-    x: adjustRulerYLeft,
-    y: adjustRulerYTop,
-    duration: 0
-  })
-
-  $("body").css('background-position', `${adjustRulerXLeft + 1}px ${adjustRulerXTop}px`)
+  Sketchage.dom.interactive.screenDims.innerHTML = dims
 }
 
 Sketchage.__saveImageData = function() {
   let serial_img = ''
 
-  $(".square").each(function() {
-    let id = $(this).attr('id')
-    let color = $(this).css('background-color')
+  document.querySelectorAll(".square").forEach((square) => {
+    const id = square.getAttribute('id')
+    const color = square.style.getPropertyValue('background-color')
+    const cell = `${id}:${color};`
 
-    serial_img = serial_img.concat(`${id}:${color};`)
+    if (cell != null) {
+      serial_img = serial_img.concat(cell)
+    }
   })
 
   localStorage.setItem(SKETCHAGE_IMAGE_DATA_KEY, serial_img)
@@ -886,14 +887,9 @@ Sketchage.__clearLocalStorage = function() {
   }
 }
 
-Sketchage.__getRandomColor = function() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16)
-}
-
 Sketchage.__floodFill = function(x, y, prevColor, newColor) {
   setTimeout(() => {
-
-    const $square = $(`#${x}_${y}`)
+    const square = document.querySelector(`#${x}_${y}`)
     const edge = Sketchage.config.squareCount
 
     // if we have traveled outside the bounds of the grid, exit
@@ -905,14 +901,14 @@ Sketchage.__floodFill = function(x, y, prevColor, newColor) {
         prevColor = Sketchage.__rgb2Rgba(prevColor)
       }
 
-      let currentColor = $square.css('background-color')
+      let currentColor = square.style.getPropertyValue('background-color')
       currentColor = Sketchage.__rgb2Rgba(currentColor)
 
       // if the next square we check isn't the same color as the OG, exit
       if (currentColor !== prevColor) return
 
       // replace the color at current square
-      $square.css('background-color', newColor)
+      square.style.setProperty('background-color', newColor)
 
       // recurse for N, E, S, W
       Sketchage.__floodFill(x, y + 1, prevColor, newColor)
@@ -926,7 +922,7 @@ Sketchage.__floodFill = function(x, y, prevColor, newColor) {
   }, 0)
 }
 Sketchage.__startFill = function(x, y, newColor) {
-  let prevColor = $(`#${x}_${y}`).css('background-color')
+  let prevColor = document.querySelector(`#${x}_${y}`).style.getPropertyValue('background-color')
   if (prevColor.split(',').length < 4) {
     // might be missing alpha channel
     prevColor = Sketchage.__rgb2Rgba(prevColor)
@@ -937,45 +933,6 @@ Sketchage.__startFill = function(x, y, newColor) {
 
   // change square color to FG/BG color, then recurse over nearby squares
   Sketchage.__floodFill(x, y, prevColor, newColor)
-}
-
-Sketchage.__dec2Hex = function(dec) {
-  const hex = parseInt(dec).toString(16);
-
-  return hex.length == 1 ? `0${hex}` : hex;
-}
-Sketchage.__rgb2Rgba = function(rgb) {
-  if (rgb !== undefined) {
-    const colors = rgb.split("(")[1].split(")")[0].split(',')
-
-    const R = colors[0].trim()
-    const G = colors[1].trim()
-    const B = colors[2].trim()
-
-    const rgba = `rgba(${R},${G},${B},1)`
-
-    return rgba;
-  }
-}
-Sketchage.__rgb2Hexa = function(rgb) {
-  // get "r, g, b" (and maybe "a") string
-  const colors = rgb.split("(")[1].split(")")[0].split(',')
-
-  // convert each value to hex
-  const hexR = Sketchage.__dec2Hex(colors[0].trim())
-  const hexG = Sketchage.__dec2Hex(colors[1].trim())
-  const hexB = Sketchage.__dec2Hex(colors[2].trim())
-
-  let hexA = 'ff'
-
-  if (colors.length == 4) {
-    hexA = Sketchage.__dec2Hex(colors[3].trim())
-  }
-
-  // glue it back together
-  const hex = `${hexR}${hexG}${hexB}${hexA}`
-
-  return hex
 }
 
 /* ******************************** *

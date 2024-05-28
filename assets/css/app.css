@@ -526,7 +526,7 @@ section#content {
     margin-bottom: 5px;
     padding: 5px;
   }
-    #generated-images div.gen-img span.img-header {
+    #generated-images div.gen-img span.gen-img-header {
       border: none;
       font-family: monospace;
       font-size: 0.9em;

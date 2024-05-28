@@ -256,18 +256,24 @@
             img_parent = document.createElement('div');
             img_parent.id = gen_img_id;
             img_parent.classList.add('gen-img');
-            document.getElementById('generated-images').appendChild(img_parent);
+            document.getElementById('generated-images').prepend(img_parent);
         }
 
-        img_parent.innerHTML =  '<span class="img-header">' + gen_img_id;
-        img_parent.innerHTML += ' <a title="remove ' + gen_img_id + '" href="#" id="' + gen_img_id_x + '" class="gen-img-x">[X]</a></span>';
-        document.getElementById(gen_img_id_x).onclick = function() {
-            var img_parent = document.getElementById(gen_img_id);
-            img_parent.parentNode.removeChild(img_parent);
-            return false;
-        };
+        var img_header = document.createElement('span');
+        img_header.classList.add('gen-img-header');
+        img_header.innerText = gen_img_id;
+        img_parent.appendChild(img_header);
+
+        var img_close_x = document.createElement('a');
+        img_close_x.classList.add('gen-img-x');
+        img_close_x.href = '#';
+        img_close_x.id = gen_img_id_x;
+        img_close_x.innerHTML = '[X]';
+        img_close_x.title = `remove ${gen_img_id}`;
+        img_parent.appendChild(img_close_x);
+        
         img_parent.appendChild(img);
-        return false;
+        return gen_img_id;
     };
 
     window.generateLowResBitmap.askToScale = function() {
