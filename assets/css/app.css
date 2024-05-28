@@ -1,7 +1,9 @@
-/* main: #155DA1 */
-/* light: #6cb6fb */
-/* dark:  #043d72 */
-/* debug: #715ec7 */
+:root {
+  --main:  #155DA1;
+  --light: #6cb6fb;
+  --dark:  #043d72;
+  --debug: #715ec7;
+}
 
 /* FOUNDATION */
 
@@ -73,7 +75,7 @@ hr {
 
 button {
   align-items: center;
-  background-color: #043d72;
+  background-color: var(--dark);
   border: 0;
   border-radius: 4px;
   color: #ffffff;
@@ -91,7 +93,7 @@ button {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
   button:hover {
-    background-color: #155DA1;
+    background-color: var(--main);
   }
   button:disabled {
     background-color: #eee;
@@ -116,7 +118,7 @@ button {
     padding: 0 4px;
   }
     button.icon:hover {
-      color: #6cb6fb;
+      color: var(--light);
     }
   button.help {
     background-color: #ddd;
@@ -175,12 +177,12 @@ input.jscolor {
       width: 1em;
     }
     .radio input[type=radio]:checked + .radio-label:before {
-      background-color: #155DA1;
+      background-color: var(--main);
       box-shadow: inset 0 0 0 4px #f4f4f4;
     }
     .radio input[type=radio]:focus + .radio-label:before {
       outline: none;
-      border-color: #155DA1;
+      border-color: var(--main);
     }
     .radio input[type=radio]:disabled + .radio-label:before {
       box-shadow: inset 0 0 0 4px #f4f4f4;
@@ -201,7 +203,7 @@ input.jscolor {
     width: 32px;
   }
     .switch[data-status='true'] {
-      background-color: #155DA1;
+      background-color: var(--main);
     }
     .switch[data-status='true'] .knob {
       transform: translateX(calc(100% - 4px));
@@ -223,8 +225,8 @@ input.jscolor {
 
 header {
   align-items: center;
-  background-color: #155DA1;
-  border-bottom: 1px solid #043d72;
+  background-color: var(--main);
+  border-bottom: 1px solid var(--dark);
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -323,8 +325,8 @@ header {
           }
 
           header .menu-left #nav-overlay #nav-content #footer-neb-host {
-            background: #155DA1;
-            border-top: 2px solid #043d72;
+            background: var(--main);
+            border-top: 2px solid var(--dark);
             bottom: 0;
             color: #fff;
             font-family: 'Consolas', sans-serif;
@@ -341,7 +343,7 @@ header {
             z-index: 2
           }
             header .menu-left #nav-overlay #nav-content #footer-neb-host a {
-              color: #6cb6fb;
+              color: var(--light);
             }
               header .menu-left #nav-overlay #nav-content #footer-neb-host a:hover {
                 text-decoration: underline;
@@ -416,7 +418,7 @@ nav {
           padding: 5px;
         }
           nav section#tools div#mode-selection button.current {
-            background-color: #6cb6fb;
+            background-color: var(--light);
           }
           nav section#tools div#mode-selection button:hover {
             background-color: #ffffff;
