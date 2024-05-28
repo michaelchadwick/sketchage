@@ -198,7 +198,6 @@ input.jscolor {
     display: block;
     height: 20px;
     position: relative;
-    vertical-align: middle;
     width: 32px;
   }
     .switch[data-status='true'] {
@@ -495,6 +494,7 @@ section#content {
 
   #grid #grid-inner {
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     background-color: transparent;
     display: grid;
     grid-column-gap: 0;
