@@ -1,193 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!-- BASIC
+  <head>
+    <!-- BASIC
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <meta http-equiv="cache-control" content="Public">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <title>Sketchage</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="Public" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Sketchage</title>
 
-  <!-- META
+    <!-- META
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="description" content="Sketch pad web app" />
-  <meta name="author" content="Michael Chadwick">
-  <meta name="application-name" content="Sketchage">
-  <meta name="title" content="Sketchage" />
-  <meta property="og:url" content="https://sketchage.neb.host">
-  <meta property="og:title" content="Sketchage - sketch pad">
-  <meta property="og:description" content="Sketch out an idea using pixels">
-  <meta property="og:image" content="https://sketchage.neb.host/assets/icons/android-chrome-512x512.png">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="sketchage.neb.host">
+    <meta name="description" content="Sketch pad web app" />
+    <meta name="author" content="Michael Chadwick" />
+    <meta name="application-name" content="Sketchage" />
+    <meta name="title" content="Sketchage" />
+    <meta property="og:url" content="https://sketchage.neb.host" />
+    <meta property="og:title" content="Sketchage - sketch pad" />
+    <meta property="og:description" content="Sketch out an idea using pixels" />
+    <meta
+      property="og:image"
+      content="https://sketchage.neb.host/assets/icons/android-chrome-512x512.png"
+    />
 
-  <!-- FAVICONS
+    <!-- FAVICONS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png">
-  <link rel="manifest" href="./site.webmanifest">
-  <link rel="shortcut icon" href="./favicon.ico">
-  <meta name="msapplication-TileColor" content="#2b5797">
-  <meta name="msapplication-config" content="./browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <meta name="msapplication-TileColor" content="#2b5797" />
+    <meta name="msapplication-config" content="./browserconfig.xml" />
+    <meta name="theme-color" content="#ffffff" />
 
-  <!-- FONTAWESOME
+    <!-- FONTAWESOME
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css">
-  <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css">
+    <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css" />
 
-  <!-- CSS
+    <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <!-- VENDOR -->
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css">
-  <!-- CUSTOM -->
-  <link rel="stylesheet" href="./assets/css/modal.css" />
-  <link rel="stylesheet" href="./assets/css/app.css" />
-</head>
-<body>
+    <!-- VENDOR -->
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css"
+    />
+    <!-- CUSTOM -->
+    <link rel="stylesheet" href="./assets/css/modal.css" />
+    <link rel="stylesheet" href="./assets/css/app.css" />
+  </head>
+  <body>
+    <section id="rulers">
+      <ul class="ruler-x">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+      <ul class="ruler-y">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </section>
 
-  <section id="rulers">
-    <ul class="ruler-x">
-      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-    </ul>
-    <ul class="ruler-y">
-      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-    </ul>
-  </section>
+    <header>
+      <div class="menu-left">
+        <div id="nav-links">
+          <button
+            id="button-nav"
+            class="icon"
+            aria-label="Click for links to more apps by neb.host"
+            tabindex="-1"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div id="nav-overlay">
+            <div id="nav-content">
+              <div class="container">
+                <div class="nav-header">More Apps By Neb</div>
 
-  <header>
-    <div class="menu-left">
+                <div class="nav-list"></div>
 
-      <div id="nav-links">
-        <button id="button-nav" class="icon" aria-label="Click for links to more apps by neb.host" tabindex="-1">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div id="nav-overlay">
-          <div id="nav-content">
-            <div class="container">
+                <div class="nav-footer">
+                  <!-- vvv neb.host subsite footer -->
+                  <footer id="footer-neb-host">
+                    site by <a href="https://neb.host">neb.host</a>
+                  </footer>
+                  <!-- ^^^ neb.host subsite footer -->
+                </div>
+              </div>
 
-              <div class="nav-header">More Apps By Neb</div>
-
-              <div class="nav-list"></div>
-
-              <div class="nav-footer">
-                <!-- vvv neb.host subsite footer -->
-                <footer id="footer-neb-host">site by <a href="https://neb.host">neb.host</a>
-                </footer>
-                <!-- ^^^ neb.host subsite footer -->
+              <div id="button-nav-close">
+                <a href="#">X</a>
               </div>
             </div>
-
-            <div id="button-nav-close">
-              <a href="#">X</a>
-            </div>
-
           </div>
         </div>
+
+        <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
+          <i class="fa-solid fa-question"></i>
+        </button>
       </div>
 
-      <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
-        <i class="fa-solid fa-question"></i>
-      </button>
+      <div class="title">
+        <h1>Sketchage</h1>
+      </div>
 
-    </div>
+      <div class="menu-right">
+        <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </header>
 
-    <div class="title">
-      <h1>Sketchage</h1>
-    </div>
-
-    <div class="menu-right">
-
-      <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
-        <i class="fa-solid fa-gear"></i>
-      </button>
-
-    </div>
-  </header>
-
-  <nav>
-    <section id="tools">
-      <div id="color-selection">
-        <label for="color-picker-fg"
-          id="fg-label"
-          title="Foreground color (Left mouse button)"
-        >FG (LMB)</label>
-        <input id="color-picker-fg"
-          class="jscolor"
-          data-jscolor="{
+    <nav>
+      <section id="tools">
+        <div id="color-selection">
+          <label for="color-picker-fg" id="fg-label" title="Foreground color (Left mouse button)"
+            >FG (LMB)</label
+          >
+          <input
+            id="color-picker-fg"
+            class="jscolor"
+            data-jscolor="{
             onChange: 'Sketchage._jscolorFGChange(this.valueElement.value)'
           }"
-          title="Foreground color (Left mouse button)"
-          value="#000000ff"
-        />
+            title="Foreground color (Left mouse button)"
+            value="#000000ff"
+          />
 
-        <label for="color-picker-bg"
-          id="bg-label"
-          title="Background color (Right mouse button)"
-        >BG (RMB)</label>
-        <input id="color-picker-bg"
-          class="jscolor"
-          data-jscolor="{
+          <label for="color-picker-bg" id="bg-label" title="Background color (Right mouse button)"
+            >BG (RMB)</label
+          >
+          <input
+            id="color-picker-bg"
+            class="jscolor"
+            data-jscolor="{
             onChange: 'Sketchage._jscolorBGChange(this.valueElement.value)'
           }"
-          title="Background color (Right mouse button)"
-          value="#ffffffff"
-        />
-      </div>
+            title="Background color (Right mouse button)"
+            value="#ffffffff"
+          />
+        </div>
 
-      <div id="mode-selection">
-        <button id="mode-draw" data-mode="draw" class="current">
-          <img src="./assets/images/draw-24.png" alt="Draw" title="Draw" />
-        </button>
-        <button id="mode-erase" data-mode="erase">
-          <img src="./assets/images/erase-24.png" alt="Erase" title="Erase" />
-        </button>
-        <button id="mode-copy" data-mode="copy">
-          <img src="./assets/images/copy-24.png" alt="Copy Color" title="Copy Color" />
-        </button>
-        <button id="mode-fill" data-mode="fill">
-          <img src="./assets/images/fill-24.png" alt="Fill Color" title="Fill Color" />
-        </button>
+        <div id="mode-selection">
+          <button id="mode-draw" data-mode="draw" class="current">
+            <img src="./assets/images/draw-24.png" alt="Draw" title="Draw" />
+          </button>
+          <button id="mode-erase" data-mode="erase">
+            <img src="./assets/images/erase-24.png" alt="Erase" title="Erase" />
+          </button>
+          <button id="mode-copy" data-mode="copy">
+            <img src="./assets/images/copy-24.png" alt="Copy Color" title="Copy Color" />
+          </button>
+          <button id="mode-fill" data-mode="fill">
+            <img src="./assets/images/fill-24.png" alt="Fill Color" title="Fill Color" />
+          </button>
+        </div>
+      </section>
+
+      <section id="buttons">
+        <button id="button-export-image">Export Image</button>
+        <button id="button-reset-image" class="danger">Reset Image</button>
+      </section>
+
+      <section id="screen-dims"></section>
+    </nav>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+    <section id="content">
+      <div id="grid" class="draw">
+        <div id="grid-inner"></div>
       </div>
+      <div id="generated-images"></div>
     </section>
 
-    <section id="buttons">
-      <button id="button-export-image">Export Image</button>
-      <button id="button-reset-image" class="danger">Reset Image</button>
-    </section>
-
-    <section id="screen-dims"></section>
-  </nav>
-
-  <!-- Primary Page Layout
+    <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
-  <section id="content">
-    <div id="grid" class="draw">
-      <div id="grid-inner"></div>
-    </div>
-    <div id="generated-images"></div>
-  </section>
-
-  <!-- End Document
+    <!-- JAVASCRIPTS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-  <!-- JAVASCRIPTS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <!-- VENDOR -->
-  <script type="text/javascript" src="./assets/js/vendor/jquery.min.js"></script>
-  <script type="text/javascript" src="./assets/js/vendor/jquery.transit.min.js"></script>
-  <script type="text/javascript" src="./assets/js/vendor/jscolor.min.js"></script>
-  <script type="text/javascript" src="./assets/js/vendor/bitmap.js"></script>
-  <!-- CUSTOM -->
-  <script type="text/javascript" src="./assets/js/app.js"></script>
-  <script type="text/javascript" src="./assets/js/app/constants.js"></script>
-  <script type="text/javascript" src="./assets/js/app/dom.js"></script>
-  <script type="text/javascript" src="./assets/js/app/modal.js"></script>
-  <script type="text/javascript" src="./assets/js/app/lib/color.js"></script>
-  <script type="text/javascript" src="./assets/js/app/lib/ruler.js"></script>
-  <script type="text/javascript" src="./assets/js/app/main.js"></script>
-</body>
+    <!-- VENDOR -->
+    <script type="text/javascript" src="./assets/js/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="./assets/js/vendor/jquery.transit.min.js"></script>
+    <script type="text/javascript" src="./assets/js/vendor/jscolor.min.js"></script>
+    <script type="text/javascript" src="./assets/js/vendor/bitmap.js"></script>
+    <!-- CUSTOM -->
+    <script type="text/javascript" src="./assets/js/app.js"></script>
+    <script type="text/javascript" src="./assets/js/app/constants.js"></script>
+    <script type="text/javascript" src="./assets/js/app/dom.js"></script>
+    <script type="text/javascript" src="./assets/js/app/modal.js"></script>
+    <script type="text/javascript" src="./assets/js/app/lib/color.js"></script>
+    <script type="text/javascript" src="./assets/js/app/lib/ruler.js"></script>
+    <script type="text/javascript" src="./assets/js/app/main.js"></script>
+  </body>
 </html>
