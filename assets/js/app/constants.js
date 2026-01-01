@@ -2,7 +2,7 @@
 /* set any global constants */
 
 const SKETCHAGE_ENV_PROD_URL = [
-  'neb.host/sketchage',
+  'neb.host',
   'sketchage.neb.host'
 ]
 
